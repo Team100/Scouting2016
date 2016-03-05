@@ -1,0 +1,46 @@
+"standsInfo": [	
+	
+	"100":
+	{
+		"home": {
+			"teamName": "",
+			"teamNum": "",
+		},
+
+		"auto": {
+			"defensesB": {"moat": false, "portcullis": false, "planks": false,
+					"ramparts": false, "drawBridge": false,
+					"sallyPort": false, "terrain": false,
+					"rockWall": false, "lowBar": false },
+			"score": {
+				{"canShoot": false},
+				{"type": "low", "num": ""},
+				{"type"; "high", "num": ""} }
+		},
+
+		"teleop": [
+			"defensesB": {"moat": false, "portcullis": false, "planks": false,
+					"ramparts": false, "drawBridge": false,
+					"sallyPort": false, "terrain": false,
+					"rockWall": false, "lowBar": false},
+			"score": {
+				{"type": "low", "num": ""},
+				{"type"; "high", "num": ""},
+				{"type": "accuracy", "description": ""} },
+			"fouls": [
+				{ "type": "techfoul", "count": 0},
+				{"type": "foul", "count": 0} ],
+			"endGame": [
+				{"type": "finalPos"},
+				{"position": ""} ]
+		],
+			
+		"summary": {
+			"broken": {"shooter": false, "pickup": false, 
+					"drivetrain": false},
+			"role" : "",
+			"teamwork": {"comms": "", "mainIssues": "", "driverIssues": ""},
+			"extraNotes": ""
+		}
+	}
+]

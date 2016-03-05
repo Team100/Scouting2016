@@ -1,0 +1,29 @@
+"pitInfo": [
+
+	"100": 
+	{
+		"teamName": "",
+		"teamNum": null,
+		"location": "",
+		
+		"kitBot": false,
+		"driveTrain": "",
+		"pickUp": false,
+		"shooter": false,
+		"scaling": false,
+		
+		"defensesB" ["moat": false, "portcullis": false, "planks": false,
+					"ramparts": false, "drawBridge": false,
+					"sallyPort": false, "terrain": false,
+					"rockWall": false, "lowBar": false ],
+		
+		"picturePaths": [],
+		
+		"extraNotes": ""
+	},
+
+	
+	"112": {
+		// Put team data here
+	},
+]
