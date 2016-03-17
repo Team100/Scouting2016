@@ -1,0 +1,55 @@
+Web server configuration
+------------------------
+$Revision: 1.1 $
+$Date: 2011/04/08 07:15:37 $
+
+
+Brief instructions on setting up a MySQL, PHP, apache web server for the competition system.
+
+1. Check params file for database name, user, password
+
+
+2. Install MySQL, apache, then php.
+     In MySQl, check option for including path in windows directory
+     In apache, note admin/root password (for later use)
+     In php, configure with apache 2.2 and extensions MySQL and MysQLi extension 
+
+3. Create the database:
+   mysqladmin create competition -u root -p
+   
+   This prompts for password to root given in install.  Now the dbfile is created.
+
+4. Grant access
+
+    mysql -d competition -u root -p
+ 
+    mysql>  grant all on *.* to 'compuser'@'localhost' identified by 'password';
+
+5. Run freshdb.bat in admin\data directory
+
+6. Config apache:
+
+
+  Setting up automatic reading of main.php:
+  Change DirectoryIndex:
+    DirectoryIndex index.html main.php index.php
+
+
+  Setting up password access:
+  In <Directory> in main config (current) or setting up for a file-based .htaccess:
+
+   AuthUserFile "C:/Program Files/Apache Software Foundation/Apache2.2/admin/htpasswd.master"
+   AuthName "Red Rock Robotics Competition System"
+   AuthType Basic
+   require valid-user
+ 
+
+
+7. Test php and db connection. Under htdocs/webhome, goto ./Test and try phpinfo.php and dbtest.php.
+
+8. May need to enable firewall for port 80 access on vista/Windows7.  
+     Go to control panel, firewall.  In advanced, add port 80 access.
+
+
+Test system. Browse to home and try it out.  Try editing, then run freshdb when done.
+
