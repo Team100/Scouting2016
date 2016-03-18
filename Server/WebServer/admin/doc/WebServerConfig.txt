@@ -11,8 +11,8 @@ Setting up automatic reading of main.php:
 Setting up password access:
 In <Directory> in main config (current) or setting up for a file-based .htaccess:
 
-   AuthUserFile "C:/Program Files/Apache Software Foundation/Apache2.2/admin/htpasswd.master"
-   AuthName "Red Rock Robotics Competition System"
+   AuthUserFile "C:/github/Scouting2016/Server/WebServer/admin/htpasswd.master"
+   AuthName "Wildhats Competition System"
    AuthType Basic
    require valid-user
  

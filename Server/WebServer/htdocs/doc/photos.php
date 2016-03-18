@@ -13,15 +13,15 @@ Team Robot Images are placed in this directory in with names in the
 following format so they can be read automatically by the application:
 
 <ul>
-<li>Small Thumbnail used on multiple pages/listings 50px
+<li>Small Thumbnail used on multiple pages/listings 50x50px
 <br>
    File format: team-{TEAM#}-small.jpg    (Example: team-3006-small.jpg)
 
-<li>Medium Thumbnail used on team information pages:180px
+<li>Medium Thumbnail used on team information pages:180x180px
 <br>  File format:  team-{TEAM#}-med.jpg    (Example: team-3006-med.jpg)
 
 <li>Other images of the robot (up to 5):(800-1200 px wide)
-<be>  File format:  team-{TEAM#}-{Image#}.jpg    (Example: team-3006-1.jpg)
+<br>  File format:  team-{TEAM#}-{Image#}.jpg    (Example: team-3006-1.jpg)
 </ul>
 
 These images are picked up by the teaminfo and teamdetails pages.

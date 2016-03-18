@@ -39,12 +39,14 @@ function dbshowerror($connection, $die)
 //  Returns: $connection MySQL handle
 //
 //  Sets up single connection for database interaction.  $connection is returned.
+//  Also loads event_id, as it is needed everywhere in system
 //
 
 function dbsetup()
 {
   // take variable values from the global space
   global $dbhost, $dbuser, $dbname, $dbpass;
+  global $def_event_id, $def_event_name;
   
   // get connection
   if(!($connection = @ mysqli_connect($dbhost,$dbuser,$dbpass, $dbname)))
@@ -52,6 +54,16 @@ function dbsetup()
      
   // turn autocommit off
   mysqli_autocommit($connection, FALSE);
+
+  // load default event_id and name for this instance from database
+  $query="select value, name from system_value, event where skey = 'def_event_id' and event_id = value";
+  if (! ($result = @mysqli_query ($connection, $query) ))
+  	dbshowerror($connection, "die");
+  $row = mysqli_fetch_array($result);
+  $def_event_id = $row["value"];
+  $def_event_name = $row["name"];
+  
+  if ($def_event_id == "") $def_event_name = "No competition event selected !!";
 
   return($connection);
 }
@@ -358,6 +370,7 @@ function pheader($title, $titleonly, $options)
   global $user;
   global $admins;
   global $admin;
+  global $event_id;
   
   // get user if exists, then set admin privledge
   if (isset($_SERVER["PHP_AUTH_USER"]))
@@ -381,6 +394,7 @@ function pheader($title, $titleonly, $options)
   // if not titleonly
   if (! (isset ($titleonly)) || (! ($titleonly == "titleonly" )))
   	print "<h2>{$title}</h2>";
+  		
 }
 
 
@@ -396,6 +410,9 @@ function pfooter()
   global $admin;	// admin rights
   global $connection;   // database connection
   global $host_team_name;  	// team host name
+  global $def_event_name;       // event name
+  global $site;         // site in site URL
+  global $base;         // base in site URL
   
   print "<br><br><hr>" 
     . "<a href=\"/\">Competition System Home</a><br>";
@@ -405,10 +422,12 @@ function pfooter()
   {
   	print "Logged in as {$user} ";
   	if ($admin) print " -- administrator";
+  	print "\n&nbsp;&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  \n";
+        print "<a href=\"http://logout@{$site}{$base}/\">Logout</a>";
   	print "<br>\n";
   }
   
-  print "<i>{$host_team_name}</i>\n</BODY>\n</HTML>";
+  print "<i>{$host_team_name} -- {$def_event_name}</i>\n</BODY>\n</HTML>";
   
   // if database connection, close down
   if ($connection)
@@ -1010,13 +1029,13 @@ function teams_validate ( $teams )
      foreach ( $alliance as $team )
      {
        // query db
-       if (! ($results =  @ mysqli_query ( $connection, "select teamnum from teambot where teamnum = {$team}")))
+       if (! ($results =  @ mysqli_query ( $connection, "select teamnum from teambot where event_id = '{$def_event_id}' and teamnum = {$team}")))
           dbshowerror("die");
        
        // if no result, team does not exist.
        if (! ($row = @ mysqli_fetch_array($results)))
           {
-            showerror("Team {$team} not found in teambot database");
+            showerror("Team {$team} not found in teambot database for current event '{$def_event_id}'");
             $error=1;
           }      
      }

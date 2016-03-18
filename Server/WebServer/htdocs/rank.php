@@ -56,7 +56,7 @@
 
 	    // query teams from db, then iterate load variables, sort, and store
 		// query and load
-		if (! ($result = @ mysqli_query ($connection, "select teamnum from teambot")))
+		if (! ($result = @ mysqli_query ($connection, "select teamnum from teambot where event_id = '{$def_event_id}'")))
   			dbshowerror($connection, "die");
 
 		// load teams
@@ -78,7 +78,7 @@
         	// if NULL skip, otherwise process
         	if ($rank != "")
         	{
-        		if (! (@mysqli_query ($connection, "update teambot set rank_{$sort} = {$cnt} where teamnum = {$teamnum} ") ))
+        		if (! (@mysqli_query ($connection, "update teambot set rank_{$sort} = {$cnt} where event_id = '{$def_event_id}' and teamnum = {$teamnum} ") ))
 					dbshowerror($connection, "die");
 
 				$cnt = ++$cnt;
@@ -91,7 +91,7 @@
         	// if NULL skip, otherwise process
         	if ($rank == "")
         	{
-        		if (! (@mysqli_query ($connection, "update teambot set rank_{$sort} = {$cnt} where teamnum = {$teamnum} ") ))
+        		if (! (@mysqli_query ($connection, "update teambot set rank_{$sort} = {$cnt} where event_id = '{$def_event_id}' and teamnum = {$teamnum} ") ))
 					dbshowerror($connection, "die");
 
 				$cnt = ++$cnt;
@@ -138,7 +138,7 @@
   $query = "select teambot.teamnum teamnum, name, nickname, rank_overall, rating_overall,
   			rating_overall_off, rating_overall_def, rank_pos1, rating_pos1, rank_pos2, rating_pos2,
   			rank_pos3, rating_pos3
-  			from teambot, team where teambot.teamnum=team.teamnum {$orderby}";
+  			from teambot, team where teambot.event_id = '{$def_event_id}' and teambot.teamnum=team.teamnum {$orderby}";
 
 	// query and load
 	if (! ($result = @ mysqli_query ($connection, $query)))

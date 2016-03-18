@@ -2,7 +2,7 @@
 # $Revision: 3.0 $
 # $Date: 2016/03/14 23:00:02 $
 #
-# Red Rock Robotics
+# Red Rock Robotics, WildHats, Verkler
 # Competition System Table Schema
 #
 # Notes:
@@ -19,19 +19,44 @@
 #
 #
 
+#
+# General schema notes
+#  - Schema includes patterns from Blue Alliance API but does not adhere to its
+#    structure or key system entirely
+#  - Assumes that the system is refreshed yearly, but that team info persists.
+#    This means:
+#      - Fields that Blue Alliance can modify are tagged as such in the schema, 
+#         with tBA (the Blue Alliance)
+#      - The schema must work for multiple regional competitions and for nationals,
+#         which looks like a collection of regional competitions.
+#
+
 
 #
-# Field
+# Event
 # 
-# For nationals, we may have scouting for each of four fields.  Building in ability to clone
-#  this app and use it in multiple places, then export and import those data into a master
+# Event ID, used to qualify data entry and use for a specific regional
 #
-create table league
+# For nationals, we may have scouting for each of four fields.  Building in ability to clone
+#  this app and use it in multiple places, then export and import those data into a master, or 
+#  manage instances of the app and team, using the same event model.
+#
+#
+create table event
  (
-  league varchar(5),		# league "name" for nationals
-  league_name varchar(25),	# long-form of league name	
-  primary key (league)
+  event_id varchar(8),		# tBA event code, format yyyy[Event_Code]
+  name varchar(20),             # tBA short_name
+  long_name varchar(35),        # tBA name, official name
+  event_code varchar(4),        # tBA event_code
+  event_type varchar(20),       # tBA event_type_string, human-readable event, i.e. 'Regional'
+  event_type_id int,            # tBA event_type, with a number code
+  year int,                     # tBA year
+  location varchar(25),         # tBA location
+  website varchar(35),          # tBA website, event webssite	
+  primary key (event_id)
  );
+
+
 
 
 #
@@ -42,16 +67,16 @@ create table league
 # 
 create table team
  (
-  teamnum  int, 		# FIRST team number - primary key
+  teamnum  int, 		# FIRST team number - primary key.  We do not use frcNNNN, just the NNNN
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
-  name varchar(30),		# formal name	
+  name varchar(30),		# tBA, FIRST nickname
   nickname varchar(30),		# our nickname for team
   org varchar(80),		# high school or other organization
-  location varchar(40),		# location of team
+  location varchar(40),		# tBA location, location of team
   students int,			# number of students on team
-  website varchar(60),		# team web site
-  sponsors varchar(400),	# team sponsors
-  rookie_year int, 		# rookie year, from TIMS
+  website varchar(60),		# tBA website, team web site
+  sponsors varchar(400),	# tBA name, team sponsors
+  rookie_year int, 		# tBA rookie year
   history varchar(10000),	# history of events from FIRST site
   notes varchar(5000),		# notes on our interaciton with the team
   primary key (teamnum)
@@ -59,20 +84,69 @@ create table team
 
 
 #
+# team history
+#
+# team history of events, as loaded from Blue Alliance
+#
+# Foreign key from team table
+#
+create table team_history
+ (
+  teamnum  int, 		# FIRST team number - foreign key from team table
+  event_id varchar(8),          # tBA event_key.  Note: not a foreign key to event table
+  year int,                     # tBA year
+  long_name varchar(35),        # tBA name
+  primary key (teamnum,event_id)
+ );
+ 
+
+
+#
+# team history award
+#
+# team history of awards at each event, as loaded from Blue Alliance
+#
+# Foreign key from team table
+#
+create table team_history_award
+ (
+  teamnum  int, 		# FIRST team number - foreign key from team table
+  event_id varchar(8),          # tBA event_key.  Note: not a foreign key to event table
+  award_type varchar(3),        # tBA award_type
+  award_name varchar(40),       # tBA name
+  primary key (teamnum,event_id,award_type)
+ );
+
+
+
+#
 # teambot
 #
-# Information on the team at the event.  There should only be one entry in this table for event players
+# Information on the team and bot at the event.  
+#  There should only be one entry in this table for event players
 # 
 # Foreign key from team table
 #
 create table teambot
  (
-
+  event_id varchar(8),          # FK to event table 
   teamnum  int, 		# FIRST team number - foreign key from team table
-#  league varchar(5),		# league "name" for nationals
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   updatedby varchar(200), 	# last updated by users
-  rank_overall real,		# overall rank
+  bot_name varchar(30),         # tBA robot name
+  f_ranking int,                # tBA ranking from FIRST
+  f_rankparam1 varchar(15),     # tBA FIRST parameter 1 in game-specific rankings
+  f_rankparam2 varchar(15),     # tBA FIRST parameter 2 in game-specific rankings
+  f_rankparam3 varchar(15),     # tBA FIRST parameter 3 in game-specific rankings
+  f_rankparam4 varchar(15),     # tBA FIRST parameter 4 in game-specific rankings
+  f_rankparam5 varchar(15),     # tBA FIRST parameter 5 in game-specific rankings
+  f_rankparam6 varchar(15),     # tBA FIRST parameter 6 in game-specific rankings
+  f_rankparam7 varchar(15),     # tBA FIRST parameter 7 in game-specific rankings
+  f_rankparam8 varchar(15),     # tBA FIRST parameter 8 in game-specific rankings
+  opr real,                     # tBA oprs, Offensive power rating
+  dpr real,                     # tBA dprs, defensive power rating
+  ccwm real,                    # tBA ccwm, calculated contribution to winning margin
+  rank_overall real,		# overall rank (by us)
   rating_overall int,		# 0-9 rating as an overall bot
   rating_overall_off int,	# 0-9 rating offensively
   rating_overall_def int,	# 0-9 rating defensively
@@ -82,8 +156,9 @@ create table teambot
   rating_pos2 int,		# 0-9 rating in position 2
   rank_pos3 real,		# overall rank in position 3
   rating_pos3 int,		# 0-9 rating in position 3
+  rating_driver int,            # 0-9 rating for driver
   PlayField_0 varchar(50),	# Play Field 0 (meaning/assignment defined in params)
-  PlayField_1 varchar(50),	# Play Field 1 (meaning/assignment defined in params)
+  PlayField_1 varchar(50),	# Play Field 1 (meaning/assignment defined in params)	
   PlayField_2 varchar(50),	# Play Field 2 (meaning/assignment defined in params)
   PlayField_3 varchar(50),	# Play Field 3 (meaning/assignment defined in params)
   PlayField_4 varchar(50),	# Play Field 4 (meaning/assignment defined in params)
@@ -143,7 +218,21 @@ create table teambot
   driver_analysis varchar(1000),	# driver analysis
   with_recommendation varchar(1000),	# recommendation if partnered with
   against_recommendation varchar(1000),	# recommendation if partnered against
-  primary key(teamnum)
+  notes varchar(1000),                  # general notes
+  primary key(event_id,teamnum)
+ );
+
+#
+# Ranking_tag
+#
+# Ranking tag on game_specific rankings from first
+#  Functions as a lookup table only
+#
+create table ranking_tag
+ (
+  tag int,                      # tBA parameter number, corresponding to f_rankparamX
+  name varchar(20),             # tBA parameter name for display
+  primary key (tag)
  );
 
 
@@ -157,7 +246,7 @@ create table teambot
 
 create table alliance
  (
-  league varchar(5),			# league "name" for nationals
+  event_id varchar(8),                  # FK to event table 
   alliancenum int,			# Alliance - #1 through #8
   locked varchar(12), 			# row locked for editing by user.  Can clear in application.
   offense_analysis varchar(1000),	# offense analysis (text)
@@ -166,7 +255,7 @@ create table alliance
   pos2_analysis varchar(1000),		# position 2 analysis (text)
   pos3_analysis varchar(1000),		# position 3 analysis (text)
   against_recommendation varchar(2000),	# recommendation if partnered against
-  primary key (league, alliancenum)
+  primary key (event_id, alliancenum)
  );
 
 
@@ -178,12 +267,12 @@ create table alliance
 
 create table alliance_team
  (
-  league varchar(5),			# league "name" for nationals
+  event_id varchar(8),                  # FK to event table 
   alliancenum int,			# Alliance - #1 through #8
   teamnum  int, 			# FIRST team number - foreign key from team table
   locked varchar(12), 			# row locked for editing by user.  Can clear in application.
   position int,				# position in the alliance (1,2,3)
-  primary key (league, alliancenum, teamnum)
+  primary key (event_id, alliancenum, teamnum)
  );
 
 #
@@ -192,12 +281,12 @@ create table alliance_team
 #
 create table alliance_unavailable
  (
-  league varchar(5),			# league "name" for nationals
+  event_id varchar(8),                  # FK to event table 
   alliancenum int,			# Alliance - #1 through #8
   teamnum  int, 			# FIRST team number - foreign key from team table
   unavailable boolean,			# marked if team selection is unavailable (refused or otherwise)
   refused boolean,			# refused our offer, so take off the availability list
-  primary key (league, teamnum)
+  primary key (event_id, teamnum)
  );
 
 
@@ -205,6 +294,8 @@ create table alliance_unavailable
 #########################
 #
 # Match Tables
+#
+# Note how match, alliances, and teams are connected to data
 #
 
 #
@@ -214,9 +305,10 @@ create table alliance_unavailable
 #
 create table match_instance
  (
-  league varchar(5),		# League, separating data for nationals with multiple fields
+  event_id varchar(8),          # FK to event table 
   type varchar(1), 		# Q=qualifying, P=practice, F=Final  part of primary key
-  matchnum int,			# match number, part of primary key
+  matchnum int,			# match number, part of primary key.  If taken from tBA, decoded
+                                #   from tBA match_number, which looks lik 2010sc_qm20
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   updatedby varchar(200), 	# last updated by users
   final_type varchar(1),	# used in finals: Q=qarter, S=Semi, F=Final
@@ -224,28 +316,31 @@ create table match_instance
   actual_time time,		# actual time
   game_plan varchar(2000), 	# our game plan for the match.  Note: this is the only field 
 				#   that is not match statistics but instead our analysis
-  primary key (league, type, matchnum)
+  primary key (event_id, type, matchnum)
  );
+
 
 #
 # Match Instance Alliance
 #
 #  Scores and other details of a match tied to a given alliance
 #
+#  Will probably add score breakout mechanism once we determine whether it's useful to see
+#
 create table match_instance_alliance
  (
-  league varchar(5),		# League, separating data for nationals with multiple fields
+  event_id varchar(8),          # FK to event table 
   type varchar(1), 		# Q=qualifying, P=practice, F=Final  part of primary key
   matchnum int,			# match number, part of primary key
   color varchar(1),		# R=Red, B=Blue
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   updatedby varchar(200), 	# last updated by users
-  score int,			# final score
+  score int,			# tBA score, final score
   raw_points int, 		# raw points (prior to penalties)
   penalty_points int,		# penalty points
   other_points int,		# other points, might need in the future
   seed_points int,		# seed points - seed points in system
-  primary key (league, type, matchnum, color)
+  primary key (event_id, type, matchnum, color)
  );
 
 #
@@ -257,7 +352,7 @@ create table match_instance_alliance
 # 
 create table match_team
  (
-  league varchar(5),		# League, foreign key to match_instance table
+  event_id varchar(8),          # FK to event table 
   type varchar(1), 		# foreign key to match_instance table
   matchnum int,			# match number, foreign key to match_instance table
   teamnum int,			# team number, foreign key to team table
@@ -296,7 +391,7 @@ create table match_team
   match_pos_analysis varchar(1000),		# position analysis (text)
   match_with_recommendation varchar(1000),	# recommendation if partnered with
   match_against_recommendation varchar(1000),	# recommendation if partnered against
-  primary key (league, type, matchnum, teamnum)
+  primary key (event_id, type, matchnum, teamnum)
  );
 
 
@@ -307,7 +402,7 @@ create table match_team
 # 
 create table match_alliance_team
  (
-  league varchar(5),		# League, foreign key to match_instance table
+  event_id varchar(8),          # FK to event table 
   type varchar(1), 		# foreign key to match_instance table
   matchnum int,			# match number, foreign key to match_instance table
   alliancenum int,		# Alliance - #1 through #8, foreign key to alliance table
@@ -320,7 +415,7 @@ create table match_alliance_team
   raw_points int,		# raw points scored
   human_points int,		# human points scored
   penalties int,		# penalty points
-  primary key (league, type, matchnum, alliancenum)
+  primary key (event_id, type, matchnum, alliancenum)
  );
 
 
@@ -329,10 +424,10 @@ create table match_alliance_team
 #
 create table championteam
  (
-  league varchar(5),		# league "name" for nationals
+  event_id varchar(8),          # FK to event table 
   league_name varchar(25),	# long-form of league name
   teamnum  int, 		# FIRST team number - primary key
-  primary key (league, teamnum)
+  primary key (event_id, teamnum)
 );
 
 #
@@ -360,6 +455,8 @@ create table schedule
 # Process Lock
 #
 # Lock table to lock various processes
+#  These locks differ from data locks in that they lock processes, such
+#  as finals selection from other users.
 #
 
 create table process_lock
@@ -451,25 +548,34 @@ create table pagetodoc
 create table system_value
  (
    skey varchar(20),		# key index into values
-   value varchar(40)		# value for the key
+   value varchar(40),		# value for the key
+   primary key (skey)
  );
 
+
+#
+# Blue Alliance API last modified
+#
+# Stores last modified settings for blue alliance data so that subsequent calls can
+#  place the last modified in calling params
+#
+create table tba_last_modified
+ (
+  api_call varchar(150),        # API call URL for reference
+  last_mod varchar(31),         # tBA last modified returned from tBA
+  primary key (api_call)
+ );
+
+#
+# insert keys needed to start in the system
+#
+insert into system_value (skey) values ('def_event_id');		# current event_id used to load Blue Alliance data
+insert into system_value (skey) values ('a');		# 
 
 ##
 ## add any other data needed as part of setup
 ##
 
-# set up default regional
-insert into league (league, league_name) values ('Reg','Default Single Regional');
 
-# setup alliances for default regional
-insert into alliance (league, alliancenum) values ('Reg',1);
-insert into alliance (league, alliancenum) values ('Reg',2);
-insert into alliance (league, alliancenum) values ('Reg',3);
-insert into alliance (league, alliancenum) values ('Reg',4);
-insert into alliance (league, alliancenum) values ('Reg',5);
-insert into alliance (league, alliancenum) values ('Reg',6);
-insert into alliance (league, alliancenum) values ('Reg',7);
-insert into alliance (league, alliancenum) values ('Reg',8);
 
 

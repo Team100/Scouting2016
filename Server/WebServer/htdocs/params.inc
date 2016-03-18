@@ -12,17 +12,19 @@
 //  
 //  - 
 
-// 
-// Nationals / Regionals
-//
-// Set to specify regional
-$default_league = "Reg";   // Reg for regional
+
 
 //
 // Host team - Team that uses this db
-$host_teamnum=3006;
-$host_team_name="Red Rock Robotics";
+$host_teamnum=100;
+$host_team_name="Wildhats";
 
+// Site parameters
+//
+// site names as in http://site/
+$site = "localhost";
+// base - everything after site.  Example: /compsys
+$base = "/";
 
 // 
 // Field positions
@@ -184,10 +186,10 @@ $message_refresh = 8;
 //
 
 // default user password (filled in)
-$default_password = "redrock";
+$default_password = "wild4woodside";
 
 // administrator users
-$admins = array("jlv", "conrad", "nichols", "kasper");
+$admins = array("jlv", "mckay");
 
 // location of security files and routines
 
