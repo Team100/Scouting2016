@@ -153,14 +153,14 @@ EOF_EOF
   //
   // define count and data query
   $cquery = "select count(*) tot from match_instance ";
-  $query = "select league, type, matchnum, final_type, scheduled_time, actual_time from match_instance ";
+  $query = "select event_id, type, matchnum, final_type, scheduled_time, actual_time from match_instance ";
   $where = '';
 
   // set where clause
   if ($filter != "A") $where = " where type = '{$filter}' ";
 
   // finish query
-  $query = $query . $where . "  order by league, type, matchnum";
+  $query = $query . $where . "  order by event_id, type, matchnum";
 
 
   // get row count first for pagebreak
@@ -193,15 +193,15 @@ EOF_EOF
 
 		// print each row with href
 		print "<tr>";
-	//	print "<td><a href=\"/matcheval.php?final={$final}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["league"]}</a></td>\n";
-		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["type"]}</a></td>\n";
-		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["matchnum"]}</a></td>\n";
+	//	print "<td><a href=\"/matcheval.php?final={$final}&event_id={$row["event_id"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["event_id"]}</a></td>\n";
+		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&event_id={$row["event_id"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["type"]}</a></td>\n";
+		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&event_id={$row["event_id"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["matchnum"]}</a></td>\n";
 		if ($final == 1) print "<td>{$row["final_type"]}</td>";   // show final type only if set
 		print "<td>" . substr($row["scheduled_time"],0,5) . "</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
 
 		// get teams in red/blue order
-		$detail_query = "select league, type, matchnum, teamnum, color from match_team"
-		    . " where league = '{$row["league"]}' and type = '{$row["type"]}' and matchnum = {$row["matchnum"]} "
+		$detail_query = "select event_id, type, matchnum, teamnum, color from match_team"
+		    . " where event_id = '{$row["event_id"]}' and type = '{$row["type"]}' and matchnum = {$row["matchnum"]} "
 		    . " order by color DESC, matchnum";
 
 		if (!($detail = @ mysqli_query ($connection, $detail_query )))
@@ -241,7 +241,7 @@ EOF_EOF
 			print ">";
 			if($detailrow["teamnum"]==$highlight)
 				print "<b>";
-			print "<a href=\"/matchteameval.php?final={$final}&teamnum={$detailrow["teamnum"]}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$detailrow["teamnum"]}</a></td>\n";
+			print "<a href=\"/matchteameval.php?final={$final}&teamnum={$detailrow["teamnum"]}&event_id={$row["event_id"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$detailrow["teamnum"]}</a></td>\n";
 
 
 			$counter++;
@@ -260,13 +260,13 @@ EOF_EOF
 		// rap sheet links
 		print "<td>";
 		// regular rap
-		print "<a href=\"/matchrapsheet.php?league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">Rap</a>";
+		print "<a href=\"/matchrapsheet.php?event_id={$row["event_id"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">Rap</a>";
 		// long rap
-		print " <a href=\"/matchrapsheet.php?league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}&long=1\">L</a>";
+		print " <a href=\"/matchrapsheet.php?event_id={$row["event_id"]}&type={$row["type"]}&matchnum={$row["matchnum"]}&long=1\">L</a>";
 
 		// public rap, if on a host_team row
 		if ($host_team_row === TRUE)
-			print " <a href=\"/matchrapsheet.php?league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}&public=}\">P</a>";
+			print " <a href=\"/matchrapsheet.php?event_id={$row["event_id"]}&type={$row["type"]}&matchnum={$row["matchnum"]}&public=}\">P</a>";
 
 		print "</td>";
 

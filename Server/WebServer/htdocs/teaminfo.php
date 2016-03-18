@@ -3,6 +3,7 @@
   // $Date: 2016/03/14 22:56:41 $
   //
   // Competition System - Team Info / Robot page
+  //   (should be named teambotinfo)
   //
   require "page.inc";
 
@@ -15,7 +16,7 @@
   $connection = dbsetup();
 
   // define lock array, fields arrays
-  $dblock = array(table=>"teambot",where=>"teamnum = {$teamnum}");
+  $dblock = array(table=>"teambot",where=>"event_id = '{$def_event_id}' and teamnum = {$teamnum}");
 
   // teambot array
 	$table_teambot = array_merge ( array("rank_overall","rating_overall","rating_overall_off","rating_overall_def",
@@ -37,7 +38,7 @@
 			// load form fields
 			$formfields = fields_load("post", $table_teambot);
 
-			$query = "update teambot set " . fields_insert("update",$formfields) . " where teamnum = {$teamnum}";
+			$query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$def_event_id}' and teamnum = {$teamnum}";
 			// process query
 			if (! (@mysqli_query ($connection, $query) ))
 				dbshowerror($connection, "die");
@@ -106,7 +107,7 @@
 
   // get team details define result set
   if (!($result = @ mysqli_query ($connection,
-  	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where teamnum = {$teamnum}")))
+  	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$def_event_id}' and teamnum = {$teamnum}")))
     dbshowerror($connection);
 
   // get row

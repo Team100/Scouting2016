@@ -95,7 +95,7 @@
 					if($_POST["team".$q]==$temp)
 						$bad=1;
 
-				if (! ($result2 = @mysqli_query ($connection, "select * from teambot where teamnum={$temp}") ))
+				if (! ($result2 = @mysqli_query ($connection, "select * from teambot where event_id = '{$def_event_id}' and teamnum={$temp}") ))
 					dbshowerror($connection, "die");
 				$row = @mysqli_fetch_array($result2);
 				if(!($row))
@@ -156,7 +156,7 @@
 				$temp = $_POST["team".$i.$q];
 				if(isset($temp) && $temp!="")
 				{
-					if (! ($result2 = @mysqli_query ($connection, "select * from teambot where teamnum={$temp}") ))
+					if (! ($result2 = @mysqli_query ($connection, "select * from teambot where event_id = '{$def_event_id}' and teamnum={$temp}") ))
 						dbshowerror($connection, "die");
 					$row2 = @mysqli_fetch_array($result2);
 
@@ -248,7 +248,7 @@
 		$refused=mysqli_real_escape_string($connection, $_POST["refused"]);
 		if(isset($refused) && $refused!="")
 		{
-			if (! ($result2 = @mysqli_query ($connection, "select * from teambot where teamnum={$refused}") ))
+			if (! ($result2 = @mysqli_query ($connection, "select * from teambot where event_id = '{$def_event_id}' and teamnum={$refused}") ))
 				dbshowerror($connection, "die");
 			$row2 = @mysqli_fetch_array($result2);
 
@@ -325,7 +325,7 @@
 
 		if(isset($prev) && $prev!="")
 		{
-			if (! ($result2 = @mysqli_query ($connection, "select * from teambot where teamnum={$prev}") ))
+			if (! ($result2 = @mysqli_query ($connection, "select * from teambot where event_id = '{$def_event_id}' and teamnum={$prev}") ))
 				dbshowerror($connection, "die");
 			$row2 = @mysqli_fetch_array($result2);
 
@@ -443,7 +443,8 @@
 	$query = "select teambot.teamnum teamnum, name, nickname, rank_overall, rating_overall,
 		rating_overall_off, rating_overall_def, rank_pos1, rating_pos1, rank_pos2, rating_pos2,
 		rank_pos3, rating_pos3
-		from teambot, team where teambot.teamnum=team.teamnum and teambot.teamnum not in (select teamnum from alliance_unavailable) {$orderby}";
+		from teambot, team where teambot.event_id = '{$def_event_id}' and teambot.teamnum=team.teamnum
+		  and teambot.teamnum not in (select teamnum from alliance_unavailable where event_id = '{$def_event_id}') {$orderby}";
 
 	// query and load
 	if (! ($result = @ mysqli_query ($connection, $query)))

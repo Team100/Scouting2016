@@ -31,7 +31,7 @@
 
 		// load form fields
 		$formfields = fields_load("post", $edit_fields);
-		$query = "update team set " . fields_insert("update",$formfields) . " where teamnum = {$teamnum}";
+		$query = "update team set " . fields_insert("update",$formfields) . "teamnum = {$teamnum}";
 
 		// process query
 		if (! (@mysqli_query ($connection, $query) ))
@@ -83,7 +83,7 @@
   {
     // if in edit mode, signal save with edit=2
   	print "<form method=\"POST\" action=\"/teamdetails.php?edit=2&teamnum={$teamnum}\">\n"
-    . hiddenfield( "league", $default_league);
+    . hiddenfield( "event_id", $def_event_id);
   }
 
   // add edit link or submit button

@@ -9,20 +9,20 @@ set dbname=competition
 set dbuser=compuser
 set dbpass=3006redrock
 
-mysql -D competition -u compuser --password=3006redrock < compsystem-tables-drop.sql
+mysql -D competition -u compuser --password=%dbpass% < compsystem-tables-drop.sql
 
 mysql -D %dbname% -u %dbuser% --password=%dbpass% < compsystem-tables.sql
 
-mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-league.sql
+rem mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-league.sql
 
-mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-team.sql
+rem mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-team.sql
 
 rem
 rem comments out the right statement for regionals or nationals
 rem 
 
 rem This statement for regionals
-mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-teambot.sql
+rem mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-teambot.sql
 
 rem These statements for nationals
 rem mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-champ.sql

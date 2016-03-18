@@ -25,7 +25,7 @@
 
 <?php
   // find total team count and set page break
-  if (!($result = @ mysqli_query ($connection, "select count(teamnum) total from teambot")))
+  if (!($result = @ mysqli_query ($connection, "select count(teamnum) total from teambot where event_id = '{$def_event_id}'")))
     dbshowerror($connection);
   $row = mysqli_fetch_array($result);
   $total = $row["total"];
@@ -34,7 +34,8 @@
 
   // define result set
   if (!($result = @ mysqli_query ($connection,
-  	"select team.teamnum teamnum, name, nickname from team, teambot where team.teamnum = teambot.teamnum order by team.teamnum")))
+  	"select team.teamnum teamnum, name, nickname from team, teambot where team.teamnum = teambot.teamnum and
+  	  teambot.event_id = '{$def_event_id}' order by team.teamnum")))
     dbshowerror($connection);
 
   $rowcnt=1;
@@ -101,6 +102,8 @@
    <h3><center><u>Admin</u></center></h3>
    <ul>
    <li><a href=\"/user.php\">User Maintenance</a></li>
+   <li><a href=\"/set-event.php\">Set competition event</a></li>
+   <li><a href=\"/bluealliance.php\">Get updates from Blue Alliance</a></li>
    <li><a href=\"/fix-db-structure.php\">Test and fix database structure</a><br>&nbsp;(should be run at start of competition)</li>
    <li><a href=\"/scheduleimport.php\">Import Schedule</a></li>
    <li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
