@@ -125,26 +125,29 @@ $dispfields["Play"][20] = array("used"=>TRUE, "display"=>"Breach Rating", "input
 //
 // Match Fields -- analyzed in each match.  Data specific to that match
 //
-$dispfields["Match"][0] = array("used"=>TRUE, "display"=>"Gets pinned", "inputlen"=>12, "maxlen"=>20, "default_value"=>"");
-$dispfields["Match"][1] = array("used"=>TRUE, "display"=>"Autonomous mode", "inputlen"=>8, "maxlen"=>15, "default_value"=>"");
-$dispfields["Match"][2] = array("used"=>TRUE, "display"=>"Autonomous height (0-3)", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Match"][3] = array("used"=>TRUE, "display"=>"Endgame speed", "inputlen"=>10, "maxlen"=>10, "default_value"=>"");
-$dispfields["Match"][4] = array("used"=>TRUE, "display"=>"Endgame Rank", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+
+$dispfields["Match"][0] = array("used"=>TRUE, "display"=>"Portcullis", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Match"][1] = array("used"=>TRUE, "display"=>"Cheval/Door", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][2] = array("used"=>TRUE, "display"=>"Moat", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][3] = array("used"=>TRUE, "display"=>"Ramparts", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][4] = array("used"=>TRUE, "display"=>"Drawbridge", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][5] = array("used"=>TRUE, "display"=>"Sally Port", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][6] = array("used"=>TRUE, "display"=>"Rock Wall", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][7] = array("used"=>TRUE, "display"=>"Rough Terrain", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][8] = array("used"=>TRUE, "display"=>"Low Bar", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][9] = array("used"=>TRUE, "display"=>"Speed Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Match"][10] = array("used"=>TRUE, "display"=>"Pickup Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Match"][11] = array("used"=>TRUE, "display"=>"Low Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Match"][12] = array("used"=>TRUE, "display"=>"High Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Match"][13] = array("used"=>TRUE, "display"=>"Breach Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+
 // $dispfields["Match"][5] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][6] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][7] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][8] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][9] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][10] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][11] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][12] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][13] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][14] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][15] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][16] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][17] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][18] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Match"][19] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+
 
 
 
