@@ -60,9 +60,9 @@ $field_positions = FALSE;
 // Pit Fields -- can be analyzed from pit discussions
 // DEPRICATE:  will need to edit out of references.  DO NOT comment out all lines until you fix.
 //
-$dispfields["Pit"][0] = array("used"=>TRUE, "display"=>"Kicker type", "inputlen"=>10, "maxlen"=>14, "default_value"=>"");
-$dispfields["Pit"][1] = array("used"=>TRUE, "display"=>"Drive-Wheels", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-$dispfields["Pit"][2] = array("used"=>TRUE, "display"=>"Drive-Wheel-type ", "inputlen"=>15, "maxlen"=>20, "default_value"=>"");
+//$dispfields["Pit"][0] = array("used"=>TRUE, "display"=>"Kicker type", "inputlen"=>10, "maxlen"=>14, "default_value"=>"");
+// $dispfields["Pit"][1] = array("used"=>TRUE, "display"=>"Drive-Wheels", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+// $dispfields["Pit"][2] = array("used"=>TRUE, "display"=>"Drive-Wheel-type ", "inputlen"=>15, "maxlen"=>20, "default_value"=>"");
 //  $dispfields["Pit"][3] = array("used"=>TRUE, "display"=>"Wide/Narrow Forward (W/N)", "inputlen"=>5, "maxlen"=>10, "default_value"=>"");
 //  $dispfields["Pit"][4] = array("used"=>TRUE, "display"=>"Drive-type", "inputlen"=>12, "maxlen"=>18, "default_value"=>"");
 //  $dispfields["Pit"][5] = array("used"=>TRUE, "display"=>"Roll Cage", "inputlen"=>10, "maxlen"=>15, "default_value"=>"");
@@ -82,27 +82,29 @@ $dispfields["Pit"][2] = array("used"=>TRUE, "display"=>"Drive-Wheel-type ", "inp
 //
 // Play Fields -- analyzed from field play, pit, or other analysis of robot
 //
-$dispfields["Play"][0] = array("used"=>TRUE, "display"=>"Arm/Grabber Type", "inputlen"=>10, "maxlen"=>14, "default_value"=>"");
-$dispfields["Play"][1] = array("used"=>TRUE, "display"=>"Post Heights Accessible", "inputlen"=>6, "maxlen"=>6, "default_value"=>"");
-$dispfields["Play"][2] = array("used"=>TRUE, "display"=>"Grabber Reliability (0-5)", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][3] = array("used"=>TRUE, "display"=>"Hang Success", "inputlen"=>15, "maxlen"=>20, "default_value"=>"");
-$dispfields["Play"][4] = array("used"=>TRUE, "display"=>"End Game (Y/N)", "inputlen"=>1, "maxlen"=>1, "default_value"=>"N");
-$dispfields["Play"][5] = array("used"=>TRUE, "display"=>"End Game Speed", "inputlen"=>2, "maxlen"=>2, "default_value"=>"00");
-$dispfields["Play"][6] = array("used"=>TRUE, "display"=>"Arm Speed (0-5)", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][7] = array("used"=>TRUE, "display"=>"Drive-type", "inputlen"=>12, "maxlen"=>18, "default_value"=>"");
-$dispfields["Play"][8] = array("used"=>TRUE, "display"=>"Drive Manueverability", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][9] = array("used"=>TRUE, "display"=>"Drive Speed", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][10] = array("used"=>TRUE, "display"=>"Drive-Wheels", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-$dispfields["Play"][11] = array("used"=>TRUE, "display"=>"Drive-Wheel-type", "inputlen"=>15, "maxlen"=>20, "default_value"=>"");
-$dispfields["Play"][12] = array("used"=>TRUE, "display"=>"Stability", "inputlen"=>10, "maxlen"=>15, "default_value"=>"");
-$dispfields["Play"][13] = array("used"=>TRUE, "display"=>"Picks Tubes Off Floor", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][14] = array("used"=>TRUE, "display"=>"Operator Skill", "inputlen"=>15, "maxlen"=>15, "default_value"=>"");
-$dispfields["Play"][15] = array("used"=>TRUE, "display"=>"Driver Skill", "inputlen"=>15, "maxlen"=>15, "default_value"=>"");
-$dispfields["Play"][16] = array("used"=>TRUE, "display"=>"Y Autonomous Mode", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][17] = array("used"=>TRUE, "display"=>"Autonomous mode rating (0-4)", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][18] = array("used"=>TRUE, "display"=>"Autonomous height (0-3)", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][19] = array("used"=>TRUE, "display"=>"Reliability", "inputlen"=>10, "maxlen"=>20, "default_value"=>"");
-// $dispfields["Play"][20] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+
+$dispfields["Play"][0] = array("used"=>TRUE, "display"=>"Oper Status", "inputlen"=>4, "maxlen"=>4, "default_value"=>"");
+$dispfields["Play"][1] = array("used"=>TRUE, "display"=>"Drivetrain", "inputlen"=>10, "maxlen"=>20, "default_value"=>"");
+$dispfields["Play"][2] = array("used"=>TRUE, "display"=>"Shooter?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][3] = array("used"=>TRUE, "display"=>"High Shooter?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][4] = array("used"=>TRUE, "display"=>"Pickup?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][5] = array("used"=>TRUE, "display"=>"Scaling Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][6] = array("used"=>TRUE, "display"=>"Special Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][7] = array("used"=>TRUE, "display"=>"Portcullis", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][8] = array("used"=>TRUE, "display"=>"Cheval/Door", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][9] = array("used"=>TRUE, "display"=>"Moat", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][10] = array("used"=>TRUE, "display"=>"Ramparts", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][11] = array("used"=>TRUE, "display"=>"Drawbridge", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][12] = array("used"=>TRUE, "display"=>"Sally Port", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][13] = array("used"=>TRUE, "display"=>"Rock Wall", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][14] = array("used"=>TRUE, "display"=>"Rough Terrain", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][15] = array("used"=>TRUE, "display"=>"Low Bar", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][16] = array("used"=>TRUE, "display"=>"Speed Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Play"][17] = array("used"=>TRUE, "display"=>"Pickup Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Play"][18] = array("used"=>TRUE, "display"=>"Low Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Play"][19] = array("used"=>TRUE, "display"=>"High Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Play"][20] = array("used"=>TRUE, "display"=>"Breach Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+
 // $dispfields["Play"][21] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Play"][22] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Play"][23] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
