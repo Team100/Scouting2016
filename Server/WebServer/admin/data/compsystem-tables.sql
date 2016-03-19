@@ -67,6 +67,7 @@ create table event
 create table team
  (
   teamnum  int, 		# FIRST team number - primary key.  We do not use frcNNNN, just the NNNN
+                                #   Note: the mapping from tBA is done by mapping function
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   name varchar(30),		# tBA, FIRST nickname
   nickname varchar(30),		# our nickname for team
@@ -306,6 +307,7 @@ create table match_instance
  (
   event_id varchar(8),          # FK to event table 
   type varchar(1), 		# Q=qualifying, P=practice, F=Final  part of primary key
+                                #   from tBA match_number
   matchnum int,			# match number, part of primary key.  If taken from tBA, decoded
                                 #   from tBA match_number, which looks lik 2010sc_qm20
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.

@@ -13,7 +13,6 @@
 
   require "page.inc";
   require "bluealliance.inc";
-  include ('lib/httpful.phar');
 
   // header and setup
   pheader("Set System Event Code");

@@ -26,6 +26,47 @@ $new_sys_event_id='2015abca';
 $new_sys_event_id='2016ausy';
 $new_sys_event_id='2016calb';
 
+print "\n";
+
+$tba="frc0111";
+
+sscanf($tba, "frc%d", $teamnum);
+
+$match="2010sc_qm20";
+
+$end = strstr($match, '_');
+
+preg_match('/[0-9]*$/', $end, $matchnumarray);
+$matchnum=$matchnumarray[0];
+
+$complevel= substr($end, 1, strpos($end, $matchnum)-1);
+
+// print_r($matches);
+
+$end = strstr($match, '_');
+
+print "end" . $matchnum;
+
+print "\n";
+print "match" . $complevel . " between " . $matchnum;
+
+print "\n";
+
+exit;
+//$end = "_qm33";
+
+sscanf($end, "_%s%d", $complevel, $matchnum);
+
+print "\n";
+print "match" . $complevel . " between " . $matchnum;
+print "\n";
+
+print "teamnum" . $teamnum;
+
+print "\n";
+
+exit;
+
 
 
   // get sys_event_id year

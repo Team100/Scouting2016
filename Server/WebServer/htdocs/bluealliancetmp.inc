@@ -8,8 +8,6 @@
 // Functions and field mappings to be used for The Blue Alliance API
 //
 
-// inlucde httpful library
-include ('lib/httpful.phar');
 
 // ***************************
 //
@@ -24,20 +22,11 @@ include ('lib/httpful.phar');
 //
 //    Variable name is $tba_[BlueAllianceEntity]_to_[CompSystemTableName]
 // 
-
-// tBA event to event table
 $tba_event_to_event = array ("key"=>"event_id","short_name"=>"name","name"=>"long_name","event_code"=>"event_code",
    "event_type_string"=>"event_type","event_type"=>"event_type_id","year"=>"year","location"=>"location",
    "website"=>"website" );
    
-// tBA team to team table
-$tba_team_to_team = array ("team_number" =>"teamnum","nickname"=>"name","location"=>"location",
-   "website"=>"website","name"=>"sponsers","rookie_year"=>"rookie_year");
-
-// tBA team to teambot table
-$tba_team_to_teambot = array ("botname"=>"name");
-
-
+   
    
    
    
@@ -68,100 +57,14 @@ $tba_team_to_teambot = array ("botname"=>"name");
 
 
 //
-// Specific field to field mapper functions 
-//
-// basic pattern
-// Field Mapper: [Element] to {Element]
-// function: tba_map_[element]($tba_response_array,$tba_dbarray)
-//   $tba_responsearray - segment of tba response that can be interpretted 
-//        as an array in a foreach
-//   $tba_array - tBA data, formatted as an array key value 
-//        pairs where the key is the db column name and the value
-//        is the data. (optional parameter)
-//
-//  Maps [element field] 
-//     from blue alliance returned object in array to a tba_dbarray.
-//  Returns the tba_dbarray
-
-
-// Field Mapper: team key to teamnum
-// function: tba_map_teamnum($tba_response_array,$tba_dbarray)
-//   $tba_responsearray - segment of tba response that can be interpretted 
-//        as an array in a foreach
-//   $tba_array - tBA data, formatted as an array key value 
-//        pairs where the key is the db column name and the value
-//        is the data. (optional parameter)
-//
-//  Returns the tba_dbarray
-//
-//  Maps team key to teamnum
-//     from blue alliance returned object in array to a tba_dbarray.
-
-
-function tba_map_teamnum($tba_response_array,$tba_dbarray)
-{
-  sscanf($tba_response_array->key, "frc%d", $teamnum);
-
-  // place into dbarray
-  $tba_dbarray["teamnum"]=$teamnum;
-  
-  return($tba_dbarray);
-}
-
-
-//
-// Special-purpose extraction function 
-// function: tba_getmatcharray($tba_response_array)
-//   $tba_responsearray - segment of tba response that can be interpretted 
-//        as an array in a foreach
-//   
-//   Returns: match array with event, match type, and matchnum
-//
-//  Note: the array can be passed as a starting or template $tba_dbarray
-//
-
-function tba_getmatcharray ($tba_response_array)
-{
-  // get match portion
-  $end = strstr($tba_response_array->match_number, '_');
-
-  // find match nubmer
-  preg_match('/[0-9]*$/', $end, $matchnumarray);
-  $matcharray[matchnum]=$matchnumarray[0];
-
-  // find blue alliance complevel and decode, using practice as a default
-  $complevel = substr($end, 1, strpos($end, $matchnum)-1);
-  switch ($complevel)
-  {
-    case "qm": 
-      $matcharray[type] = 'Q';
-      break;
-    case "ef":
-    case "qf":
-    case "sf":
-    case "f":
-      $matcharray[type] = 'F';
-      break;
-    default:
-      $matcharray[type] = 'P';
-   }   
-   
-   return ($matcharray);
-}
-
-
-
-//
-// tBA field general mapping and database functions
+// tBA field mapping and database functions
 //
 // The functions below bridge from the Blue Alliance API objects and fields
 //  to the system database tables and columns.
 //
 // Basic use pattern:
 //
-//  // map tBA fields into db array
 //  $tba_dbarray = tba_mapfields($tba_event_to_event, $tba_response->body, $tba_dbarray (or "") );
-//  // use dbarray to update event table
 //  tba_updatedb("event", array ("event_id"=>$new_sys_event_id, "year"=>2016), $tba_dbarray);
 //  commit the query
 //
