@@ -1,0 +1,19 @@
+Web server configuration
+------------------------
+$Revision: 1.1 $
+$Date: 2010/03/15 07:20:34 $
+
+Setting up automatic reading of main.php:
+  Change DirectoryIndex:
+    DirectoryIndex index.html main.php index.php
+
+
+Setting up password access:
+In <Directory> in main config (current) or setting up for a file-based .htaccess:
+
+   AuthUserFile "C:/Program Files/Apache Software Foundation/Apache2.2/admin/htpasswd.master"
+   AuthName "Red Rock Robotics Competition System"
+   AuthType Basic
+   require valid-user
+ 
+ 
