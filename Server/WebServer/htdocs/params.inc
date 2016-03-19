@@ -12,18 +12,29 @@
 //  
 //  - 
 
-
+// Timezone setting
+//  -- the string must come from a PHP list found here:
+//       http://php.net/manual/en/timezones.php
+$sys_time_zone='America/Los_Angeles';
 
 //
 // Host team - Team that uses this db
 $host_teamnum=100;
 $host_team_name="Wildhats";
+// don't change next line
+$frcteam=sprintf("frc%'04d",$host_teamnum);
+
+//
+// The Blue Alliance API id
+//   Format is FRC team number:user:version.  Change as needed.
+$tbaAppId= $frcteam . ':compsystem:v02';
+
 
 // Site parameters
 //
 // site names as in http://site/
 $site = "localhost";
-// base - everything after site.  Example: /compsys
+// base - everything after site.  Example: /compsys.  Leave at "/" if nothing.
 $base = "/";
 
 // 
@@ -160,7 +171,7 @@ $dbname = "competition";
 
 $dbuser = "compuser";
 
-$dbpass = "3006redrock";
+$dbpass = "100hats";
 
 $dbhost = "localhost";
 
@@ -193,9 +204,10 @@ $admins = array("jlv", "mckay");
 
 // location of security files and routines
 
-$htpasswdfile = "C:\Program Files\Apache Software Foundation\Apache2.2\admin\htpasswd.master";
+//$htpasswdfile = "C:\Program Files\Apache Software Foundation\Apache2.2\admin\htpasswd.master";
+$htpasswdfile = "..\admin\htpasswd.master";
 $htpasswdexe = "..\bin\htpasswd.exe";
-// $htpasswdexe = "C:\Program Files\Apache Software Foundation\Apache2.2\bin\htpasswd.exe";
+// $htpasswdexe = "C:\apps\Apache24\bin\htpasswd.exe";
 
 
 // ***************************
@@ -214,6 +226,14 @@ $lred = '#ffcccc';
 
 //length of the updated by field
 $maxlengthchangeby=200;
+
+
+// ***************************
+//
+// The Blue Alliance API mapping fields
+//
+// Field mappings to the API are defined in bluealliance.inc for performance reasons
+//
 
 //
 // end of params.inc -- do not leave any lines under the end of this closure or html is not well-formed with top header line

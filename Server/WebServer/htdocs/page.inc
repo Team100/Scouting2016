@@ -11,6 +11,26 @@
 require "params.inc";
 
 
+// software release version
+$release_version="3.0";
+
+
+//
+// set time zone
+//
+date_default_timezone_set($sys_time_zone);
+
+
+//
+// function: debug
+//  returns true if $debug is true, otherwise returns false
+function debug()
+{
+    global $debug;
+
+    if ( $debug === TRUE ) return(TRUE); else return(FALSE);
+}
+
 //
 // ****************************************************************************
 //
@@ -39,14 +59,14 @@ function dbshowerror($connection, $die)
 //  Returns: $connection MySQL handle
 //
 //  Sets up single connection for database interaction.  $connection is returned.
-//  Also loads event_id, as it is needed everywhere in system
+//  Also loads sys_event_id, as it is needed everywhere in system
 //
 
 function dbsetup()
 {
   // take variable values from the global space
   global $dbhost, $dbuser, $dbname, $dbpass;
-  global $def_event_id, $def_event_name;
+  global $sys_event_id, $sys_event_name;
   
   // get connection
   if(!($connection = @ mysqli_connect($dbhost,$dbuser,$dbpass, $dbname)))
@@ -56,14 +76,14 @@ function dbsetup()
   mysqli_autocommit($connection, FALSE);
 
   // load default event_id and name for this instance from database
-  $query="select value, name from system_value, event where skey = 'def_event_id' and event_id = value";
+  $query="select value, name from system_value, event where skey = 'sys_event_id' and event_id = value";
   if (! ($result = @mysqli_query ($connection, $query) ))
   	dbshowerror($connection, "die");
   $row = mysqli_fetch_array($result);
-  $def_event_id = $row["value"];
-  $def_event_name = $row["name"];
+  $sys_event_id = $row["value"];
+  $sys_event_name = $row["name"];
   
-  if ($def_event_id == "") $def_event_name = "No competition event selected !!";
+  if ($sys_event_id == "") $sys_event_name = "No competition event selected !!";
 
   return($connection);
 }
@@ -346,8 +366,9 @@ function showupdatedby($dblock)
 
 function showerror ($text)
 {
-    print "<h2><font color=\"red\">{$text}</font></h2>\nPlease use BACK button to correct and resubmit.\n"
-    	. "<br><br><a href=\"/\">Return to Home Page</a>";
+  global $base;
+  print "<h2><font color=\"red\">{$text}</font></h2>\nPlease use BACK button to correct and resubmit.\n"
+  . "<br><br><a href=\"{$base}\">Return to Home Page</a>";
 }
 
 //
@@ -410,12 +431,12 @@ function pfooter()
   global $admin;	// admin rights
   global $connection;   // database connection
   global $host_team_name;  	// team host name
-  global $def_event_name;       // event name
+  global $sys_event_name;       // event name
   global $site;         // site in site URL
   global $base;         // base in site URL
   
   print "<br><br><hr>" 
-    . "<a href=\"/\">Competition System Home</a><br>";
+    . "<a href=\"{$base}\">Competition System Home</a><br>";
     
   // show user if exists
   if ($user)
@@ -427,7 +448,7 @@ function pfooter()
   	print "<br>\n";
   }
   
-  print "<i>{$host_team_name} -- {$def_event_name}</i>\n</BODY>\n</HTML>";
+  print "<i>{$host_team_name} -- {$sys_event_name}</i>\n</BODY>\n</HTML>";
   
   // if database connection, close down
   if ($connection)
@@ -676,9 +697,12 @@ function fields_load ( $post, $fieldnames )
 //  $operation - name, value, where
 //        nameonly or fieldname - name of fields, comma separated
 //        insert - values used in SQL insert statement
-//        where - where-clear name=value, comma separated
-//  $formfields - array created in loadfields of each field
-//  $fieldnames - optional array of field names to be inserted
+//        where - where-clause name=value, and separate
+//        update - update clause
+//  $formfields - array created in fields_load of each field 
+//      (an ordered associative array of name=>value for each field)
+//  $fieldnames - optional array of field names to be inserted 
+//      (an ordered array of db column fieldnames)
 //
 //   Returns string for insertion into SQL statement.
 //
@@ -689,6 +713,8 @@ function fields_load ( $post, $fieldnames )
 
 function fields_insert ( $operation, $formfields, $fieldnames )
 {
+   $insert="";
+   
    // if field names, use the array that is passed, otherwise iterate over formfields
    if ($fieldnames)
      foreach($fieldnames as $fieldname)
@@ -706,20 +732,25 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
   {
   	// get db connection
   	global $connection;
-  	
-  	// add comma
-      	if ( $insert ) $insert = $insert . ", ";
-      	
+  	      	
       	switch ($operation)
       	{
       	  case "nameonly":
       	  case "fieldname":
+      	    	// add comma
+      	        if ( $insert ) $insert = $insert . ", ";
+      	
       	  	$insert = $insert . $fieldname;
       	  	break;
       	  	
       	  case "insert":
-      	  	// clean sql inputs before submitting
+      	  	// clean sql inputs before submitting -- not sure why this is commented out -- jlv
       	  	// $formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
+      		// clean sql inputs before submitting
+      	  	// $formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
+      	  	
+      	    	// add comma
+      	        if ( $insert ) $insert = $insert . ", ";
       	  	
       		// add insert value
       		if ( $formfields[$fieldname] == "" ) 
@@ -736,7 +767,10 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
           case "update":
       		// clean sql inputs before submitting
       	  	$formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
-      	  	
+
+      	    	// add comma
+      	        if ( $insert ) $insert = $insert . ", ";
+      	        
       	  	// add insert value
       		if ( $formfields[$fieldname] == "" ) 
         		$insert = $insert . "$fieldname = NULL";
@@ -744,6 +778,20 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
         		$insert = $insert . "$fieldname = '$formfields[$fieldname]'"; 
         	break;
         	
+          case "where":
+                // clean sql inputs before submitting
+      	  	$formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
+
+      	    	// add comma
+      	        if ( $insert ) $insert = $insert . " and ";
+      	        
+      	  	// add where value
+      		if ( $formfields[$fieldname] == "" ) 
+        		$insert = $insert . "$fieldname = NULL";
+      		else
+        		$insert = $insert . "$fieldname = '$formfields[$fieldname]'"; 
+        	break;
+      	  	
           default:
           	showerror("Code error: No operation value assigned in fields_insert_add.");
 	}
@@ -875,8 +923,9 @@ function tabparamfields($edit, $options, $data, $paramgroup)
 //        nameonly or fieldname - name of fields, comma separated
 //        insert - values used in SQL insert statement
 //        where - where-clear name=value, comma separated
-//  $formfields - array created in loadfields of each field
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//  $formfields - array created in fields_load of each field 
+//      (an ordered associative array of name=>value for each field)
+//  $paramgroup - group name for paramters (Play, Pit, Match, etc.)
 //
 //   Adds SQL statement fields to SQL statements, similar to fields_insert.
 //   Creates strings for insertion into SQL statements.  Strings include column names (fieldname or nameonly),
@@ -1029,13 +1078,13 @@ function teams_validate ( $teams )
      foreach ( $alliance as $team )
      {
        // query db
-       if (! ($results =  @ mysqli_query ( $connection, "select teamnum from teambot where event_id = '{$def_event_id}' and teamnum = {$team}")))
+       if (! ($results =  @ mysqli_query ( $connection, "select teamnum from teambot where event_id = '{$sys_event_id}' and teamnum = {$team}")))
           dbshowerror("die");
        
        // if no result, team does not exist.
        if (! ($row = @ mysqli_fetch_array($results)))
           {
-            showerror("Team {$team} not found in teambot database for current event '{$def_event_id}'");
+            showerror("Team {$team} not found in teambot database for current event '{$sys_event_id}'");
             $error=1;
           }      
      }

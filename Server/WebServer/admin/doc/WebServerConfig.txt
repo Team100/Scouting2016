@@ -3,10 +3,6 @@ Web server configuration
 $Revision: 1.1 $
 $Date: 2010/03/15 07:20:34 $
 
-Setting up automatic reading of main.php:
-  Change DirectoryIndex:
-    DirectoryIndex index.html main.php index.php
-
 
 Setting up password access:
 In <Directory> in main config (current) or setting up for a file-based .htaccess:

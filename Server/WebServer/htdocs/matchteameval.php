@@ -40,7 +40,7 @@
 
     // lock database, using two arrays for each table
     $dblock[0] = array(table=>"match_team",where=>" event_id = '{$matchidentifiers["event_id"]}' and type = '{$matchidentifiers["type"]}' and matchnum = '{$matchidentifiers["matchnum"]}' and teamnum = '{$matchidentifiers["teamnum"]}' ");
-  	$dblock[1] = array(table=>"teambot",where=>"event_id = '{$def_event_id}' and teamnum = {$teamnum}");
+  	$dblock[1] = array(table=>"teambot",where=>"event_id = '{$sys_event_id}' and teamnum = {$teamnum}");
 
 	$match_sql_identifier = "event_id = '{$matchidentifiers["event_id"]}' and type = '{$matchidentifiers["type"]}'
 		and matchnum = {$matchidentifiers["matchnum"]}";
@@ -90,7 +90,7 @@
 			// load form fields
 			$formfields = fields_load("post", $table_teambot);
 
-			$query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$def_event_id}' and teamnum = {$teamnum}";
+			$query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
 			// process query
 			if (! (@mysqli_query ($connection, $query) ))
 				dbshowerror($connection, "die");
@@ -314,7 +314,7 @@ EOF_EOF
   // get row info
     // get team details define result set
     if (!($result = @ mysqli_query ($connection,
-    	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$def_event_id}' and teamnum = {$teamnum}")))
+    	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}")))
       dbshowerror($connection);
 
     // get row

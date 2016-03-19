@@ -44,18 +44,17 @@
 #
 create table event
  (
-  event_id varchar(8),		# tBA event code, format yyyy[Event_Code]
+  event_id varchar(8),		# tBA key (event key), format yyyy[Event_Code]
   name varchar(20),             # tBA short_name
   long_name varchar(35),        # tBA name, official name
   event_code varchar(4),        # tBA event_code
   event_type varchar(20),       # tBA event_type_string, human-readable event, i.e. 'Regional'
   event_type_id int,            # tBA event_type, with a number code
   year int,                     # tBA year
-  location varchar(25),         # tBA location
-  website varchar(35),          # tBA website, event webssite	
+  location varchar(40),         # tBA location
+  website varchar(100),          # tBA website, event webssite	
   primary key (event_id)
  );
-
 
 
 
@@ -74,9 +73,9 @@ create table team
   org varchar(80),		# high school or other organization
   location varchar(40),		# tBA location, location of team
   students int,			# number of students on team
-  website varchar(60),		# tBA website, team web site
+  website varchar(80),		# tBA website, team web site
   sponsors varchar(400),	# tBA name, team sponsors
-  rookie_year int, 		# tBA rookie year
+  rookie_year int, 		# tBA rookie_year
   history varchar(10000),	# history of events from FIRST site
   notes varchar(5000),		# notes on our interaciton with the team
   primary key (teamnum)
@@ -569,7 +568,7 @@ create table tba_last_modified
 #
 # insert keys needed to start in the system
 #
-insert into system_value (skey) values ('def_event_id');		# current event_id used to load Blue Alliance data
+insert into system_value (skey) values ('sys_event_id');		# current event_id used to load Blue Alliance data
 insert into system_value (skey) values ('a');		# 
 
 ##

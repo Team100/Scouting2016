@@ -46,7 +46,7 @@
 
   // return and home buttons
   print "<a href=\"/teaminfo.php?teamnum={$teamnum}\">Return to Team Info</a><br>\n";
-  print "<a href=\"/\">Return to Home</a>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
 
  //
  // top of loop

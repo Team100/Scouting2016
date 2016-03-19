@@ -16,7 +16,7 @@
   $connection = dbsetup();
 
   // define lock array, fields arrays
-  $dblock = array(table=>"teambot",where=>"event_id = '{$def_event_id}' and teamnum = {$teamnum}");
+  $dblock = array(table=>"teambot",where=>"event_id = '{$sys_event_id}' and teamnum = {$teamnum}");
 
   // teambot array
 	$table_teambot = array_merge ( array("rank_overall","rating_overall","rating_overall_off","rating_overall_def",
@@ -38,7 +38,7 @@
 			// load form fields
 			$formfields = fields_load("post", $table_teambot);
 
-			$query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$def_event_id}' and teamnum = {$teamnum}";
+			$query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
 			// process query
 			if (! (@mysqli_query ($connection, $query) ))
 				dbshowerror($connection, "die");
@@ -107,7 +107,7 @@
 
   // get team details define result set
   if (!($result = @ mysqli_query ($connection,
-  	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$def_event_id}' and teamnum = {$teamnum}")))
+  	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}")))
     dbshowerror($connection);
 
   // get row
@@ -121,7 +121,7 @@
   // return and home buttons
   print "<br>";
   // print "<br><br><a href=\"/teaminfo.php?teamnum={$teamnum}\">Return to Team Info</a><br>\n";
-  print "<a href=\"/\">Return to Home</a>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
 
   // end links and place picture
   print "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";

@@ -104,7 +104,7 @@
 	print "&nbsp;&nbsp;&nbsp; <a href=\"/matchlist.php?final={$final}\">Match List</a>\n";
 
 	// return home
-	print "&nbsp;&nbsp;&nbsp; <a href=\"/\">Return to Home</a>\n";
+	print "&nbsp;&nbsp;&nbsp; <a href=\"{$base}\">Return to Home</a>\n";
 	print "<br><br>\n";
 
 	// first table

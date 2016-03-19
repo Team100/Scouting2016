@@ -89,7 +89,7 @@
   // print dblockshowedit($edit, $dblock, "/teamdetails.php?teamnum={$teamnum}") . "\n";
 
   // return and home buttons
-  print "<a href=\"/\">Return to Home</a>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
 
 
   // close the form if in edit mode

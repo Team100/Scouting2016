@@ -7,7 +7,7 @@ rem
 
 set dbname=competition
 set dbuser=compuser
-set dbpass=3006redrock
+set dbpass=100hats
 
 mysql -D competition -u compuser --password=%dbpass% < compsystem-tables-drop.sql
 

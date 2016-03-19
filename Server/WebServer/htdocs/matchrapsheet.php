@@ -99,7 +99,7 @@
 
     // get teams in match
     $query="select teambot.teamnum, match_team.color color, name, nickname ". fields_insert("nameonly",NULL,$table_teambot)
-      . " from match_team, teambot, team where match_team.event_id = '{$def_event_id}' and teambot.event_id = '{$def_event_id}' "
+      . " from match_team, teambot, team where match_team.event_id = '{$sys_event_id}' and teambot.event_id = '{$sys_event_id}' "
       . " and match_team.teamnum=teambot.teamnum and match_team.teamnum=team.teamnum"
       . " and match_team.teamnum != {$host_teamnum} and {$match_sql_identifier} order by match_team.color {$order}, match_team.teamnum";
 
@@ -126,7 +126,7 @@
        if ($teamcnt == 6) $tablehead = $tablehead . "<th>{$with_color_long} {$team[5]["teamnum"]}</th>";
 
 	// return home
-	print "<a href=\"/\">Return to Home</a>\n";
+	print "<a href=\"{$base}\">Return to Home</a>\n";
 	print "&nbsp;&nbsp;&nbsp; <a href=\"/matchlist.php?final={$final}\">Match List</a>\n";
 	print "<br>";
 
@@ -469,7 +469,7 @@ for($i=0; $i<$tot; $i++)
 
 // return home
 print "<br><br>\n";
-print "<a href=\"/\">Return to Home</a>\n";
+print "<a href=\"{$base}\">Return to Home</a>\n";
 print "&nbsp;&nbsp;&nbsp; <a href=\"/matchlist.php?final={$final}\">Match List</a>\n";
 
 

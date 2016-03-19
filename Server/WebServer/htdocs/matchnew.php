@@ -96,7 +96,7 @@
 // if edit, start edit
 if ($edit) print "<form method=\"POST\" action=\"/matchnew.php?edit=2\">\n\n";
 
-print "<a href=\"/\">Return to Home</a><br><br>";
+print "<a href=\"{$base}\">Return to Home</a><br><br>";
 
 
   // if $edit show buttons

@@ -25,7 +25,7 @@
 
 <?php
   // find total team count and set page break
-  if (!($result = @ mysqli_query ($connection, "select count(teamnum) total from teambot where event_id = '{$def_event_id}'")))
+  if (!($result = @ mysqli_query ($connection, "select count(teamnum) total from teambot where event_id = '{$sys_event_id}'")))
     dbshowerror($connection);
   $row = mysqli_fetch_array($result);
   $total = $row["total"];
@@ -35,7 +35,7 @@
   // define result set
   if (!($result = @ mysqli_query ($connection,
   	"select team.teamnum teamnum, name, nickname from team, teambot where team.teamnum = teambot.teamnum and
-  	  teambot.event_id = '{$def_event_id}' order by team.teamnum")))
+  	  teambot.event_id = '{$sys_event_id}' order by team.teamnum")))
     dbshowerror($connection);
 
   $rowcnt=1;
@@ -79,6 +79,8 @@
 <li><a href="/finalselectfield.php">Finals Selection - On Field</a></li>
 <br>
 <li><a href="/matchlist.php?filter=F">Evaluate a final match</a></li>
+<br>
+<li><a href="/tabletsync.php?filter=F">Sync with tablet servers</a></li>
 </ul>
 
 <!--- Documentation Section --->
@@ -102,13 +104,14 @@
    <h3><center><u>Admin</u></center></h3>
    <ul>
    <li><a href=\"/user.php\">User Maintenance</a></li>
-   <li><a href=\"/set-event.php\">Set competition event</a></li>
+   <li><a href=\"/set-event.php\">Set system competition event code</a></li>
    <li><a href=\"/bluealliance.php\">Get updates from Blue Alliance</a></li>
    <li><a href=\"/fix-db-structure.php\">Test and fix database structure</a><br>&nbsp;(should be run at start of competition)</li>
    <li><a href=\"/scheduleimport.php\">Import Schedule</a></li>
    <li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
    <li><a href=\"/messagerecv.php\">Receive a Message From Field</a></li>
    </ul>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}
    ";
 ?>
 

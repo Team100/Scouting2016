@@ -101,7 +101,7 @@
   // set up form *********************
 	print "<form method=\"POST\" action=\"/matchlist.php?final={$final}\">\n";
 
-  print "<a href=\"/\">Return to Home</a>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
 
   // display options
   //   If user has selected an option, show as bold with no link, otherwise, show as link option

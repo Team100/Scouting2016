@@ -83,7 +83,7 @@
   {
     // if in edit mode, signal save with edit=2
   	print "<form method=\"POST\" action=\"/teamdetails.php?edit=2&teamnum={$teamnum}\">\n"
-    . hiddenfield( "event_id", $def_event_id);
+    . hiddenfield( "event_id", $sys_event_id);
   }
 
   // add edit link or submit button
@@ -92,7 +92,7 @@
   // return and home buttons
   print "&nbsp;&nbsp;&nbsp;<a href=\"/teaminfo.php?teamnum={$teamnum}\">Return to Team Info</a>\n";
   print "&nbsp;&nbsp;&nbsp;<a href=\"/allteamslist.php\">All Teams</a>\n";
-  print "&nbsp;&nbsp;&nbsp;<a href=\"/\">Return to Home</a>\n";
+  print "&nbsp;&nbsp;&nbsp;<a href=\"{$base}\">Return to Home</a>\n";
 
   // top of table
   print "
