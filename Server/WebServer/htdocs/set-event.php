@@ -179,9 +179,11 @@
   // show new ID if in confirm mode
   if (($edit == 4) || ($edit == 5))
   {
+    print "<font color=\"red\">\n";
     print "<tr><td>New Event ID:</td><td>{$new_sys_event_id}</td></tr>\n";
     print "<tr><td>New Event Name:</td><td>{$new_sys_event_name}</td></tr>\n";
     print "<tr><td>New Event Year:</td><td>{$new_sys_event_year}</td></tr>\n";
+    print "</font>\n";
   }
 
   // end of display table

@@ -69,13 +69,13 @@ create table team
   teamnum  int, 		# FIRST team number - primary key.  We do not use frcNNNN, just the NNNN
                                 #   Note: the mapping from tBA is done by mapping function
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
-  name varchar(30),		# tBA, FIRST nickname
+  name varchar(50),		# tBA, FIRST nickname
   nickname varchar(30),		# our nickname for team
   org varchar(80),		# high school or other organization
-  location varchar(40),		# tBA location, location of team
+  location varchar(80),		# tBA location, location of team
   students int,			# number of students on team
   website varchar(80),		# tBA website, team web site
-  sponsors varchar(400),	# tBA name, team sponsors
+  sponsors varchar(1000),	# tBA name, team sponsors
   rookie_year int, 		# tBA rookie_year
   history varchar(10000),	# history of events from FIRST site
   notes varchar(5000),		# notes on our interaciton with the team

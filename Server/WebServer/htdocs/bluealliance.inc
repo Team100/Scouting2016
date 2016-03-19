@@ -32,7 +32,7 @@ $tba_event_to_event = array ("key"=>"event_id","short_name"=>"name","name"=>"lon
    
 // tBA team to team table
 $tba_team_to_team = array ("team_number" =>"teamnum","nickname"=>"name","location"=>"location",
-   "website"=>"website","name"=>"sponsers","rookie_year"=>"rookie_year");
+   "website"=>"website","name"=>"sponsors","rookie_year"=>"rookie_year");
 
 // tBA team to teambot table
 $tba_team_to_teambot = array ("botname"=>"name");
@@ -221,7 +221,8 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
    
    // select to see if update or insert
    $query = "select {$dummycol} from {$tablename} where " . $where;
-//   print $query . "<br>\n";
+   if (debug()) print "<br>DEBUG:tba_updatedb, Select queary: " . $query . "<br>\n";
+   
    if (! ($result = @ mysqli_query ($connection, $query)))
   	  dbshowerror($connection, "die");
   	  
@@ -230,7 +231,7 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
    {
      $query = "update {$tablename} set " . fields_insert("update", $tba_dbarray, "")
             .  " where " . $where;
-//   print $query . "<br>\n";
+   print $query . "<br>\n";
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    } 
@@ -239,7 +240,7 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
      $query = "insert into {$tablename} (" . fields_insert("nameonly", $tba_dbarray, "")
              . ") values (" . fields_insert("insert", $tba_dbarray, "") . " )";
              
-//  print $query . "<br>\n"; 
+  print $query . "<br>\n"; 
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    }

@@ -24,6 +24,8 @@ date_default_timezone_set($sys_time_zone);
 //
 // function: debug
 //  returns true if $debug is true, otherwise returns false
+//$debug=TRUE;
+$debug=FALSE;
 function debug()
 {
     global $debug;

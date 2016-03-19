@@ -35,6 +35,7 @@
 
   switch ($op)
   {
+    // ****
     // get teams from event
     case "eventteams":
 
@@ -44,7 +45,7 @@
       // get data
       try
       {
-        $tba_url = "http://www.thebluealliance.com/api/v2/events/2015";
+        $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams";
         $tba_response = \Httpful\Request::get($tba_url)
            ->addHeader('X-TBA-App-Id',$tbaAppId)
            ->send();
@@ -55,7 +56,111 @@
          return;
       }
 
+      foreach($tba_response->body as $key=>$teamobj)
+      {
+        // get teamnum
+        $tba_dbarray = tba_map_teamnum($teamobj, "");
+
+        // map fields from response for team table
+        $tba_dbarray = tba_mapfields($tba_team_to_team, $teamobj, $tba_dbarray);
+
+        // update event data in event table
+        tba_updatedb("team", array ("teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
+
+        // get teamnum and reset db array
+        $tba_dbarray = tba_map_teamnum($teamobj, "");
+        $tba_dbarray['event_id']=$sys_event_id;
+
+        // map fields from response for teambot  table
+        $tba_dbarray = tba_mapfields($tba_team_to_teambot, $teamobj, $tba_dbarray);
+
+        // update event data in event table
+        tba_updatedb("teambot", array ("event_id"=>$sys_event_id, "teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
+
+      }
+
+      // commit
+      if (! (@mysqli_commit($connection) ))
+        dbshowerror($connection, "die");
+
+      // Inform user
+      print "... Blue Alliance loading complete.<br><br>\n";
+
       break;
+
+    // ****
+    //
+    case "matchdata":
+    case "eventteams":
+
+      // inform user
+      print "Processing event teams...<br>\n";
+
+      // get data
+      try
+      {
+        $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams";
+        $tba_response = \Httpful\Request::get($tba_url)
+           ->addHeader('X-TBA-App-Id',$tbaAppId)
+           ->send();
+      } catch (Exception $e)
+      {
+      print "Exception";
+         showerror("Caught exception from Blue Alliance: " . $e->getMessage());
+         return;
+      }
+
+      foreach($tba_response->body as $key=>$teamobj)
+      {
+        // get teamnum
+        $tba_dbarray = tba_map_teamnum($teamobj, "");
+
+        // map fields from response for team table
+        $tba_dbarray = tba_mapfields($tba_team_to_team, $teamobj, $tba_dbarray);
+
+        // update event data in event table
+        tba_updatedb("team", array ("teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
+
+        // get teamnum and reset db array
+        $tba_dbarray = tba_map_teamnum($teamobj, "");
+        $tba_dbarray['event_id']=$sys_event_id;
+
+        // map fields from response for teambot  table
+        $tba_dbarray = tba_mapfields($tba_team_to_teambot, $teamobj, $tba_dbarray);
+
+        // update event data in event table
+        tba_updatedb("teambot", array ("event_id"=>$sys_event_id, "teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
+
+      }
+
+      // commit
+      if (! (@mysqli_commit($connection) ))
+        dbshowerror($connection, "die");
+
+      // Inform user
+      print "... Blue Alliance loading complete.<br><br>\n";
+
+      break;
+
+    // ****
+    //
+    case "stats":
+
+      break;
+
+    // ****
+    //
+    case "history":
+
+      break;
+
+    // ****
+    //
+    case "allteams":
+
+      break;
+
+
 
     default:
 
