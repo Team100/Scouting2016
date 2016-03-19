@@ -26,7 +26,13 @@ $tba_event_to_event = array ("key"=>"event_id","short_name"=>"name","name"=>"lon
    "event_type_string"=>"event_type","event_type"=>"event_type_id","year"=>"year","location"=>"location",
    "website"=>"website" );
    
-   
+
+$tba_team_to_team = array ("team_number" =>"teamnum","nickname"=>"name","location"=>"location",
+   "website"=>"website","name"=>"sponsers","rookie_year"=>"rookie_year");
+
+$tba_team_to_teambot = array ("botname"=>"name");
+
+
    
    
    
