@@ -195,7 +195,8 @@
   // confirm mode
   if (($edit == 4) || ($edit == 5))
   {
-    if ($edit == 5) print "<b><font color=\"red\">Double-checking:</font><br>\n";
+    if ($edit == 5)
+      print "<b><font color=\"red\">Double-checking:<br>Please check New Event data above.<br></font><br>\n";
     print "<form method=\"POST\" action=\"/set-event.php?edit=";
     if ($edit == 5) print "2"; else print "5";
     print "&new_sys_event_id={$new_sys_event_id}\">\n";

@@ -10,6 +10,7 @@ Brief instructions on setting up a MySQL, PHP, apache web server for the competi
 
 2. Follow instructions in for setting up php, mysql, and apache.  
     Example in "Win7 PHP-MySQL-Apache Package Install"
+   PHP and Apache are best installed in c:\Apps to conform with our other machines
 
 3. Create the database:
    mysqladmin create competition -u root -p

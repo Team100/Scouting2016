@@ -24,8 +24,8 @@ date_default_timezone_set($sys_time_zone);
 //
 // function: debug
 //  returns true if $debug is true, otherwise returns false
-//$debug=TRUE;
-$debug=FALSE;
+$debug=TRUE;
+//$debug=FALSE;
 function debug()
 {
     global $debug;
@@ -320,6 +320,7 @@ function showupdatedby($dblock)
 	global $user;
 	global $admin;
 	global $connection;
+	global $sys_event_id;
 	
 	if($admin)
 	{
@@ -370,7 +371,7 @@ function showerror ($text)
 {
   global $base;
   print "<h2><font color=\"red\">{$text}</font></h2>\nPlease use BACK button to correct and resubmit.\n"
-  . "<br><br><a href=\"{$base}\">Return to Home Page</a>";
+  . "<br><br><a href=\"{$base}\">Return to Home Page</a><br><br>";
 }
 
 //
@@ -1073,6 +1074,7 @@ function teams_validate ( $teams )
 {
    // get database connection
    global $connection;
+   global $sys_event_id;
    
    // iterate through each team and check db for existance
    foreach ( $teams as $color =>$alliance )

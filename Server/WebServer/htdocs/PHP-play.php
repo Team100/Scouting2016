@@ -13,7 +13,7 @@
 
   require "page.inc";
   require "bluealliance.inc";
-  include ('lib/httpful.phar');
+
 
   // header and setup
 
@@ -27,6 +27,15 @@ $new_sys_event_id='2016ausy';
 $new_sys_event_id='2016calb';
 
 print "\n";
+
+
+        foreach(array("blue", "red") as $colorkey)
+        {
+          if ($colorkey == "blue") $color='B'; else $color='R';
+print $colorkey . $color;
+}
+
+exit;
 
 $tba="frc0111";
 

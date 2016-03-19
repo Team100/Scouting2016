@@ -312,9 +312,13 @@ create table match_instance
                                 #   from tBA match_number, which looks lik 2010sc_qm20
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   updatedby varchar(200), 	# last updated by users
+  match_key varchar(5),         # tBA part after _ in match key, e.g. qm20
   final_type varchar(1),	# used in finals: Q=qarter, S=Semi, F=Final
+  tba_match_num int,            # tBA match_number
   scheduled_time time,		# scheduled time
   actual_time time,		# actual time
+  schedule_utime int,           # schedule time - unix time
+  actual_utime int,             # actual time - unix time
   game_plan varchar(2000), 	# our game plan for the match.  Note: this is the only field 
 				#   that is not match statistics but instead our analysis
   primary key (event_id, type, matchnum)

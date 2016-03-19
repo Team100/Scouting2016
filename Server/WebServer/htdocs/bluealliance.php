@@ -41,6 +41,7 @@
 
       // inform user
       print "Processing event teams...<br>\n";
+      print "Updated team \n";
 
       // get data
       try
@@ -77,6 +78,9 @@
         // update event data in event table
         tba_updatedb("teambot", array ("event_id"=>$sys_event_id, "teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
 
+        // inform user
+        print "{$tba_dbarray["teamnum"]}, ";
+
       }
 
       // commit
@@ -84,22 +88,21 @@
         dbshowerror($connection, "die");
 
       // Inform user
-      print "... Blue Alliance loading complete.<br><br>\n";
+      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance loading complete.<br><br>\n";
 
       break;
 
     // ****
-    //
+    // get match data
     case "matchdata":
-    case "eventteams":
-
       // inform user
-      print "Processing event teams...<br>\n";
+      print "Processing match data...<br>\n";
+      print "Updated match \n";
 
       // get data
       try
       {
-        $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams";
+        $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches";
         $tba_response = \Httpful\Request::get($tba_url)
            ->addHeader('X-TBA-App-Id',$tbaAppId)
            ->send();
@@ -110,35 +113,68 @@
          return;
       }
 
-      foreach($tba_response->body as $key=>$teamobj)
+      foreach($tba_response->body as $key=>$matchobj)
       {
-        // get teamnum
-        $tba_dbarray = tba_map_teamnum($teamobj, "");
+        // get match array from match
+        $matcharray = tba_getmatcharray($matchobj);
 
-        // map fields from response for team table
-        $tba_dbarray = tba_mapfields($tba_team_to_team, $teamobj, $tba_dbarray);
+        // create match ID array and use and starting dbarray
+        $tba_dbarray = array_merge ( array ("event_id"=>$sys_event_id, ), $matcharray);
+        $match_id_array = array ("event_id"=>$sys_event_id, "type"=>$matcharray['type'],
+                            "matchnum"=>$matcharray['matchnum']);
 
-        // update event data in event table
-        tba_updatedb("team", array ("teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
-
-        // get teamnum and reset db array
-        $tba_dbarray = tba_map_teamnum($teamobj, "");
-        $tba_dbarray['event_id']=$sys_event_id;
-
-        // map fields from response for teambot  table
-        $tba_dbarray = tba_mapfields($tba_team_to_teambot, $teamobj, $tba_dbarray);
+        // map fields from response for match_instance table
+        // $tba_dbarray = tba_mapfields($tba_match_to_match_instance, $matchobj, $tba_dbarray);
 
         // update event data in event table
-        tba_updatedb("teambot", array ("event_id"=>$sys_event_id, "teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
 
-      }
+        tba_updatedb("match_instance", $match_id_array, $tba_dbarray);
+
+        // update match alliance table
+        // iterate match alliances
+        foreach($matchobj->alliances as $colorkey=>$allianceobj)
+        {
+          if ($colorkey == "blue") $color='B'; else $color='R';
+
+          // set match alliance array
+          $match_alliance_array = array_merge ($match_id_array,array("color"=>$color));
+          $tba_dbarray = $match_alliance_array;
+
+          // map fields from response for match_instance table
+          $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $allianceobj, $tba_dbarray);
+
+          // update event data in event table
+          tba_updatedb("match_instance_alliance", $match_alliance_array, $tba_dbarray);
+
+          // loop through each team in alliance and update match_team table
+          foreach($allianceobj->teams as $teamkey)
+          {
+            // turn teamkey to teamnum
+            sscanf($teamkey, "frc%d", $teamnum);
+
+            // set match key array
+            //   Note: it doesn't use color or the alliance key
+            $match_team_array = array_merge ($match_id_array, array ("teamnum"=>$teamnum));
+            $tba_dbarray = $match_team_array;
+            // map fields from response for match_instance table
+            // $tba_dbarray = tba_mapfields($tba_match_to_match_team, $match_team_array, $tba_dbarray);
+
+            // update event data in event table
+            tba_updatedb("match_team", $match_team_array, $tba_dbarray);
+          }
+        } // end of alliance
+
+        // inform user
+        print "{$tba_dbarray["type"]}{$tba_dbarray["matchnum"]}, ";
+
+      } // end of match
 
       // commit
-      if (! (@mysqli_commit($connection) ))
-        dbshowerror($connection, "die");
+      //if (! (@mysqli_commit($connection) ))
+      //  dbshowerror($connection, "die");
 
       // Inform user
-      print "... Blue Alliance loading complete.<br><br>\n";
+      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance loading complete.<br><br>\n";
 
       break;
 

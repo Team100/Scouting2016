@@ -30,6 +30,24 @@ $tba_event_to_event = array ("key"=>"event_id","short_name"=>"name","name"=>"lon
    
    
    
+   
+   
+     // get match portion
+     
+     $end = strstr($tba_response_array->key, '_');
+   
+     // find match number
+     preg_match('/[0-9]*$/', $end, $matchnumarray);
+     $matcharray[matchnum]=$matchnumarray[0];
+   
+     // find blue alliance complevel and decode, using practice as a default
+  $complevel = substr($end, 1, strpos($end, $matchnum)-1)
+  
+  
+  
+  
+   
+   
 
 // ***************************
 //
@@ -67,6 +85,7 @@ $tba_event_to_event = array ("key"=>"event_id","short_name"=>"name","name"=>"lon
 //  $tba_dbarray = tba_mapfields($tba_event_to_event, $tba_response->body, $tba_dbarray (or "") );
 //  tba_updatedb("event", array ("event_id"=>$new_sys_event_id, "year"=>2016), $tba_dbarray);
 //  commit the query
+//
 //
 
 

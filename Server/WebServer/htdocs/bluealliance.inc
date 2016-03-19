@@ -37,10 +37,17 @@ $tba_team_to_team = array ("team_number" =>"teamnum","nickname"=>"name","locatio
 // tBA team to teambot table
 $tba_team_to_teambot = array ("botname"=>"name");
 
+// tBA match to match_instance table
+$tba_match_to_match_instance = array ("match_number"=>"tba_match_num", "time"=>"scheduled_utime");
 
-   
-   
-   
+// tBA match to match_instance_alliance table
+$tba_match_to_match_alliance = array ("score"=>"score");
+
+// tBA match to match_team table
+$tba_match_to_match_team = array ();
+
+
+
 
 // ***************************
 //
@@ -122,29 +129,44 @@ function tba_map_teamnum($tba_response_array,$tba_dbarray)
 
 function tba_getmatcharray ($tba_response_array)
 {
-  // get match portion
-  $end = strstr($tba_response_array->match_number, '_');
-
-  // find match nubmer
-  preg_match('/[0-9]*$/', $end, $matchnumarray);
-  $matcharray[matchnum]=$matchnumarray[0];
-
-  // find blue alliance complevel and decode, using practice as a default
-  $complevel = substr($end, 1, strpos($end, $matchnum)-1);
-  switch ($complevel)
+  // initialize vars
+  $offset=0;
+    
+  // set type based on comp level
+  switch ($tba_response_array->comp_level)
   {
     case "qm": 
       $matcharray[type] = 'Q';
       break;
     case "ef":
+      $matcharray[type] = 'F';
+      $matcharray[final_type] = 'E';
+      break;    
     case "qf":
+      $offset=24;
+      $matcharray[final_type] = 'Q';
+      $matcharray[type] = 'F';
+      break;
     case "sf":
+      $offset=36;
+      $matcharray[final_type] = 'S';      
+      $matcharray[type] = 'F';
+      break;
     case "f":
+      $offset=42;
+      $matcharray[final_type] = 'F';
       $matcharray[type] = 'F';
       break;
     default:
       $matcharray[type] = 'P';
    }   
+   
+  // set match number by type, if finals, need to calculate number
+  //  calculation is based on set * match number
+  if ($matcharray[type] == 'F')
+    $matcharray[matchnum]=$offset + $tba_response_array->set_number * 3 + $tba_response_array->match_number;
+  else
+    $matcharray[matchnum]=$tba_response_array->match_number;
    
    return ($matcharray);
 }
@@ -231,7 +253,7 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
    {
      $query = "update {$tablename} set " . fields_insert("update", $tba_dbarray, "")
             .  " where " . $where;
-   print $query . "<br>\n";
+     if (debug()) print "<br>DEBUG:tba_updatedb, insert :" . $query . "<br>\n";
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    } 
@@ -240,7 +262,7 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
      $query = "insert into {$tablename} (" . fields_insert("nameonly", $tba_dbarray, "")
              . ") values (" . fields_insert("insert", $tba_dbarray, "") . " )";
              
-  print $query . "<br>\n"; 
+     if (debug()) print "<br>DEBUG:tba_updatedb, update: " . $query . "<br>\n"; 
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    }
