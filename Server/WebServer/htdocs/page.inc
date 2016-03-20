@@ -716,9 +716,12 @@ function fields_load ( $post, $fieldnames )
 
 function fields_insert ( $operation, $formfields, $fieldnames )
 {
-   $insert="";
+//   $insert="";
    
    // if field names, use the array that is passed, otherwise iterate over formfields
+   print "<br>In fieldnames:";
+print_r($fieldnames);
+
    if ($fieldnames)
      foreach($fieldnames as $fieldname)
 	$insert = fields_insert_add ( $operation, $formfields, $fieldname, $insert);
