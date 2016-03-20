@@ -22,10 +22,13 @@
   //   array is keyed by teamnum and includes type, with_matchnum, against_matchnum
 
   // first load teams we are playing with
-  $query = "select  a.type, a.matchnum, b.teamnum from match_team a, match_team b
-  			where a.type=b.type and a.matchnum=b.matchnum and a.color=b.color and
-  			a.teamnum=3006 group by teamnum order by teamnum,  matchnum";
 
+  $query = "select  a.type, a.matchnum, b.teamnum from match_team a, match_team b
+  			where a.event_id = '{$sys_event_id}' and b.event_id = '{$sys_event_id}'
+  			and a.type=b.type and a.matchnum=b.matchnum and a.color=b.color and
+  			a.teamnum={$host_teamnum} group by teamnum order by teamnum,  matchnum";
+
+  if (debug()) print "<br>matchlist: " . $query . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $query)))
       dbshowerror($connection);
   while ($row = mysqli_fetch_array($result))
@@ -36,9 +39,11 @@
 
   // load teams we are playing against
   $query = "select  a.type, a.matchnum, b.teamnum from match_team a, match_team b
-  			where a.type=b.type and a.matchnum=b.matchnum and a.color!=b.color and
-  			a.teamnum=3006 group by teamnum order by teamnum,  matchnum";
+  			where a.event_id = '{$sys_event_id}' and b.event_id = '{$sys_event_id}'
+  			and a.type=b.type and a.matchnum=b.matchnum and a.color!=b.color and
+  			a.teamnum={$host_teamnum} group by teamnum order by teamnum,  matchnum";
 
+  if (debug()) print "<br>matchlist: " . $query . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $query)))
       dbshowerror($connection);
   while ($row = mysqli_fetch_array($result))
@@ -99,9 +104,9 @@
   //
 
   // set up form *********************
-	print "<form method=\"POST\" action=\"/matchlist.php?final={$final}\">\n";
+  print "<form method=\"POST\" action=\"/matchlist.php?final={$final}\">\n";
 
-  print "<a href=\"/\">Return to Home</a>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
 
   // display options
   //   If user has selected an option, show as bold with no link, otherwise, show as link option
@@ -129,6 +134,8 @@
 		<INPUT TYPE=\"submit\" name=\"Submit\" VALUE=\"HiLite\" ALIGN=middle BORDER=0>
 		</form>";
 
+
+
   // set up teams section
   print <<< EOF_EOF
   <!--- Teams Section --->
@@ -141,7 +148,7 @@ EOF_EOF
 ; // end of print
 
   // set up table head section
-//  $table_head = "<tr><th>Lg</th><th>Typ</th><th>Num</th>";
+  //  $table_head = "<tr><th>Lg</th><th>Typ</th><th>Num</th>";
   $table_head = "<tr><th>T</th><th>#</th>";
   if ($final == 1)   $table_head = $table_head . "<th>Final</th>";
   $table_head = $table_head . "<th>Sched</th><th>Actual</th><th>Red1</th>
@@ -150,27 +157,32 @@ EOF_EOF
   print $table_head;
 
   //  *************************************
+  // Determine page break area
+  //
   //
   // define count and data query
   $cquery = "select count(*) tot from match_instance ";
-  $query = "select league, type, matchnum, final_type, scheduled_time, actual_time from match_instance ";
-  $where = '';
+  $query = "select type, matchnum, final_type, scheduled_time, actual_time from match_instance ";
+  $where = "where event_id = '{$sys_event_id}'";
 
   // set where clause
-  if ($filter != "A") $where = " where type = '{$filter}' ";
+  if ($filter != "A") $where = $where . " and type = '{$filter}' ";
 
   // finish query
-  $query = $query . $where . "  order by league, type, matchnum";
-
+  $query = $query . $where . " order by event_id, type, matchnum";
 
   // get row count first for pagebreak
+  if (debug()) print "<br>matchlist: " . $cquery . $where . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $cquery . $where)))
     dbshowerror($connection);
   $row = mysqli_fetch_array($result);
   $tot = $row['tot'];
   $pagebreak = ceil (($tot +.5) / 2);   	// ceil rounds up
+  // end of pagebreak calc
 
-  // get data set
+  //
+  // get data set and paint
+  if (debug()) print "<br>matchlist: " . $query . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $query)))
     dbshowerror($connection);
 
@@ -180,11 +192,13 @@ EOF_EOF
 		// clear host_team_row
 		$host_team_row = FALSE;
 
-   		//find if this match contains the highlighting team
+   		//find if this match contains the highlight team
    		$bold="";
    		if($highlight)
    		{
-			if (!($result2 = @ mysqli_query ($connection, "select teamnum from match_team where type = '{$row["type"]}' and matchnum = {$row["matchnum"]}")))
+            $query="select teamnum from match_team where event_id = '{$sys_event_id}' and type = '{$row["type"]}' and matchnum = {$row["matchnum"]}";
+			if (debug()) print "<br>matchlist: " . $query . "<br>\n";
+			if (!($result2 = @ mysqli_query ($connection, $query)))
 				dbshowerror($connection, die);
 			while($row2 = mysqli_fetch_array($result2))
 				if($row2["teamnum"]==$highlight)
@@ -193,17 +207,17 @@ EOF_EOF
 
 		// print each row with href
 		print "<tr>";
-	//	print "<td><a href=\"/matcheval.php?final={$final}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["league"]}</a></td>\n";
-		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["type"]}</a></td>\n";
-		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["matchnum"]}</a></td>\n";
+		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["type"]}</a></td>\n";
+		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["matchnum"]}</a></td>\n";
 		if ($final == 1) print "<td>{$row["final_type"]}</td>";   // show final type only if set
 		print "<td>" . substr($row["scheduled_time"],0,5) . "</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
 
 		// get teams in red/blue order
-		$detail_query = "select league, type, matchnum, teamnum, color from match_team"
-		    . " where league = '{$row["league"]}' and type = '{$row["type"]}' and matchnum = {$row["matchnum"]} "
+		$detail_query = "select type, matchnum, teamnum, color from match_team"
+		    . " where event_id = '{$sys_event_id}' and type = '{$row["type"]}' and matchnum = {$row["matchnum"]} "
 		    . " order by color DESC, matchnum";
 
+		if (debug()) print "<br>matchlist: " . $detail_query . "<br>\n";
 		if (!($detail = @ mysqli_query ($connection, $detail_query )))
 			dbshowerror($connection);
 
@@ -231,9 +245,10 @@ EOF_EOF
 				if (($detailrow['matchnum'] < $upcoming[$teamnum]['with_matchnum']) &&
 					($detailrow['matchnum'] < $upcoming[$teamnum]['against_matchnum']))
 					print " style=\"background-color: {$lblue}\" ";
-				// else if with
+				// else if playing with
 				else if ($detailrow['matchnum'] < $upcoming[$teamnum]['with_matchnum'])
 					print " style=\"background-color: {$lgreen}\" ";
+				// else if play against
 				else if ($detailrow['matchnum'] < $upcoming[$teamnum]['against_matchnum'])
 					print " style=\"background-color: {$lred}\" ";
 
@@ -241,7 +256,7 @@ EOF_EOF
 			print ">";
 			if($detailrow["teamnum"]==$highlight)
 				print "<b>";
-			print "<a href=\"/matchteameval.php?final={$final}&teamnum={$detailrow["teamnum"]}&league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$detailrow["teamnum"]}</a></td>\n";
+			print "<a href=\"/matchteameval.php?final={$final}&teamnum={$detailrow["teamnum"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$detailrow["teamnum"]}</a></td>\n";
 
 
 			$counter++;
@@ -260,13 +275,13 @@ EOF_EOF
 		// rap sheet links
 		print "<td>";
 		// regular rap
-		print "<a href=\"/matchrapsheet.php?league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">Rap</a>";
+		print "<a href=\"/matchrapsheet.php?&type={$row["type"]}&matchnum={$row["matchnum"]}\">Rap</a>";
 		// long rap
-		print " <a href=\"/matchrapsheet.php?league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}&long=1\">L</a>";
+		print " <a href=\"/matchrapsheet.php?&type={$row["type"]}&matchnum={$row["matchnum"]}&long=1\">L</a>";
 
 		// public rap, if on a host_team row
 		if ($host_team_row === TRUE)
-			print " <a href=\"/matchrapsheet.php?league={$row["league"]}&type={$row["type"]}&matchnum={$row["matchnum"]}&public=}\">P</a>";
+			print " <a href=\"/matchrapsheet.php?&type={$row["type"]}&matchnum={$row["matchnum"]}&public=}\">P</a>";
 
 		print "</td>";
 

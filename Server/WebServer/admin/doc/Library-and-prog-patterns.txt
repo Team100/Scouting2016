@@ -1,0 +1,29 @@
+
+SQL Examples:
+
+Subquery:
+
+select type, matchnum, teamnum from match_team where matchnum  in 
+(select matchnum from match_team where teamnum = '3006') group by teamnum order by matchnum;
+
+
+select  teamnum from match_team where matchnum in (select matchnum from m
+atch_team where teamnum = 3006 and  matchnum > 38) group by teamnum order by tea
+mnum;
+
+
+
+Using self-join (join in the same table) to compare values of two rows and bring back matches:
+
+
+select  b.teamnum, a.matchnum from match_team a, match_team b where a.type=b.type 
+and a.matchnum=b.matchnum and a.color=b.color and a.teamnum=3006 
+group by teamnum order by teamnum,  matchnum;
+
+
+
+
+
+
+
+

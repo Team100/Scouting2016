@@ -3,6 +3,7 @@
   // $Date: 2016/03/14 22:56:41 $
   //
   // Competition System - Team Info / Robot page
+  //   (should be named teambotinfo)
   //
   require "page.inc";
 
@@ -15,14 +16,14 @@
   $connection = dbsetup();
 
   // define lock array, fields arrays
-  $dblock = array(table=>"teambot",where=>"teamnum = {$teamnum}");
+  $dblock = array(table=>"teambot",where=>"event_id = '{$sys_event_id}' and teamnum = {$teamnum}");
 
   // teambot array
 	$table_teambot = array_merge ( array("rank_overall","rating_overall","rating_overall_off","rating_overall_def",
 		"rank_pos1","rating_pos1","rank_pos2","rating_pos2","rank_pos3","rating_pos3","offense_analysis",
 		"defense_analysis","pos1_analysis","pos2_analysis","pos3_analysis","robot_analysis","driver_analysis",
 		"with_recommendation","against_recommendation"),
-		param_array("Play"), param_array("Pit"));
+		param_array("Play"));
 
   // handle update if returning from edit mode
 	if ($edit == 2)
@@ -37,7 +38,7 @@
 			// load form fields
 			$formfields = fields_load("post", $table_teambot);
 
-			$query = "update teambot set " . fields_insert("update",$formfields) . " where teamnum = {$teamnum}";
+			$query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
 			// process query
 			if (! (@mysqli_query ($connection, $query) ))
 				dbshowerror($connection, "die");
@@ -106,7 +107,7 @@
 
   // get team details define result set
   if (!($result = @ mysqli_query ($connection,
-  	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where teamnum = {$teamnum}")))
+  	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}")))
     dbshowerror($connection);
 
   // get row
@@ -120,7 +121,7 @@
   // return and home buttons
   print "<br>";
   // print "<br><br><a href=\"/teaminfo.php?teamnum={$teamnum}\">Return to Team Info</a><br>\n";
-  print "<a href=\"/\">Return to Home</a>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
 
   // end links and place picture
   print "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";

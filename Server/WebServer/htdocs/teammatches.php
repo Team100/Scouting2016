@@ -46,32 +46,32 @@
 
   // return and home buttons
   print "<a href=\"/teaminfo.php?teamnum={$teamnum}\">Return to Team Info</a><br>\n";
-  print "<a href=\"/\">Return to Home</a>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
 
  //
  // top of loop
  //
 
  $query =
-     "select league, type, matchnum from match_team where teamnum = {$teamnum} order by type, matchnum";
+     "select event_id, type, matchnum from match_team where teamnum = {$teamnum} order by type, matchnum";
 
  if (! ($matches_result = @ mysqli_query ($connection, $query) ))
 		dbshowerror($connection, "die");
 
  while ($matches_row = mysqli_fetch_array($matches_result) )
  {
-  $matchidentifiers = array ("league"=>$matches_row["league"], "type"=>$matches_row["type"],
+  $matchidentifiers = array ("event_id"=>$matches_row["event_id"], "type"=>$matches_row["type"],
     	"matchnum"=>$matches_row["matchnum"]);
-  //$league = $matches_row["league"];
+  //$event_id = $matches_row["event_id"];
   //$type = $matches_row["type"];
   //$matchnum = $matches_row["matchnum"];
 
 
   // set up variables for this run
-	// $matchidentifiers = fields_load("GET", array("league", "type", "matchnum", "teamnum"));
+	// $matchidentifiers = fields_load("GET", array("event_id", "type", "matchnum", "teamnum"));
 
 	$match_sql_identifier =
-		"league = '{$matchidentifiers["league"]}' and type = '{$matchidentifiers["type"]}'
+		"event_id = '{$matchidentifiers["event_id"]}' and type = '{$matchidentifiers["type"]}'
 		and matchnum = {$matchidentifiers["matchnum"]}";
 	$team_sql_identifier = "teamnum={$teamnum}";
 
@@ -93,9 +93,9 @@
 	<table valign=\"top\" border=1>
   ";
 
-  // league
+  // event_id
 
-		$query = "select league, type, matchnum, scheduled_time, actual_time
+		$query = "select event_id, type, matchnum, scheduled_time, actual_time
 			from match_instance where ".$match_sql_identifier;
 
 		if (! ($result = @ mysqli_query ($connection, $query) ))
@@ -111,7 +111,7 @@
 
 		//print match data
 		print "<tr><th>Leg</th><th>Type</th><th>Match</th><th>Sched</th><th>Actual</th><th>Red</th><th>Blue</th></tr>";
-		print "<tr><td>".$row["league"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>".
+		print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>".
 			$row["scheduled_time"]."</td><td>".$row["actual_time"]."</td><td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>";
 
 
@@ -129,7 +129,7 @@
 				if($row["teamnum"]==$teamnum)
 					print "<td>{$row["color"]} {$row["teamnum"]}</td>";
 				else
-					print "<td>{$row["color"]} <a href=\"/matchteameval.php?teamnum={$row["teamnum"]}&league={$matchidentifiers["league"]}&
+					print "<td>{$row["color"]} <a href=\"/matchteameval.php?teamnum={$row["teamnum"]}&event_id={$matchidentifiers["event_id"]}&
 						type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$row["teamnum"]}</a></td>";
 			}
 			print"</tr><tr>";

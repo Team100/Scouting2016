@@ -1,0 +1,63 @@
+Web server install and configuration
+------------------------
+$Revision: 1.1 $
+$Date: 2011/04/08 07:15:37 $
+
+
+Brief instructions on setting up a MySQL, PHP, apache web server for the competition system.
+
+1. Check params file for database name, user, password
+
+2. Follow instructions in for setting up php, mysql, and apache.  
+    Example in "Win7 PHP-MySQL-Apache Package Install"
+   PHP and Apache are best installed in c:\Apps to conform with our other machines
+
+3. Create the database:
+   mysqladmin create competition -u root -p
+   
+   This prompts for password to root given in install.  Now the dbfile is created.
+
+4. Grant access
+
+    mysql -d competition -u root -p
+ 
+    mysql>  grant all on *.* to 'compuser'@'localhost' identified by 'password';
+
+5. Run tests:
+	- Web server test: http://{server_name}/Test/webtest.htm
+		Example: http://localhost/Test/webtest.htm
+	- PHP test: http://{server_name}/Test/phpinfo.php
+	- Database test: http://{server_name}/Test/dbtest.php
+
+6. Config apache:
+
+
+
+  Setting up password access:
+  In <Directory> in main config (current) or setting up for a file-based .htaccess:
+
+   AuthUserFile "C:/github/Scouting2016/Server/WebServer/admin/htpasswd.master"
+   AuthName "Wildhats Competition System"
+   AuthType Basic
+   require valid-user
+ 
+
+   Also, comment out Require all granted
+      # Require all granted
+
+7. Create htpasswd.master
+    In cmd window, go to .../admin directory (mentioned in AuthUserFile above)
+    Run c:\apps\apache24\bin\htpasswd.exe -c htpasswd.master {first_user_name}
+
+    Note: preferably this user has admin rights set up in params.inc
+
+8. Run freshdb.bat in admin\data directory
+
+
+
+May need to enable firewall for port 80 access on vista/Windows7.  
+     Go to control panel, firewall.  In advanced, add port 80 access.
+
+
+Test system. Browse to home and try it out.  Try editing, then run freshdb when done.
+

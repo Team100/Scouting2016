@@ -32,6 +32,7 @@
 		// load form fields
 		$formfields = fields_load("post", $edit_fields);
 		$query = "update team set " . fields_insert("update",$formfields) . " where teamnum = {$teamnum}";
+		if (debug()) print "<br>DEBUG-teamdetails: " . $query . "<br>\n";
 
 		// process query
 		if (! (@mysqli_query ($connection, $query) ))
@@ -62,8 +63,9 @@
   if (! ($teamnum)) print "<h1>No Team Number Specified</h1>\n";
 
   // get team details define result set
-  if (!($result = @ mysqli_query ($connection,
-  	"select ". fields_insert("nameonly",NULL,$table_team) . " from team where teamnum = {$teamnum}")))
+  $query="select ". fields_insert("nameonly",NULL,$table_team) . " from team where teamnum = {$teamnum}";
+  if (debug()) print "<br>DEBUG-teamdetails: " . $query . "<br>\n";
+  if (!($result = @ mysqli_query ($connection,$query)))
     dbshowerror($connection);
 
   // get row
@@ -83,7 +85,7 @@
   {
     // if in edit mode, signal save with edit=2
   	print "<form method=\"POST\" action=\"/teamdetails.php?edit=2&teamnum={$teamnum}\">\n"
-    . hiddenfield( "league", $default_league);
+    . hiddenfield( "event_id", $sys_event_id);
   }
 
   // add edit link or submit button
@@ -92,7 +94,7 @@
   // return and home buttons
   print "&nbsp;&nbsp;&nbsp;<a href=\"/teaminfo.php?teamnum={$teamnum}\">Return to Team Info</a>\n";
   print "&nbsp;&nbsp;&nbsp;<a href=\"/allteamslist.php\">All Teams</a>\n";
-  print "&nbsp;&nbsp;&nbsp;<a href=\"/\">Return to Home</a>\n";
+  print "&nbsp;&nbsp;&nbsp;<a href=\"{$base}\">Return to Home</a>\n";
 
   // top of table
   print "

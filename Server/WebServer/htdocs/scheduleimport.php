@@ -227,7 +227,7 @@ EOF_EOF
   		<p>
   		Schedule successfully imported if no errors are displayed above.
   		<p>
-  		<a href=\"/\">Return to Home</a>
+  		<a href=\"{$base}\">Return to Home</a>
   		<p>
   		";  // end of print
   	}
@@ -274,7 +274,7 @@ EOF_EOF
   		</form>
 
   		<br>
-  		<a href=\"/\">Return to Home</a>
+  		<a href=\"{$base}\">Return to Home</a>
   		";  // end of print
   	}
 

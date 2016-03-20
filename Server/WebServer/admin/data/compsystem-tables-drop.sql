@@ -2,7 +2,7 @@
 # $Revision: 3.0 $
 # $Date: 2016/03/14 23:00:02 $
 #
-# Red Rock Robotics
+# Red Rock Robotics, Wildhats, Verkler
 # Competition System Table Schema
 #
 # Notes:
@@ -16,9 +16,12 @@
 #
 #
 
-drop table league;
+drop table event;
 drop table team;
+drop table team_history;
+drop table team_history_award;
 drop table teambot;
+drop table ranking_tag;
 drop table alliance;
 drop table alliance_team;
 drop table alliance_unavailable;
@@ -35,3 +38,5 @@ drop table topic;
 drop table documentation;
 drop table pagetodoc;
 drop table system_value;
+drop table tba_last_modified;
+
