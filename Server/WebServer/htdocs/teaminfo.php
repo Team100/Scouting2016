@@ -23,7 +23,7 @@
 		"rank_pos1","rating_pos1","rank_pos2","rating_pos2","rank_pos3","rating_pos3","offense_analysis",
 		"defense_analysis","pos1_analysis","pos2_analysis","pos3_analysis","robot_analysis","driver_analysis",
 		"with_recommendation","against_recommendation"),
-		param_array("Play"), param_array("Pit"));
+		param_array("Play"));
 
   // handle update if returning from edit mode
 	if ($edit == 2)

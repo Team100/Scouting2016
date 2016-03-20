@@ -31,7 +31,8 @@
 
 		// load form fields
 		$formfields = fields_load("post", $edit_fields);
-		$query = "update team set " . fields_insert("update",$formfields) . "teamnum = {$teamnum}";
+		$query = "update team set " . fields_insert("update",$formfields) . " where teamnum = {$teamnum}";
+		if (debug()) print "<br>DEBUG-teamdetails: " . $query . "<br>\n";
 
 		// process query
 		if (! (@mysqli_query ($connection, $query) ))
@@ -62,8 +63,9 @@
   if (! ($teamnum)) print "<h1>No Team Number Specified</h1>\n";
 
   // get team details define result set
-  if (!($result = @ mysqli_query ($connection,
-  	"select ". fields_insert("nameonly",NULL,$table_team) . " from team where teamnum = {$teamnum}")))
+  $query="select ". fields_insert("nameonly",NULL,$table_team) . " from team where teamnum = {$teamnum}";
+  if (debug()) print "<br>DEBUG-teamdetails: " . $query . "<br>\n";
+  if (!($result = @ mysqli_query ($connection,$query)))
     dbshowerror($connection);
 
   // get row

@@ -8,14 +8,15 @@
   //
 
 	require "page.inc";
+	$connection = dbsetup();
 
 	// load paramters
 	$long=$_GET["long"];	     // indicates "long form with all match listing on teams
 	$public=$_GET["public"]; 	// sharable version for other teams in alliance
 
     // load variables
-	$matchidentifiers = fields_load("GET", array("event_id", "type", "matchnum"));
-	$match_sql_identifier = "event_id = '{$matchidentifiers["event_id"]}' and type = '{$matchidentifiers["type"]}'
+	$matchidentifiers = fields_load("GET", array("type", "matchnum"));
+	$match_sql_identifier = "type = '{$matchidentifiers["type"]}'
 		and matchnum = {$matchidentifiers["matchnum"]}";
 
 	// determine header
@@ -23,14 +24,14 @@
 	if (! ($public)) $header = $header . "(Private)";
 	$header = $header .  " {$matchidentifiers["type"]}-{$matchidentifiers["matchnum"]}";
 	pheader($header);
-	$connection = dbsetup();
+
 
   // table data
   $table_teambot = array_merge ( array("rank_overall","rating_overall","rating_overall_off","rating_overall_def",
   	"rank_pos1","rating_pos1","rank_pos2","rating_pos2","rank_pos3","rating_pos3","offense_analysis",
   	"defense_analysis","pos1_analysis","pos2_analysis","pos3_analysis","robot_analysis","driver_analysis",
   	"with_recommendation","against_recommendation"),
-  	param_array("Play"), param_array("Pit"));
+  	param_array("Play"));
 
 	$team_rank_fields = array(rank_overall=>"Overall Rank", rating_overall=>"Overall Rating (0-9)",
 		rating_overall_off=>"Offensive Rating (0-9)", rating_overall_def=>"Defensive Rating (0-9)");
@@ -72,7 +73,8 @@
 		);
 
 	// get our team
-	$query = "select teamnum, color from match_team where {$match_sql_identifier} and teamnum = {$host_teamnum}";
+	$query = "select teamnum, color from match_team where event_id = '{$sys_event_id}' and {$match_sql_identifier} and teamnum = {$host_teamnum}";
+	if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
 	if (! ($result = @ mysqli_query ($connection, $query)))
 		dbshowerror($connection, "die");
 
@@ -103,6 +105,7 @@
       . " and match_team.teamnum=teambot.teamnum and match_team.teamnum=team.teamnum"
       . " and match_team.teamnum != {$host_teamnum} and {$match_sql_identifier} order by match_team.color {$order}, match_team.teamnum";
 
+	if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
 	if (! ($result = @ mysqli_query ($connection, $query)))
   		dbshowerror($connection, "die");
 
@@ -307,16 +310,16 @@ for($i=0; $i<$tot; $i++)
  //
 
  $query =
-     "select event_id, type, matchnum from match_team where teamnum = {$teamnum} order by type, matchnum";
+     "select type, matchnum from match_team where event_id = '{$sys_event_id}' and teamnum = {$teamnum} order by type, matchnum";
 
+ if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
  if (! ($matches_result = @ mysqli_query ($connection, $query) ))
 		dbshowerror($connection, "die");
 
  while ($matches_row = mysqli_fetch_array($matches_result) )
  {
-  $matchidentifiers = array ("event_id"=>$matches_row["event_id"], "type"=>$matches_row["type"],
+  $matchidentifiers = array ("type"=>$matches_row["type"],
     	"matchnum"=>$matches_row["matchnum"]);
-  //$event_id = $matches_row["event_id"];
   //$type = $matches_row["type"];
   //$matchnum = $matches_row["matchnum"];
 
@@ -325,7 +328,7 @@ for($i=0; $i<$tot; $i++)
 	// $matchidentifiers = fields_load("GET", array("event_id", "type", "matchnum", "teamnum"));
 
 	$match_sql_identifier =
-		"event_id = '{$matchidentifiers["event_id"]}' and type = '{$matchidentifiers["type"]}'
+		"event_id = '{$sys_event_id}' and type = '{$matchidentifiers["type"]}'
 		and matchnum = {$matchidentifiers["matchnum"]}";
 	$team_sql_identifier = "teamnum={$teamnum}";
 
@@ -349,9 +352,10 @@ for($i=0; $i<$tot; $i++)
 
   // event_id
 
-		$query = "select event_id, type, matchnum, scheduled_time, actual_time
+		$query = "select type, matchnum, scheduled_time, actual_time
 			from match_instance where ".$match_sql_identifier;
 
+		if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
 		if (! ($result = @ mysqli_query ($connection, $query) ))
 			dbshowerror($connection, "die");
 		if (! ($resultR = @ mysqli_query ($connection, "select score from match_instance_alliance where {$match_sql_identifier} and color='R'") ))
@@ -364,8 +368,8 @@ for($i=0; $i<$tot; $i++)
 		$pointsB = mysqli_fetch_array($resultB);
 
 		//print match data
-		print "<tr><th>Leg</th><th>Type</th><th>Match</th><th>Sched</th><th>Actual</th><th>Red</th><th>Blue</th></tr>";
-		print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>".
+		print "<tr><th>Type</th><th>Match</th><th>Sched</th><th>Actual</th><th>Red</th><th>Blue</th></tr>";
+		print "<tr><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>".
 			$row["scheduled_time"]."</td><td>".$row["actual_time"]."</td><td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>";
 
 
@@ -376,6 +380,7 @@ for($i=0; $i<$tot; $i++)
 		foreach(array('R', 'B') as $color_initial)
 		{
 			print "<td>{$color_names[$color_initial]}</td>";
+			if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
 			if (! ($result = @ mysqli_query ($connection, "select teamnum from match_team where ".$match_sql_identifier." and color='{$color_initial}'") ))
 				dbshowerror($connection, "die");
 			while($row = mysqli_fetch_array($result))
@@ -383,7 +388,7 @@ for($i=0; $i<$tot; $i++)
 				if($row["teamnum"]==$teamnum)
 					print "<td>{$row["color"]} {$row["teamnum"]}</td>";
 				else
-					print "<td>{$row["color"]} <a href=\"/matchteameval.php?teamnum={$row["teamnum"]}&event_id={$matchidentifiers["event_id"]}&
+					print "<td>{$row["color"]} <a href=\"/matchteameval.php?teamnum={$row["teamnum"]}&
 						type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$row["teamnum"]}</a></td>";
 			}
 			print"</tr><tr>";
@@ -397,6 +402,7 @@ for($i=0; $i<$tot; $i++)
   	$query = "select ". fields_insert("nameonly",NULL,$field_array)
   		. " from match_team where {$match_sql_identifier} and {$team_sql_identifier}";
 
+	if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
 	if (! ($result = @ mysqli_query ($connection, $query)))
 		dbshowerror($connection, "die");
 	$row = mysqli_fetch_array($result);

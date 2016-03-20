@@ -107,6 +107,7 @@
    <li><a href=\"/set-event.php\">Set system competition event code</a></li>
    <li><a href=\"/bluealliance.php\">Get updates from Blue Alliance</a></li>
    <li><a href=\"/fix-db-structure.php\">Test and fix database structure</a><br>&nbsp;(should be run at start of competition)</li>
+   <li><a href=\"/verify-params.php\">Verify custom parameters from config file.</li>
    <li><a href=\"/scheduleimport.php\">Import Schedule</a></li>
    <li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
    <li><a href=\"/messagerecv.php\">Receive a Message From Field</a></li>

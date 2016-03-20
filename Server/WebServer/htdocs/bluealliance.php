@@ -153,11 +153,18 @@
             sscanf($teamkey, "frc%d", $teamnum);
 
             // set match key array
-            //   Note: it doesn't use color or the alliance key
+            //   Note: it doesn't use color in the kay or the alliance key;
+            //     however, color must be inserted in the table (avoids a crazy join)
             $match_team_array = array_merge ($match_id_array, array ("teamnum"=>$teamnum));
             $tba_dbarray = $match_team_array;
             // map fields from response for match_instance table
             // $tba_dbarray = tba_mapfields($tba_match_to_match_team, $match_team_array, $tba_dbarray);
+
+            // manually add color
+            $tba_dbarray = array_merge ($tba_dbarray, array("color"=>$color));
+
+print_r($tba_array);
+print "<br>\n";
 
             // update event data in event table
             tba_updatedb("match_team", $match_team_array, $tba_dbarray);
@@ -181,6 +188,8 @@
     // ****
     //
     case "stats":
+      print "<br>Not yet implemented.<br><br>\n";
+
 
       break;
 
@@ -188,8 +197,13 @@
     // Load team history and team awards in two tables
     case "history":
 
+      print "<br>Not yet implemented.<br><br>\n";
+
+
+      break;
+
       // inform user
-      print "Processing team histories and awards...<br>\n";
+      print "Processing team histories and awards...<br><br>\n";
       print "Updated team \n";
 
       // get data
@@ -244,6 +258,8 @@
     // ****
     //
     case "allteams":
+      print "<br>Not yet implemented.<br><br>\n";
+
 
       break;
 
@@ -260,9 +276,6 @@
 
   print "<a href=\"{$base}\">Return to Home</a><br>\n";
 
-  // format inside a table
-  // print "<br><table border=\"0\">\n<tr>\n";
-
   print "
   <h4><u>Update Functions</u></h4>
   <ul>
@@ -270,19 +283,7 @@
   <br>
   <li><a href=\"/bluealliance.php?op=matchdata\">Update match data for current event</a></li>
   <br>
-  <li><a href=\"/bluealliance.php?op=stats\">Get stats for teams in matches</a></li>
-  <br>
-  <li><a href=\"/bluealliance.php?op=\"></a></li>
-  <br>
-  <li><a href=\"/bluealliance.php?op=\"></a></li>
-  <br>
-  <li><a href=\"/bluealliance.php?op=\"></a></li>
-  <br>
-  <li><a href=\"/bluealliance.php?op=\"></a></li>
-  <br>
-  <li><a href=\"/bluealliance.php?op=\"></a></li>
-  <br>
-  <li><a href=\"/bluealliance.php?op=\"></a></li>
+  <li><a href=\"/bluealliance.php?op=stats\">Get stats and rankings for teams in matches</a></li>
   <br>
   <li><a href=\"/bluealliance.php?op=history\">Update history and award info for teams in our database</a></li>
   <br>

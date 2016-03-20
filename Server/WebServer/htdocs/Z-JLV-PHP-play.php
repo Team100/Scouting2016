@@ -12,12 +12,27 @@
   //
 
   require "page.inc";
-  require "bluealliance.inc";
-
-
   // header and setup
 
   $connection = dbsetup();
+
+
+  $query = "select teambot.teamnum, name, nickname, location, org, students, rookie_year
+        from teambot, team where teambot.teamnum = team.teamnum";
+
+   if (!($result = @mysqli_query ($connection, $query)))
+        dbshowerror($connection);
+   while ($row = mysqli_fetch_array($result))
+   {
+       $fp = fopen($tablet_templates . '/' . $row['teamnum'] . '.json', 'w');
+       fwrite($fp, json_encode($row));
+       fclose($fp);
+   }
+
+exit;
+
+
+
 
 
   	$listyear = date("Y");  // default to this year if not set

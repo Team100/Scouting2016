@@ -11,18 +11,15 @@
 
 	$edit=$_GET["edit"];
 	$final=$_GET["final"];
-	$matchidentifiers = fields_load("GET", array("event_id", "type", "matchnum"));
+	$matchidentifiers = fields_load("GET", array("type", "matchnum"));
 
 
 	$alliance_data = array("color", "score", "raw_points", "penalty_points");
 
-	$match_sql_identifier = "event_id = '{$matchidentifiers["event_id"]}' and type = '{$matchidentifiers["type"]}'
+	$match_sql_identifier = "event_id = '{$sys_event_id}' and type = '{$matchidentifiers["type"]}'
 		and matchnum = {$matchidentifiers["matchnum"]}";
 
-	//$dblock = array(event_id=>$matchidentifiers["event_id"], type=>$matchidentifiers["type"],
-	//	matchnum=>$matchidentifiers["matchnum"]);
 	$dblock = array(table=>"match_instance",where=>$match_sql_identifier);
-
 
 	$color_names = array(R=>"Red", B=>"Blue");
 
@@ -64,6 +61,7 @@
 				$query = $query." seed_points={$s_points} where {$match_sql_identifier} and color='{$color_initial}'";
 
 				// process query on seed points
+				if (debug()) print "<br>DEBUG-matcheval: " . $query . "<br>\n";
 				if (! (@mysqli_query ($connection, $query) ))
 					dbshowerror($connection, "die");
 			  } // end of foreach
@@ -93,12 +91,12 @@
 	if ($edit)
 	{
 		// if in edit mode, signal save with edit=2
-		print "<form method=\"POST\" action=\"/matcheval.php?edit=2&final={$final}&event_id={$matchidentifiers["event_id"]}&
+		print "<form method=\"POST\" action=\"/matcheval.php?edit=2&final={$final}&
 			type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">\n";
 	}
 
 
-    $editURL = "/matcheval.php?&final={$final}&event_id={$matchidentifiers["event_id"]}&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}";
+    $editURL = "/matcheval.php?&final={$final}&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}";
     print dblockshowedit($edit, $dblock, $editURL) . "\n";
 
 	print "&nbsp;&nbsp;&nbsp; <a href=\"/matchlist.php?final={$final}\">Match List</a>\n";
@@ -119,8 +117,8 @@
 		$row = mysqli_fetch_array($result);
 
 		//print match data
-		print "<tr><td>League</td><td>Type</td><td>Match Number</td><td>Sched Time</td><td>Actual Time</td></tr>";
-		print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>".
+		print "<tr><td>Type</td><td>Match Number</td><td>Sched Time</td><td>Actual Time</td></tr>";
+		print "<tr><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>".
 			$row["scheduled_time"]."</td><td>".$row["actual_time"]."</td></tr>";
 
 		//print teams in the match
@@ -129,16 +127,18 @@
 		//prep for displaying colors for the teams
 		//query to get color codes for teams
 		$detail_query = "select type, matchnum, teamnum, color from match_team"
-		    . " where matchnum = {$_GET["matchnum"]} "
+		    . " where $match_sql_identifier "
 		    . " order by color DESC, matchnum";
+		if (debug()) print "<br>DEBUG-matcheval: " . $detail_query . "<br>\n";
 
 		if (!($detail = @ mysqli_query ($connection, $detail_query )))
 			dbshowerror($connection);
 
 		//create array of upcoming teams
 		$query = "select  a.type, a.matchnum, b.teamnum from match_team a, match_team b
-			where a.type=b.type and a.matchnum=b.matchnum and a.color=b.color and
-			a.teamnum=3006 group by teamnum order by teamnum,  matchnum";
+			where a.event_id = '{$sys_event_id}' and a.type=b.type and a.matchnum=b.matchnum and a.color=b.color and
+			a.teamnum='{$host_teamnum}' group by teamnum order by teamnum,  matchnum";
+	    if (debug()) print "<br>DEBUG-matcheval: " . $query . "<br>\n";
 
 		if (!($result = @ mysqli_query ($connection, $query)))
 			dbshowerror($connection);
@@ -150,8 +150,9 @@
 
 		// load teams we are playing against
 		$query = "select  a.type, a.matchnum, b.teamnum from match_team a, match_team b
-			where a.type=b.type and a.matchnum=b.matchnum and a.color!=b.color and
-			a.teamnum=3006 group by teamnum order by teamnum,  matchnum";
+			where a.event_id = '{$sys_event_id}' and a.type=b.type and a.matchnum=b.matchnum and a.color!=b.color and
+			a.teamnum='{$host_teamnum}' group by teamnum order by teamnum,  matchnum";
+		if (debug()) print "<br>DEBUG-matcheval: " . $query . "<br>\n";
 
 		if (!($result = @ mysqli_query ($connection, $query)))
 			dbshowerror($connection);
@@ -188,8 +189,8 @@
 				else if ($detailrow['matchnum'] < $upcoming[$teamnum]['against_matchnum'])
 					print " style=\"background-color: {$lred}\" ";
 
-			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$teamnum}&event_id={$matchidentifiers["event_id"]}&
-					type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$teamnum}{$editor}</a></td>";
+			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$teamnum}
+			        &type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$teamnum}{$editor}</a></td>";
 
 			$counter++;
 			if($counter==3)
@@ -212,8 +213,9 @@
 	{
 		if (!($result = @ mysqli_query ($connection,
 			"select color, score, raw_points, penalty_points, seed_points from match_instance_alliance where ".
-				$match_sql_identifier." and color='{$color_initial}'")))
+				$match_sql_identifier . " and color='{$color_initial}'")))
 			dbshowerror($connection);
+		if (debug()) print "<br>DEBUG-matcheval: " . $query . "<br>\n";
 
 		while($row = mysqli_fetch_array($result))
 		{

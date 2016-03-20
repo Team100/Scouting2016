@@ -69,16 +69,16 @@
 
 	if($edit == 11 || $edit == 12)
 	{
-		if (! (@mysqli_query ($connection, "delete from alliance_team") ))
+		if (! (@mysqli_query ($connection, "delete from alliance_team where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
-		if (! (@mysqli_query ($connection, "delete from alliance") ))
+		if (! (@mysqli_query ($connection, "delete from alliance where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
-		if (! (@mysqli_query ($connection, "delete from alliance_unavailable") ))
+		if (! (@mysqli_query ($connection, "delete from alliance_unavailable where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
 
 		for($i=1; $i<=8; $i++)
-			if (! (@mysqli_query ($connection, "insert into alliance (alliancenum) values
-				({$i})") ))
+			if (! (@mysqli_query ($connection, "insert into alliance (event_id, alliancenum) values
+				('{$sys_event_id}', {$i})") ))
 				dbshowerror($connection, "die");
 	}
 	if($edit == 12)
@@ -109,11 +109,21 @@
 
 				if($bad==0)
 				{
-					$query = "insert into alliance_team (alliancenum, teamnum, position) values
-						({$i}, {$temp}, 1)";
+					$query = "insert into alliance_team (event_id, alliancenum, teamnum, position) values
+						('{$sys_event_id}', {$i}, {$temp}, 1)";
 
 					if (! (@mysqli_query ($connection, $query) ))
 						dbshowerror($connection, "die");
+
+
+				    // add to unavailable
+				    // JLV -- start work here
+					$query = "insert into alliance_unavailable (event_id, alliancenum, teamnum, unavailable) values
+						('{$sys_event_id}', {$i}, {$temp}, TRUE)";
+
+					if (! (@mysqli_query ($connection, $query) ))
+						dbshowerror($connection, "die");
+
 				}
 				else
 				{
@@ -137,16 +147,16 @@
 	if($edit == 14)
 	{
 		$error_message="";
-		if (! (@mysqli_query ($connection, "delete from alliance_team") ))
+		if (! (@mysqli_query ($connection, "delete from alliance_team where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
-		if (! (@mysqli_query ($connection, "delete from alliance") ))
+		if (! (@mysqli_query ($connection, "delete from alliance where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
-		if (! (@mysqli_query ($connection, "delete from alliance_unavailable") ))
+		if (! (@mysqli_query ($connection, "delete from alliance_unavailable where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
 
 		for($i=1; $i<=8; $i++)
-			if (! (@mysqli_query ($connection, "insert into alliance (alliancenum) values
-				({$i})") ))
+			if (! (@mysqli_query ($connection, "insert into alliance (event_id, alliancenum) values
+				('{$sys_event_id}', {$i})") ))
 				dbshowerror($connection, "die");
 
 		for($i=1; $i<=8; $i++)
@@ -169,22 +179,23 @@
 					}//team does not exist
 					else
 					{
-						if (!($result=@mysqli_query ($connection, "select * from alliance_team where teamnum={$temp}") ))
+						$query = "select * from alliance_team where event_id = '{$sys_event_id}' and teamnum={$temp}";
+						if (!($result=@mysqli_query ($connection, $query) ))
 							dbshowerror($connection, "die");
 						$row = mysqli_fetch_array($result);
 
 						if(!($row))
 						{
-							$query = "insert into alliance_team (alliancenum, teamnum, position) values
-								({$i}, {$temp}, {$q})";
+							$query = "insert into alliance_team (event_id, alliancenum, teamnum, position) values
+								('{$sys_event_id}', {$i}, {$temp}, {$q})";
 
 							if (! (@mysqli_query ($connection, $query) ))
 								dbshowerror($connection, "die");
 
 							if($q>1 || (isset($_POST["team".$i."2"]) && $_POST["team".$i."2"]!=""))
 							{
-								$query = "insert into alliance_unavailable (alliancenum, teamnum, unavailable) values
-									({$i}, {$temp}, TRUE)";
+								$query = "insert into alliance_unavailable (event_id, alliancenum, teamnum, unavailable) values
+									('{$sys_event_id}, {$i}, {$temp}, TRUE)";
 								mysqli_query ($connection, $query);
 								//this does not throw an error if there is a duplicate entry, same for whole page
 							}//add to unavailable if not in the first column or has another team in the second column
@@ -264,14 +275,14 @@
 				if($refused<0)
 				{
 					$refused=$refused*-1;
-					if(!(mysqli_query ($connection, "delete from alliance_unavailable where teamnum = {$refused}")))
+					if(!(mysqli_query ($connection, "delete from alliance_unavailable where event_id = '{$sys_event_id}' and teamnum = {$refused}")))
 							dbshowerror($connection, "die");
 				}//if enter a negative number remove that form the unavilable list
 				else
 				{
 					$wrong=0;
-					if(!(mysqli_query ($connection, "insert into alliance_unavailable (teamnum, refused)
-						values ({$refused}, true)")))
+					if(!(mysqli_query ($connection, "insert into alliance_unavailable (event_id, teamnum, refused)
+						values ('{$sys_event_id}', {$refused}, true)")))
 						$wrong=1;
 					if(!(mysqli_query ($connection, "update alliance_unavailable set refused = true where teamnum = $refused")))
 						$wrong=1;
@@ -293,19 +304,19 @@
 				if($num>=2)
 				{
 					if (! ($result = @ mysqli_query ($connection, "select teamnum from
-						alliance_team where alliancenum = '{$tn}'") ))
+						alliance_team where event_id = '{$sys_event_id}' and alliancenum = '{$tn}'") ))
 						dbshowerror($connection, "die");
 
 					while($row = mysqli_fetch_array($result))
 					{
-						mysqli_query ($connection, "insert into alliance_unavailable (teamnum, refused)
-							values ({$row['teamnum']}, false)");
+						mysqli_query ($connection, "insert into alliance_unavailable (event_id, teamnum, refused)
+							values ('{$sys_event_id}', {$row['teamnum']}, false)");
 						//print no errors because will probably insert duplicate data
 					}
 				}//add teams to unavailable list
 
 				if(!($resultT = @ mysqli_query ($connection, "select * from alliance_team
-					where alliancenum = {$tn} and position = {$num}") ))
+					where event_id = '{$sys_event_id}' and alliancenum = {$tn} and position = {$num}") ))
 					dbshowerror($connection, "die");
 
 				$found=0;
@@ -347,7 +358,7 @@
 							$tn = 9-$tn;
 
 						if(!($resultT = @ mysqli_query ($connection, "select * from alliance_team
-							where alliancenum = {$tn} and position = {$num}") ))
+							where event_id = '{$sys_event_id}' and alliancenum = {$tn} and position = {$num}") ))
 							dbshowerror($connection, "die");
 
 						$found=0;
@@ -361,14 +372,15 @@
 
 							if($num==1)
 							{
-								if (! ($result = @ mysqli_query ($connection, "select * from
-									alliance_unavailable where teamnum = '{$prev}' and refused=false") ))
+								$query = "select * from	alliance_unavailable where event_id = '{$sys_event_id}' and
+								       teamnum = '{$prev}' and refused=false";
+								if (! ($result = @ mysqli_query ($connection, $query) ))
 									dbshowerror($connection, "die");
 							}
 							else
 							{
 								if (! ($result = @ mysqli_query ($connection, "select * from
-									alliance_unavailable where teamnum = '{$prev}'") ))
+									alliance_unavailable where event_id = '{$sys_event_id}' and teamnum = '{$prev}'") ))
 									dbshowerror($connection, "die");
 							}
 
@@ -379,7 +391,8 @@
 
 							if($uCount==0)
 							{
-								if (! ($result = @ mysqli_query ($connection, "select * from alliance_team where teamnum = '{$prev}'") ))
+								$query = "select * from alliance_team where event_id = '{$sys_event_id}' and teamnum = '{$prev}'";
+								if (! ($result = @ mysqli_query ($connection, $query) ))
 									dbshowerror($connection, "die");
 								$alliancenum=0;
 								while($row = mysqli_fetch_array($result))
@@ -399,15 +412,17 @@
 												dbshowerror($connection, "die");
 										}
 									}//if a team is taken from the first column shift lower teams up
-								if (! ($result = @ mysqli_query ($connection, "delete from alliance_team where teamnum = '{$prev}'") ))
+								$query = "delete from alliance_team where event_id = '{$sys_event_id}' and teamnum = '{$prev}'";
+								if (! ($result = @ mysqli_query ($connection, $query) ))
 									dbshowerror($connection, "die");
 
-								if (! ($result = @ mysqli_query ($connection, "insert into alliance_team (alliancenum, teamnum,
-									position) values ({$tn}, {$prev}, {$num})") ))
+								$query = "insert into alliance_team (event_id, alliancenum, teamnum, position)
+								          values ('{$sys_event_id}',{$tn}, {$prev}, {$num})";
+									if (! ($result = @ mysqli_query ($connection, $query) ))
 									dbshowerror($connection, "die");
 								if($num>=2)
-									mysqli_query ($connection, "insert into alliance_unavailable (teamnum, refused)
-										values ({$prev}, false)");
+									mysqli_query ($connection, "insert into alliance_unavailable (event_id, teamnum, refused)
+										values ('{$sys_event_id}', {$prev}, false)");
 							}
 							else
 								$error_message="Team {$prev} is unavailable";
@@ -502,7 +517,7 @@
 				}
 
 				if(!($result = @ mysqli_query ($connection, "select * from alliance_team
-					where alliancenum = {$tn} and position = {$num}") ))
+					where event_id = '{$sys_event_id}' and alliancenum = {$tn} and position = {$num}") ))
 					dbshowerror($connection, "die");
 
 				$found=0;
@@ -516,7 +531,7 @@
 						{
 							$un=0;
 							if(!($result2 = @ mysqli_query ($connection, "select * from alliance_unavailable
-								where alliancenum = {$row["teamnum"]}") ))
+								where event_id = '{$sys_event_id}' and alliancenum = {$row["teamnum"]}") ))
 								dbshowerror($connection, "die");
 							while($row2 = mysqli_fetch_array($result2))
 								$un=1;
@@ -569,7 +584,7 @@
 		//** print refused list:
 		print "<td>&nbsp;&nbsp;</td><td><table border=1><tr><td>Refused:</td></tr>";
 		if(!($result = @ mysqli_query ($connection, "select teamnum from alliance_unavailable
-			where refused=true") ))
+			where event_id = '{$sys_event_id}' and refused=true") ))
 			dbshowerror($connection, "die");
 		while($row = mysqli_fetch_array($result))
 			print "<tr><td>{$row["teamnum"]}</td></td>";
@@ -606,7 +621,7 @@
 				for($num=1; $num<=3; $num++)
 				{
 					if (! ($result2 = @ mysqli_query ($connection, "select teamnum from alliance_team
-						where alliancenum = '{$i}' and position = '{$num}'") ))
+						where event_id = '{$sys_event_id}' and alliancenum = '{$i}' and position = '{$num}'") ))
 						dbshowerror($connection, "die");
 					while($row2 = mysqli_fetch_array($result2))
 						print "<td>".teamhref($row2[0]).$row2[0]."</a></td>";
@@ -615,7 +630,7 @@
 			if($edit == 11)
 			{
 				if (! ($result = @ mysqli_query ($connection, "select teamnum from alliance_team
-					where alliancenum = '{$i}' and position = '1'") ))
+					where event_id = '{$sys_event_id}' and alliancenum = '{$i}' and position = '1'") ))
 					dbshowerror($connection, "die");
 				$row = mysqli_fetch_array($result);
 
@@ -629,7 +644,7 @@
 				for($q=1; $q<=3; $q++)
 				{
 					if (! ($result2 = @ mysqli_query ($connection, "select teamnum from alliance_team
-						where alliancenum = '{$i}' and position='{$q}'") ))
+						where event_id = '{$sys_event_id}' and alliancenum = '{$i}' and position='{$q}'") ))
 						dbshowerror($connection, "die");
 					$row2 = mysqli_fetch_array($result2);
 
@@ -650,7 +665,7 @@
 		//** print refused list:
 		print "</td></table><td>&nbsp;&nbsp;</td><td><table border=1><tr><td>Refused:</td></tr>";
 		if(!($result = @ mysqli_query ($connection, "select teamnum from alliance_unavailable
-			where refused=true") ))
+			where event_id = '{$sys_event_id}' and refused=true") ))
 			dbshowerror($connection, "die");
 		while($row = mysqli_fetch_array($result))
 			print "<tr><td>{$row["teamnum"]}</td></td>";

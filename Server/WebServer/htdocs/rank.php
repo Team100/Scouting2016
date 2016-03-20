@@ -56,7 +56,9 @@
 
 	    // query teams from db, then iterate load variables, sort, and store
 		// query and load
-		if (! ($result = @ mysqli_query ($connection, "select teamnum from teambot where event_id = '{$sys_event_id}'")))
+		$query = "select teamnum from teambot where event_id = '{$sys_event_id}'";
+		if (debug()) print "<br>DEBUG-rank: " . $query . "<br>\n";
+		if (! ($result = @ mysqli_query ($connection, $query)))
   			dbshowerror($connection, "die");
 
 		// load teams
@@ -65,7 +67,7 @@
   			$teamnum=$row["teamnum"];
 
 			// load sort array
-			$teamsrank[$teamnum]=$_POST["{$teamnum}_rank_{$sort}"];
+			$teamsrank[$teamnum]=$_POST["{$teamnum}_{$sort}"];
 		}
 
         // sort ranks
@@ -78,7 +80,9 @@
         	// if NULL skip, otherwise process
         	if ($rank != "")
         	{
-        		if (! (@mysqli_query ($connection, "update teambot set rank_{$sort} = {$cnt} where event_id = '{$sys_event_id}' and teamnum = {$teamnum} ") ))
+        		$query = "update teambot set {$sort} = {$cnt} where event_id = '{$sys_event_id}' and teamnum = {$teamnum} ";
+        		if (debug()) print "<br>DEBUG-rank: " . $query . "<br>\n";
+        		if (! (@mysqli_query ($connection, $query) ))
 					dbshowerror($connection, "die");
 
 				$cnt = ++$cnt;
@@ -91,7 +95,9 @@
         	// if NULL skip, otherwise process
         	if ($rank == "")
         	{
-        		if (! (@mysqli_query ($connection, "update teambot set rank_{$sort} = {$cnt} where event_id = '{$sys_event_id}' and teamnum = {$teamnum} ") ))
+        		$query = "update teambot set {$sort} = {$cnt} where event_id = '{$sys_event_id}' and teamnum = {$teamnum} ";
+        		if (debug()) print "<br>DEBUG-rank: " . $query . "<br>\n";
+        		if (! (@mysqli_query ($connection, $query) ))
 					dbshowerror($connection, "die");
 
 				$cnt = ++$cnt;
@@ -107,7 +113,7 @@
 		// see doc above
 		//
 		// look through submit vars and set sort mode.  If set, edit is 3
-		if ( $_POST[overall_save] == "Save-Edit" ) {$sort="overall"; $edit=3;}
+		if ( $_POST[overall_save] == "Save-Edit" ) {$sort="rank_overall"; $edit=3;}
 		if ($_POST[pos1_save] == "Save-Edit") { $sort="pos1"; $edit=3;}
 		if ($_POST[pos2_save] == "Save-Edit") { $sort="pos2"; $edit=3;}
 		if ($_POST[pos3_save] == "Save-Edit") { $sort="pos3"; $edit=3;}
@@ -141,6 +147,7 @@
   			from teambot, team where teambot.event_id = '{$sys_event_id}' and teambot.teamnum=team.teamnum {$orderby}";
 
 	// query and load
+	if (debug()) print "<br>DEBUG-rank: " . $query . "<br>\n";
 	if (! ($result = @ mysqli_query ($connection, $query)))
   		dbshowerror($connection, "die");
 
@@ -153,7 +160,7 @@
 		$team[$teamnum]=$row;
 
 		// load sort array
-		$teamsrank[$teamnum]=$row["rank_" . $sort];
+		$teamsrank[$teamnum]=$row[$sort];
 
 	}
 
@@ -175,10 +182,11 @@
   //
   $url_root="/rank.php?edit=${edit}&sort=";					// note the sort is adjustable
 
+  print "\n\n";
   // show edit
   print dblockshowedit($edit, $dblock, $url_root . $sort . "&lsort=" . $lsort) . "\n";
   // Return navigation
-  print "<br><a href=\"{$base}\">Return to Home</a>\n";
+  print "\n<br><a href=\"{$base}\">Return to Home</a>\n";
 
 
   // set up table heading
@@ -234,7 +242,7 @@
   foreach ($teamsrank as $teamnum=>$rank)
   {
     // set edit field values
-    $editfield = "<input type=\"text\" name=\"{$teamnum}_rank_{$sort}\" size=4 maxlength=4 value=\"{$team[$teamnum]["rank_{$sort}"]}\">";
+    $editfield = "<input type=\"text\" name=\"{$teamnum}{$sort}\" size=4 maxlength=4 value=\"{$team[$teamnum]["{$sort}"]}\">";
 
   	// display values
   	print "<tr>\n";
@@ -247,7 +255,7 @@
 
     // overall rank
     print "\n<td align=\"center\">";
-    if (($edit) && ($sort=="overall")) print $editfield; else print $team[$teamnum]["rank_overall"];
+    if (($edit) && ($sort=="rank_overall")) print $editfield; else print $team[$teamnum]["rank_overall"];
     print "</td>\n";
     // rating
     print "<td align=\"center\">{$team[$teamnum]["rating_overall"]}</td>";

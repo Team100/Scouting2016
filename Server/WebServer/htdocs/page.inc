@@ -24,8 +24,8 @@ date_default_timezone_set($sys_time_zone);
 //
 // function: debug
 //  returns true if $debug is true, otherwise returns false
-$debug=TRUE;
-//$debug=FALSE;
+$debug=FALSE;
+//$debug=TRUE;
 function debug()
 {
     global $debug;
@@ -51,7 +51,7 @@ function debug()
 function dbshowerror($connection, $die)
 {
     if ( $die == "die")
- 	die(showerror("Fatal Database Error " . mysqli_errno($connection) . ", " . mysqli_error($connection)));
+      die(showerror("Fatal Database Error " . mysqli_errno($connection) . ", " . mysqli_error($connection)));
     else
       showerror("Non-fatal Database Error " . mysqli_errno($connection) . ", " . mysqli_error($connection));
 }
@@ -719,9 +719,6 @@ function fields_insert ( $operation, $formfields, $fieldnames )
 //   $insert="";
    
    // if field names, use the array that is passed, otherwise iterate over formfields
-   print "<br>In fieldnames:";
-print_r($fieldnames);
-
    if ($fieldnames)
      foreach($fieldnames as $fieldname)
 	$insert = fields_insert_add ( $operation, $formfields, $fieldname, $insert);
@@ -745,7 +742,7 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
       	  case "fieldname":
       	    	// add comma
       	        if ( $insert ) $insert = $insert . ", ";
-      	
+      
       	  	$insert = $insert . $fieldname;
       	  	break;
       	  	
@@ -820,27 +817,20 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
 // 
 // function: param_array ($paramgroup)
 //  creates array of needed form fields
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //   Retuns an array of valid fieldnames
 //
 
 function param_array ($paramgroup)
 {
    global $dispfields;
-
-   $cnt=0;
+   
+   // initialize
    $fcnt=0;
    
-   // loop while var is set.  Don't go over 50 as a safety check
-   while ( isset($dispfields[$paramgroup][$cnt]) && ( $cnt < 50 ) )
-   {
-   	// if used is set TRUE, include in group
-   	if ($dispfields[$paramgroup][$cnt]["used"]===TRUE)
-		$fieldnames[$fcnt] = $paramgroup . "Field_" . $fcnt++;
-	
-	// increment field counter
-   	$cnt = ++$cnt;
-   }
+   foreach($dispfields[$paramgroup] as $key)
+     if ($key['used'] == TRUE)
+     	$fieldnames[] = $paramgroup . "Field_" . $fcnt++;
    
    return($fieldnames);
 }
@@ -855,7 +845,7 @@ function param_array ($paramgroup)
 //         pagebreakstring = string inserted to cause pagebreak.  Works
 //           in tandem with pagebreak
 //   $data - data row with field params (similar to tabtextfield)
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //
 //   Displays param fields in a table form, similar to texttabfield.  Displays all param fields
 //    in a paramgroup
@@ -931,7 +921,7 @@ function tabparamfields($edit, $options, $data, $paramgroup)
 //        where - where-clear name=value, comma separated
 //  $formfields - array created in fields_load of each field 
 //      (an ordered associative array of name=>value for each field)
-//  $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//  $paramgroup - group name for paramters (Play, Match, etc.)
 //
 //   Adds SQL statement fields to SQL statements, similar to fields_insert.
 //   Creates strings for insertion into SQL statements.  Strings include column names (fieldname or nameonly),
@@ -963,7 +953,7 @@ function param_insert( $operation, $formfields, $paramgroup)
 // function: param_load ($post, $paramgroup)
 //  loads paramterized fields names from post operation
 //   $post = text value for get or post
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //
 //  Loads parameter fields from $GET or $POST vars.
 //
@@ -988,7 +978,7 @@ function param_load( $post, $paramgroup)
 //
 // function:param_report ($data, $paramgroup, $public))
 //   $data - array or field=>value row arrays (multiple teams)
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //   $public - if set to 1 then only print competitive info
 //   $teamcnt - count of total teams in paramter report
 //

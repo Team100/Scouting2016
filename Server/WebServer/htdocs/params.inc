@@ -20,6 +20,7 @@ $sys_time_zone='America/Los_Angeles';
 //
 // Host team - Team that uses this db
 $host_teamnum=100;
+$host_teamnum=4;
 $host_team_name="Wildhats";
 // don't change next line
 $frcteam=sprintf("frc%'04d",$host_teamnum);
@@ -51,33 +52,16 @@ $field_positions = FALSE;
 //
 // Notes:
 //  Field parameters are intended to be changed every year for a given game
-//  
-// Should we create a "alliance position" switch too?  (for later)
+// 
+//  display - what is displayed in fields prompts to user
+//  inputlen - length of input box
+//  maxlen - max length of entry. Browser will not accept more characters.
+//  default_value - value placed in input box as a default.  Can be null if no value is expected.
+//
+//
+//   Should we create a "alliance position" switch too?  (for later)
 
 // Comment out unsed params or set used to FALSE
-
-//
-// Pit Fields -- can be analyzed from pit discussions
-// DEPRICATE:  will need to edit out of references.  DO NOT comment out all lines until you fix.
-//
-//$dispfields["Pit"][0] = array("used"=>TRUE, "display"=>"Kicker type", "inputlen"=>10, "maxlen"=>14, "default_value"=>"");
-// $dispfields["Pit"][1] = array("used"=>TRUE, "display"=>"Drive-Wheels", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-// $dispfields["Pit"][2] = array("used"=>TRUE, "display"=>"Drive-Wheel-type ", "inputlen"=>15, "maxlen"=>20, "default_value"=>"");
-//  $dispfields["Pit"][3] = array("used"=>TRUE, "display"=>"Wide/Narrow Forward (W/N)", "inputlen"=>5, "maxlen"=>10, "default_value"=>"");
-//  $dispfields["Pit"][4] = array("used"=>TRUE, "display"=>"Drive-type", "inputlen"=>12, "maxlen"=>18, "default_value"=>"");
-//  $dispfields["Pit"][5] = array("used"=>TRUE, "display"=>"Roll Cage", "inputlen"=>10, "maxlen"=>15, "default_value"=>"");
-//  $dispfields["Pit"][6] = array("used"=>TRUE, "display"=>"Tunnel", "inputlen"=>10, "maxlen"=>15, "default_value"=>"");
-//  $dispfields["Pit"][7] = array("used"=>TRUE, "display"=>"Bump", "inputlen"=>15, "maxlen"=>15, "default_value"=>"");
-//  $dispfields["Pit"][8] = array("used"=>TRUE, "display"=>"Omni Wheels", "inputlen"=>15, "maxlen"=>15, "default_value"=>"");
-//  $dispfields["Pit"][9] = array("used"=>TRUE, "display"=>"End Game", "inputlen"=>12, "maxlen"=>12, "default_value"=>"");
-// $dispfields["Pit"][10] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Pit"][11] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Pit"][12] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Pit"][13] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Pit"][14] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-// $dispfields["Pit"][15] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-
-
 
 //
 // Play Fields -- analyzed from field play, pit, or other analysis of robot
@@ -91,7 +75,7 @@ $dispfields["Play"][4] = array("used"=>TRUE, "display"=>"Pickup?", "inputlen"=>1
 $dispfields["Play"][5] = array("used"=>TRUE, "display"=>"Scaling Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 $dispfields["Play"][6] = array("used"=>TRUE, "display"=>"Special Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 $dispfields["Play"][7] = array("used"=>TRUE, "display"=>"Portcullis", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][8] = array("used"=>TRUE, "display"=>"Cheval/Door", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][8] = array("used"=>TRUE, "display"=>"Cheval-Door", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Play"][9] = array("used"=>TRUE, "display"=>"Moat", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Play"][10] = array("used"=>TRUE, "display"=>"Ramparts", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Play"][11] = array("used"=>TRUE, "display"=>"Drawbridge", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
@@ -99,11 +83,11 @@ $dispfields["Play"][12] = array("used"=>TRUE, "display"=>"Sally Port", "inputlen
 $dispfields["Play"][13] = array("used"=>TRUE, "display"=>"Rock Wall", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Play"][14] = array("used"=>TRUE, "display"=>"Rough Terrain", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Play"][15] = array("used"=>TRUE, "display"=>"Low Bar", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][16] = array("used"=>TRUE, "display"=>"Speed Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
-$dispfields["Play"][17] = array("used"=>TRUE, "display"=>"Pickup Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
-$dispfields["Play"][18] = array("used"=>TRUE, "display"=>"Low Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
-$dispfields["Play"][19] = array("used"=>TRUE, "display"=>"High Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
-$dispfields["Play"][20] = array("used"=>TRUE, "display"=>"Breach Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
+$dispfields["Play"][16] = array("used"=>TRUE, "display"=>"Speed Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
+$dispfields["Play"][17] = array("used"=>TRUE, "display"=>"Pickup Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
+$dispfields["Play"][18] = array("used"=>TRUE, "display"=>"Low Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
+$dispfields["Play"][19] = array("used"=>TRUE, "display"=>"High Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
+$dispfields["Play"][20] = array("used"=>TRUE, "display"=>"Breach Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
 // $dispfields["Play"][21] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Play"][22] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Play"][23] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
@@ -126,7 +110,7 @@ $dispfields["Play"][20] = array("used"=>TRUE, "display"=>"Breach Rating", "input
 //
 
 $dispfields["Match"][0] = array("used"=>TRUE, "display"=>"Portcullis", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Match"][1] = array("used"=>TRUE, "display"=>"Cheval/Door", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Match"][1] = array("used"=>TRUE, "display"=>"Cheval-Door", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Match"][2] = array("used"=>TRUE, "display"=>"Moat", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Match"][3] = array("used"=>TRUE, "display"=>"Ramparts", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
 $dispfields["Match"][4] = array("used"=>TRUE, "display"=>"Drawbridge", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
@@ -139,7 +123,6 @@ $dispfields["Match"][10] = array("used"=>TRUE, "display"=>"Pickup Rating", "inpu
 $dispfields["Match"][11] = array("used"=>TRUE, "display"=>"Low Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
 $dispfields["Match"][12] = array("used"=>TRUE, "display"=>"High Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
 $dispfields["Match"][13] = array("used"=>TRUE, "display"=>"Breach Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"2");
-
 // $dispfields["Match"][5] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][6] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][7] = array("used"=>TRUE, "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
@@ -166,6 +149,17 @@ function seedscore($my_raw_score, $their_raw_score, $my_penalties, $their_penalt
       $seed=3*$my_score;//tie
    return($seed);
 }
+
+
+//
+// Tablet Server File Locations
+//
+
+$tablet_server_home = "D:/jlv/tmp/tablet";
+$tablet_templates = $tablet_server_home . "/templates";
+$tablet_ingest = $tablet_server_home . "/ingest";
+$tablet_ingest_complete = $tablet_server_home . "/ingest-complete";
+$tablet_teamimages = $tablet_server_home . "/team_images";
 
 //
 // Database parameters
