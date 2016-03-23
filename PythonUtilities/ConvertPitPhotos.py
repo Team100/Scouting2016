@@ -64,7 +64,9 @@ def make_small (teamId, inPhotofile, outPhotoPath):
 
 def make_medium (teamId, inPhotofile, outPhotoPath):
     medFile = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-med.jpg"]))
+    medFileForTablet = os.path.join(outPhotoPath, "".join([str(teamId), ".jpg"]))
     crop_resize_save(med_size, inPhotofile, medFile)
+    crop_resize_save(med_size, inPhotofile, medFileForTablet)
     print "Saving: ", medFile        
 
 def save_all_photos(teamId, inPhotos, inPhotoPath, outPhotoPath):
@@ -78,6 +80,7 @@ def save_all_photos(teamId, inPhotos, inPhotoPath, outPhotoPath):
             im.thumbnail(max_size, PILImage.ANTIALIAS)              
         outfilename = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-", str(i), ".jpg"]))
         im.save(outfilename)
+        print "Saving: ", outfilename
         i += 1
         
 parse_pit_json_files()
