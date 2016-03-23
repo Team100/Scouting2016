@@ -33,7 +33,7 @@ def parse_pit_json_files():
                     except:
                         print "Problem with JSON file: ", pitfile
                     else:
-                        print team
+                        #print team
                         teamNum = team['Team Number']
                         pictureList = team['PictureList']
                         primaryPicture = os.path.join(pictureDataPath, team['Primary Photo'])
@@ -53,7 +53,6 @@ def crop_resize_save(size, infile, outfile):
         #crop extra height to make square
         chop = (h - w) / 2
         box = (0, chop, w, h - chop)
-        print box
     croppedImage = im.crop(box)       
     croppedImage.thumbnail(size, PILImage.ANTIALIAS)   
     croppedImage.save(outfile)             
