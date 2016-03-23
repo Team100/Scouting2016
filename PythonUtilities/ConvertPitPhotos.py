@@ -36,9 +36,11 @@ def parse_pit_json_files():
                         #print team
                         teamNum = team['Team Number']
                         pictureList = team['PictureList']
-                        primaryPicture = os.path.join(pictureDataPath, team['Primary Photo'])
-                        make_small(teamNum, primaryPicture, pictureStoragePath)
-                        make_medium(teamNum, primaryPicture, pictureStoragePath)
+                        primaryPicture = team['Primary Photo']
+                        if len(primaryPicture) > 0:
+                            primaryPicture = os.path.join(pictureDataPath, primaryPicture)
+                            make_small(teamNum, primaryPicture, pictureStoragePath)
+                            make_medium(teamNum, primaryPicture, pictureStoragePath)
                         save_all_photos(teamNum, pictureList, pictureDataPath, pictureStoragePath)
                         
 def crop_resize_save(size, infile, outfile): 
