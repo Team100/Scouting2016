@@ -22,8 +22,9 @@
 
   // handle update if returning from edit mode
 
-   // lock tables if in edit mode
-   // if ($edit) dblock($dblock,"lock");  // lock row with current user id
+  // lock tables if in edit mode
+  // Not needed in new/insert situation
+  // if ($edit) dblock($dblock,"lock");  // lock row with current user id
 
 
   if ($edit == 2)
@@ -42,10 +43,11 @@
  		// insert into match_instance
 
 		// load form fields
-		$formfields = fields_load("post", $match_fields);
+		$formfields = array_merge (array ("event_id"=>$sys_event_id), fields_load("post", $match_fields));
 
 		$query = "insert into match_instance (" . fields_insert("fieldname", $formfields)
      			. ") values (" . fields_insert("insert", $formfields) . ")";
+        if (debug()) print "<br>DEBUG-matchnew: " . $query . "<br>\n";
 
 		// process query
 		if (! (@mysqli_query ($connection, $query) ))
@@ -55,9 +57,10 @@
 		// insert into match_team_alliance
 		foreach (array("R", "B") as $color)
 		{
-			$query = "insert into match_instance_alliance (type, matchnum, color) values ("
-			. fields_insert("insert", $formfields, array("type", "matchnum"))
+			$query = "insert into match_instance_alliance (event_id, type, matchnum, color) values ("
+			. fields_insert("insert", $formfields, array("event_id", "type", "matchnum"))
 			. ", '{$color}')";
+			if (debug()) print "<br>DEBUG-matchnew: " . $query . "<br>\n";
 		 	if (! (@mysqli_query ($connection, $query)))
 				dbshowerror($connection, "die");
 		}
@@ -68,9 +71,10 @@
 				$teamcnt=0;
 				while ($teamcnt++ < 3)
 					{
-					  $query = "insert into match_team (type, matchnum, teamnum, color) values ("
-						. fields_insert("insert", $formfields, array("type", "matchnum"))
+					  $query = "insert into match_team (event_id, type, matchnum, teamnum, color) values ("
+						. fields_insert("insert", $formfields, array("event_id", "type", "matchnum"))
 						. ", {$teams[$color][$teamcnt]}, '" . substr($color,0,1) . "')";
+					  if (debug()) print "<br>DEBUG-matchnew: " . $query . "<br>\n";
 
 					  if (! (@mysqli_query ($connection, $query)))
 						dbshowerror($connection, "die");
@@ -96,7 +100,7 @@
 // if edit, start edit
 if ($edit) print "<form method=\"POST\" action=\"/matchnew.php?edit=2\">\n\n";
 
-print "<a href=\"/\">Return to Home</a><br><br>";
+print "<a href=\"{$base}\">Return to Home</a><br><br>";
 
 
   // if $edit show buttons

@@ -36,13 +36,13 @@
   }
 
 
-	$matchidentifiers = fields_load("GET", array("league", "type", "matchnum", "teamnum"));
+	$matchidentifiers = fields_load("GET", array("type", "matchnum", "teamnum"));
 
     // lock database, using two arrays for each table
-    $dblock[0] = array(table=>"match_team",where=>" league = '{$matchidentifiers["league"]}' and type = '{$matchidentifiers["type"]}' and matchnum = '{$matchidentifiers["matchnum"]}' and teamnum = '{$matchidentifiers["teamnum"]}' ");
-  	$dblock[1] = array(table=>"teambot",where=>"teamnum = {$teamnum}");
+    $dblock[0] = array(table=>"match_team",where=>" event_id = '{$sys_event_id}' and type = '{$matchidentifiers["type"]}' and matchnum = '{$matchidentifiers["matchnum"]}' and teamnum = '{$matchidentifiers["teamnum"]}' ");
+  	$dblock[1] = array(table=>"teambot",where=>"event_id = '{$sys_event_id}' and teamnum = {$teamnum}");
 
-	$match_sql_identifier = "league = '{$matchidentifiers["league"]}' and type = '{$matchidentifiers["type"]}'
+	$match_sql_identifier = "event_id = '{$sys_event_id}' and type = '{$matchidentifiers["type"]}'
 		and matchnum = {$matchidentifiers["matchnum"]}";
 	$team_sql_identifier = "teamnum={$teamnum}";
 
@@ -64,8 +64,7 @@
 	  	"rank_pos1","rating_pos1","rank_pos2","rating_pos2","rank_pos3","rating_pos3","offense_analysis",
 	  	"defense_analysis","pos1_analysis","pos2_analysis","pos3_analysis","robot_analysis","driver_analysis",
 	  	"with_recommendation","against_recommendation"),
-  		param_array("Play"), param_array("Pit"));
-
+	  	param_array("Play"));
 
 	// handle update if returning from edit mode
 	if ($edit == 2)
@@ -81,6 +80,7 @@
 	  		// match_team table
 			$formfields = fields_load("post",$field_array);
 			$query = "update match_team set " . fields_insert("update",$formfields) . " where {$match_sql_identifier} and {$team_sql_identifier}";
+			if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 
 			// process query
 			if (! (@mysqli_query ($connection, $query) ))
@@ -90,7 +90,8 @@
 			// load form fields
 			$formfields = fields_load("post", $table_teambot);
 
-			$query = "update teambot set " . fields_insert("update",$formfields) . " where teamnum = {$teamnum}";
+			$query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
+			if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 			// process query
 			if (! (@mysqli_query ($connection, $query) ))
 				dbshowerror($connection, "die");
@@ -111,7 +112,7 @@
 	// lock tables if in edit mode
 	if ($edit) dblock($dblock,"lock");  // lock row with current user id
 	// define edit URL
-	$editURL = "/matchteameval.php?teamnum={$teamnum}&league={$league}&type={$type}&matchnum={$matchnum}";
+	$editURL = "/matchteameval.php?teamnum={$teamnum}&event_id={$event_id}&type={$type}&matchnum={$matchnum}";
 
 
 
@@ -139,67 +140,69 @@
   print "<table valalign=\"top\">\n<tr valign=\"top\">\n<td>\n";
 
   // next and prev buttons
-   // see if previous match exists and display buttong
-    $matchnum_text = $matchnum - 1;
-    $query = "select matchnum from match_instance where type = '{$type}' and matchnum = {$matchnum_text}";
-    if (!($result = @ mysqli_query ($connection, $query)))
-      dbshowerror($connection);
+  // see if previous match exists and display buttong
+  $matchnum_text = $matchnum - 1;
+  $query = "select matchnum from match_instance where event_id = '{$sys_event_id}' and type = '{$type}' and matchnum = {$matchnum_text}";
+  if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
+  if (!($result = @ mysqli_query ($connection, $query)))
+    dbshowerror($connection);
 
-    // get row
-  	if ($row = mysqli_fetch_array($result))
-  		print "<a href=\"/matchteameval.php?league={$league}&type={$type}&matchnum={$matchnum_text}\">&lt Prev</a> &nbsp;&nbsp;&nbsp;";
+  // get row
+  if ($row = mysqli_fetch_array($result))
+ 	print "<a href=\"/matchteameval.php?event_id={$event_id}&type={$type}&matchnum={$matchnum_text}\">&lt Prev</a> &nbsp;&nbsp;&nbsp;";
 
-   // see if next match exists and display
-    $matchnum_text = $matchnum + 1;
-    $query = "select matchnum from match_instance where type = '{$type}' and matchnum = {$matchnum_text}";
-    if (!($result = @ mysqli_query ($connection, $query)))
-      dbshowerror($connection);
+  // see if next match exists and display
+  $matchnum_text = $matchnum + 1;
+  $query = "select matchnum from match_instance where event_id = '{$sys_event_id}' and type = '{$type}' and matchnum = {$matchnum_text}";
+  if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
+  if (!($result = @ mysqli_query ($connection, $query)))
+    dbshowerror($connection);
 
-    // get row
-  	if ($row = mysqli_fetch_array($result))
-  		print "<a href=\"/matchteameval.php?league={$league}&type={$type}&matchnum={$matchnum_text}\">Next &gt</a> &nbsp;&nbsp;";
+  // get row
+  if ($row = mysqli_fetch_array($result))
+ 	print "<a href=\"/matchteameval.php?event_id={$event_id}&type={$type}&matchnum={$matchnum_text}\">Next &gt</a> &nbsp;&nbsp;";
 	print "<br>";
 
 
   // view match details
-  print "<a href=\"/matcheval.php?final={$final}&league={$matchidentifiers["league"]}&
+  print "<a href=\"/matcheval.php?final={$final}&event_id={$matchidentifiers["event_id"]}&
 		type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">View Match Details</a><br>";
 
   // view
   print "<a href=\"/matchlist.php?final={$final}\">Match List</a><br>";
   print "<a href=\"/matchlist.php?final={$final}&highlight={$teamnum}\">View in match list</a><br><br>";
 
-	if ($edit)
+  if ($edit)
 	{
 		// if in edit mode, signal save with edit=2
-		print "<form method=\"POST\" action=\"/matchteameval.php?edit=2&teamnum={$teamnum}&league={$matchidentifiers["league"]}
+		print "<form method=\"POST\" action=\"/matchteameval.php?edit=2&teamnum={$teamnum}&event_id={$matchidentifiers["event_id"]}
 			&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">\n";
 	}
 
 	// show edit block
     print dblockshowedit($edit, $dblock,$editURL);
 
-
-
   //
   // close first cell and space between next layout
   print "\n</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>\n";
 
-	//print teams
+	//print teams block
 	print "<table border=\"1\"><tr>Teams in Match:</tr><tr>";
 	//prep for displaying colors for the teams
 	//query to get color codes for teams
 	$detail_query = "select type, matchnum, teamnum, color from match_team"
-		. " where matchnum = {$_GET["matchnum"]} "
+		. " where event_id = '{$sys_event_id}' and matchnum = {$_GET["matchnum"]} "
 		. " order by color DESC, matchnum";
 
+    if (debug()) print "<br>DEBUG-matchteameval: " . $detail_query . "<br>\n";
 	if (!($detail = @ mysqli_query ($connection, $detail_query )))
 		dbshowerror($connection);
 
 	//create array of upcoming teams
 	$query = "select  a.type, a.matchnum, b.teamnum from match_team a, match_team b
-		where a.type=b.type and a.matchnum=b.matchnum and a.color=b.color and
-		a.teamnum=3006 group by teamnum order by teamnum,  matchnum";
+		where a.event_id=b.event_id and a.type=b.type and a.matchnum=b.matchnum and a.color=b.color and
+		a.event_id = '{$sys_event_id}' and a.teamnum='{$host_teamnum}' group by teamnum order by teamnum,  matchnum";
+	if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 
 	if (!($result = @ mysqli_query ($connection, $query)))
 		dbshowerror($connection);
@@ -212,7 +215,9 @@
 	// load teams we are playing against
 	$query = "select  a.type, a.matchnum, b.teamnum from match_team a, match_team b
 		where a.type=b.type and a.matchnum=b.matchnum and a.color!=b.color and
-		a.teamnum=3006 group by teamnum order by teamnum,  matchnum";
+		a.event_id = '{$sys_event_id}' and b.event_id = '{$sys_event_id}' and
+		a.teamnum={$host_teamnum} group by teamnum order by teamnum,  matchnum";
+    if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 
 	if (!($result = @ mysqli_query ($connection, $query)))
 		dbshowerror($connection);
@@ -227,7 +232,7 @@
 	$counter=0;
 	while ($detailrow = mysqli_fetch_array($detail))
 	{
-		// set teamnumT
+		// set teamnumT -- the teamnum local to the match block, not to whole form
 		$teamnumT = $detailrow['teamnum'];
 
 		// start output of individual cell
@@ -238,7 +243,7 @@
 			print " style=\"background-color: {$lyellow}\" ";
 
 		// otherwise check whether we're playing with or against them, and the right type
-		else if (array_key_exists($teamnum, $upcoming) && ($detailrow['type'] == $upcoming[$teamnum]['type']))
+		if (array_key_exists($teamnumT, $upcoming) && ($detailrow['type'] == $upcoming[$teamnumT]['type']))
 			// if playing agaist and with, then blue
 			if (($detailrow['matchnum'] < $upcoming[$teamnumT]['with_matchnum']) &&
 				($detailrow['matchnum'] < $upcoming[$teamnumT]['against_matchnum']))
@@ -252,7 +257,7 @@
 		if($teamnum == $teamnumT)
 			print "> <b>{$row["color"]}{$teamnumT}{$editor}</td>";
 		else
-			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$teamnumT}&league={$matchidentifiers["league"]}&
+			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$teamnumT}&event_id={$matchidentifiers["event_id"]}&
 					type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$teamnumT}{$editor}</a></td>";
 
 		$counter++;
@@ -263,7 +268,7 @@
 
 	print "</tr></table>\n";
 
-	// next format block
+	// Match info block
     print "\n</td><td>&nbsp;&nbsp;</td><td>\n";
 
 	print "
@@ -272,8 +277,9 @@
 	<table valign=\"top\" border=1>
 	";  // end of print
 
-		$query = "select league, type, matchnum, scheduled_time, actual_time
+		$query = "select event_id, type, matchnum, scheduled_time, actual_time
 			from match_instance where ".$match_sql_identifier;
+		if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 
 		if (! ($result = @ mysqli_query ($connection, $query) ))
 			dbshowerror($connection, "die");
@@ -288,7 +294,7 @@
 
 		//print match data
 		print "<tr><td>League</td><td>Type</td><td>Match</td><td>Sched Time</td><td>Actual Time</td><td>Red Points</td><td>Blue Points</td></tr>";
-		print "<tr><td>".$row["league"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>"
+		print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>"
 			.substr($row["scheduled_time"],0,5)."</td><td>".substr($row["actual_time"],0,5)
 			."</td><td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>";
 
@@ -313,8 +319,10 @@ EOF_EOF
 
   // get row info
     // get team details define result set
-    if (!($result = @ mysqli_query ($connection,
-    	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where teamnum = {$teamnum}")))
+    $query="select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
+    if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
+
+    if (!($result = @ mysqli_query ($connection,$query)))
       dbshowerror($connection);
 
     // get row
@@ -358,6 +366,7 @@ EOF_EOF
 
 
   	$query = "select ". fields_insert("nameonly",NULL,$field_array) . " from match_team where {$match_sql_identifier} and {$team_sql_identifier}";
+  	if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 
 	if (! ($result = @ mysqli_query ($connection, $query)))
 		dbshowerror($connection, "die");

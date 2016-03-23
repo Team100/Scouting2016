@@ -3,8 +3,9 @@
 <body>
 <h1>PHP Test</h1>
 
-Testing php....
-<?php print "... this statement is from php."; ?>
+Testing php.  You should see a statement from php, then a block of parameters.
+
+<?php print "<br><br>This statement is from php."; ?>
 <p>
 <?php
   phpinfo();

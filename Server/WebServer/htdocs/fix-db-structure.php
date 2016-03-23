@@ -14,7 +14,7 @@
   $connection = dbsetup();
 
   // return home
-  print "<a href=\"/\">Return to Home</a><br><br>\n";
+  print "<a href=\"{$base}\">Return to Home</a><br><br>\n";
 
   print "
   	This funtion tests database structure, reports errors, and fixes what is possible to fix.
@@ -78,7 +78,7 @@
    }
 
    // return home
-   print "<br><br><a href=\"/\">Return to Home</a><br>\n";
+   print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
 
   ?>
 

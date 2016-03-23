@@ -1,0 +1,80 @@
+Windows 7 MySQL, Apache, and PHP instructions
+
+
+Start with the following files:
+VC11 or VC14 Redist  (currently (3/2016) using VC11 – called 
+Mysql-5.5……..msi
+Httpd….zip
+Php…. VCx…zip
+
+
+VC: Check and install appropriate VC:
+-	In control panel, programs: check for Visual C++ Redistributable
+-	Install appropriate redistributable
+
+MySQL:
+-	Install server msi – community 57 64
+-	Take the MySQL Server update
+-	Select server only
+-	Set root password
+-	In Control Panel->System->Advanded settings, go to Advanced tab, select Environment Variables:
+o	Add C:\Program Files\MySQL\MySQL Server 5.7\bin to path
+-	
+
+Apache:
+-	Find appropriate VC11 or VC14 file
+-	Unzip file into location (example: c:\apps\apache24)
+-	In CMD window where you run as Administrator, go to …\apache24\bin:
+o	Httpd.exe –k install
+-	In httpd.con:
+o	At the end of the LoadModule section add:
+LoadModule php5_module "C:/apps/PHP/php5apache2_4.dll"
+AddHandler application/x-httpd-php .php
+PHPIniDir C:/apps/PHP
+o	Find     DirectoryIndex
+?	Add index.php at end to form:
+    DirectoryIndex index.html index.php
+o	May need to adjust ServerRoot, DocRoot, etc.
+?	Find c:/Ap and change appropriate instances to c:/apps
+-	Browse to localhost to test that the server is running.  Comes up with a generic “It Works!” page.
+
+PHP:
+-	Find appropriate VC11 or VC14 and x64 or x32 file
+-	Extract and name directory to php, e.g. C:\PHP  or C:\apps\PHP
+-	Copy php.ini-production file to php.ini
+o	Uncomment extension_dir
+o	Uncomment the following extensions:
+?	extension=php_curl.dll
+?	extension=php_mysqli.dll
+o	Set following parameters:
+o	   memory_limit = 256M
+o	   post_max_size = 128M
+o	   upload_max_filesize = 128M
+-	In Control Panel->System->Advanded settings, go to Advanced tab, select Environment Variables:
+o	Add c:\PHP or c:\apps\PHP to path
+-	Test:
+o	On command-line, php –v prints version
+o	within file: <?php phpinfo(); ?>
+
+
+
+MySQL setup:
+Create a db with dbname competition:
+  mysqladmin -u root -p create competition
+
+Create db user and grant privileges:
+  mysql -D competition -u root -p
+  at prompt mysql>  grant all on competition.* to 'compuser’@’localhost’ identified by ‘100Hats’;
+
+
+Run tests for php and for MySQL.
+
+Examples tests:
+-	Web server test: http://{server_name}/Test/webtest.htm
+o	Example: http://localhost/Test/webtest.htm
+-	PHP test: http://{server_name}/Test/phpinfo.php
+-	Database test: http://{server_name}/Test/dbtest.php
+
+
+Within php, use phpinfo() to see PHP information
+
