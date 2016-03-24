@@ -1,0 +1,3 @@
+cd sdcard/Pictures
+rm app_inventor_*.jpg
+exit 
