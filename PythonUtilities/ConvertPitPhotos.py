@@ -34,7 +34,7 @@ def parse_pit_json_files():
                         print "Problem with JSON file: ", pitfile
                     else:
                         #print team
-                        teamNum = team['Team Number']
+                        teamNum = team['teamnum']
                         pictureList = team['PictureList']
                         primaryPicture = team['Primary Photo']
                         if len(primaryPicture) > 0:
