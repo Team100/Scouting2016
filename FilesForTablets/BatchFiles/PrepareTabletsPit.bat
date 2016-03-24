@@ -42,6 +42,6 @@ adb -s 09f27d4b shell < ClearPictureFiles.txt
 
 echo Spare Tablet
 adb -s 0a845d90 pull sdcard/Scouting/Pit %backupLoc%/spare/Scouting/Pit
-adb -s 09f27d4b pull sdcard/Pictures %backupLoc%/spare/Pictures
-adb -s 09f27d4b shell < ClearPitFiles.txt
-adb -s 09f27d4b shell < ClearPictureFiles.txt
+adb -s 0a845d90 pull sdcard/Pictures %backupLoc%/spare/Pictures
+adb -s 0a845d90 shell < ClearPitFiles.txt
+adb -s 0a845d90 shell < ClearPictureFiles.txt
