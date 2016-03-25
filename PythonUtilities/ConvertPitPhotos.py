@@ -45,44 +45,57 @@ def parse_pit_json_files():
                         
 def crop_resize_save(size, infile, outfile): 
     from PIL import Image as PILImage   
-    im = PILImage.open(infile)
-    w,h = im.size
-    if w > h:
-        #crop extra width to make square
-        chop = (w - h) / 2
-        box = (chop, 0, w - chop, h)
-    else:
-        #crop extra height to make square
-        chop = (h - w) / 2
-        box = (0, chop, w, h - chop)
-    croppedImage = im.crop(box)       
-    croppedImage.thumbnail(size, PILImage.ANTIALIAS)   
-    croppedImage.save(outfile)             
+    try:
+        im = PILImage.open(infile)
+        w,h = im.size
+        if w > h:
+            #crop extra width to make square
+            chop = (w - h) / 2
+            box = (chop, 0, w - chop, h)
+        else:
+            #crop extra height to make square
+            chop = (h - w) / 2
+            box = (0, chop, w, h - chop)
+        croppedImage = im.crop(box)       
+        croppedImage.thumbnail(size, PILImage.ANTIALIAS)   
+        croppedImage.save(outfile)
+    except:
+        print 'file resize', infile, 'failed'
+                    
                    
 def make_small (teamId, inPhotofile, outPhotoPath):
-    smallFile = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-small.jpg"]))
-    crop_resize_save(sm_size, inPhotofile, smallFile)
-    print "Saving: ", smallFile
+    try:
+        smallFile = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-small.jpg"]))
+        crop_resize_save(sm_size, inPhotofile, smallFile)
+        print "Saving: ", smallFile
+    except:
+        print 'smallFile: ', smallFile, ' failed'
 
 def make_medium (teamId, inPhotofile, outPhotoPath):
-    medFile = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-med.jpg"]))
-    medFileForTablet = os.path.join(outPhotoPath, "".join([str(teamId), ".jpg"]))
-    crop_resize_save(med_size, inPhotofile, medFile)
-    crop_resize_save(med_size, inPhotofile, medFileForTablet)
-    print "Saving: ", medFile        
+    try:
+        medFile = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-med.jpg"]))
+        medFileForTablet = os.path.join(outPhotoPath, "".join([str(teamId), ".jpg"]))
+        crop_resize_save(med_size, inPhotofile, medFile)
+        crop_resize_save(med_size, inPhotofile, medFileForTablet)
+        print "Saving: ", medFile  
+    except:
+        print 'medFile: ', medFile, ' failed'
 
 def save_all_photos(teamId, inPhotos, inPhotoPath, outPhotoPath):
     from PIL import Image as PILImage
     i = 1
     for photo in inPhotos:           
         infilename = os.path.join(inPhotoPath, photo)
-        im = PILImage.open(infilename)
-        w,h = im.size
-        if w > max_width:
-            im.thumbnail(max_size, PILImage.ANTIALIAS)              
-        outfilename = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-", str(i), ".jpg"]))
-        im.save(outfilename)
-        print "Saving: ", outfilename
-        i += 1
+        try:
+            im = PILImage.open(infilename)
+            w,h = im.size
+            if w > max_width:
+                im.thumbnail(max_size, PILImage.ANTIALIAS)              
+            outfilename = os.path.join(outPhotoPath, "".join(["team-", str(teamId), "-", str(i), ".jpg"]))
+            im.save(outfilename)
+            print "Saving: ", outfilename
+            i += 1
+        except:
+            print 'File: ', infilename, ' failed'
         
 parse_pit_json_files()
