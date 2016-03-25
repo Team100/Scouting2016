@@ -15,7 +15,7 @@ echo Blue1 Tablet
 adb -s 093291ff pull sdcard/Scouting/Matches %location%/Blue1/Scouting/Matches
 
 echo Blue2 Tablet
-adb -s 0a0eb95a pull sdcard/Scouting/Matches%location%/Blue2/Scouting/Matches
+adb -s 0a0eb95a pull sdcard/Scouting/Matches %location%/Blue2/Scouting/Matches
 
 echo Blue3 Tablet
 adb -s 09f27d4b pull sdcard/Scouting/Matches %location%s/Blue3/Scouting/Matches
