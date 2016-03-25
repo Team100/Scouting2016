@@ -163,9 +163,6 @@
             // manually add color
             $tba_dbarray = array_merge ($tba_dbarray, array("color"=>$color));
 
-print_r($tba_array);
-print "<br>\n";
-
             // update event data in event table
             tba_updatedb("match_team", $match_team_array, $tba_dbarray);
           }

@@ -15,7 +15,7 @@ $dbname = "competition";
 
 $dbuser = "compuser";
 
-$dbpass = "3006redrock";
+$dbpass = "100hats";
 
 $dbhost = "localhost";
 
