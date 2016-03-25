@@ -29,5 +29,5 @@ adb -s 09f27d4b pull sdcard/Pictures %location%/Blue3/Pictures
 
 echo Spare Tablet
 adb -s 0a845d90 pull sdcard/Scouting/Pit %location%/spare/Scouting/Pit
-adb -s 0a845d90 pull sdcard/Pictures%location%/spare/Pictures
+adb -s 0a845d90 pull sdcard/Pictures %location%/spare/Pictures
 
