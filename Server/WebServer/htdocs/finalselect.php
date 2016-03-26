@@ -118,11 +118,11 @@
 
 				    // add to unavailable
 				    // JLV -- start work here
-					$query = "insert into alliance_unavailable (event_id, alliancenum, teamnum, unavailable) values
-						('{$sys_event_id}', {$i}, {$temp}, TRUE)";
-
-					if (! (@mysqli_query ($connection, $query) ))
-						dbshowerror($connection, "die");
+					//$query = "insert into alliance_unavailable (event_id, alliancenum, teamnum, unavailable) values
+					//	('{$sys_event_id}', {$i}, {$temp}, TRUE)";
+//
+					//if (! (@mysqli_query ($connection, $query) ))
+					//	dbshowerror($connection, "die");
 
 				}
 				else

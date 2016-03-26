@@ -23,7 +23,7 @@
 
   <!--- table for display data --->
   <table border=\"1\" valign=\"top\">
-  <tr><th></th><th>Rating<br>(-3 to +3</th><th>Rank</th><tr>\n";
+  <tr><th></th><th>Rating<br>(0 - 9)</th><th>Rank</th><tr>\n";
 
   // two fields - rating and rank
   $options["notag"]=FALSE;

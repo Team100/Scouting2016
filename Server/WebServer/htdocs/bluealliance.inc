@@ -246,7 +246,7 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
    
    // select to see if update or insert
    $query = "select {$dummycol} from {$tablename} where " . $where;
-   if (debug()) print "<br>DEBUG:tba_updatedb, Select queary: " . $query . "<br>\n";
+   if (debug()) print "<br>DEBUG:tba_updatedb, Select query: " . $query . "<br>\n";
    
    if (! ($result = @ mysqli_query ($connection, $query)))
   	  dbshowerror($connection, "die");
