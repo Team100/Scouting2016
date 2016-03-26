@@ -154,6 +154,10 @@ $dispfields["Match"][34] = array("used"=>TRUE, "tag"=>"Notes", "display"=>"Notes
 // $dispfields["Match"][38] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][39] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 
+//
+// set max length of Match fields to match the database.  Tablet data longer than this is truncated.
+$tablet_max_matchfield = 50;
+
 
 // 
 // Tag to database column mappings, used by tablet server

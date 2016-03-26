@@ -58,8 +58,14 @@
           if (preg_match('/.*\.json$/',$file))
 
           {
-            // get json file
-			if (! ($json_array = json_decode(file_get_contents($tablet_ingest . "/" . $file), TRUE)))
+            // read file
+            $json_file = file_get_contents($tablet_ingest . "/" . $file);
+
+            // fix anything that we need to in the file
+            $json_file = str_replace("NaN", "0", $json_file);
+
+            // decode json and process
+			if (! ($json_array = json_decode($json_file)))
 			{
 			  print "<br>!! JSON conversion failed for $file<br>\n";
 
@@ -91,8 +97,13 @@
 			      $db_array = array_merge($db_array, array($map_match_tags[$jsontag]=>$jsonvalue));
 			    // check custom parameters
 			    elseif ((isset($tagmap[$jsontag])) && ($jsontag != NULL))
-			      $db_array = array_merge($db_array, array("MatchField_" . $tagmap[$jsontag]=>$jsonvalue));
-			  }
+			    {
+			      // truncate string to match db
+			      $truncstring = substr($jsonvalue, 0, $tablet_max_matchfield);
+
+			      $db_array = array_merge($db_array, array("MatchField_" . $tagmap[$jsontag]=>$truncstring));
+			    }
+			  } // end of foreach
 
 			  // update database
 			  db_update("match_team", $match_identifiers, $db_array);
