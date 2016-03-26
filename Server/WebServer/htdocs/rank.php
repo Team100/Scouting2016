@@ -207,10 +207,10 @@
     }
   else
     {
-    	print "<a href=\"{$url_root}overall&lsort=rank_overall\">Overall Rank</a>";
-  		print "</th><th><a href=\"{$url_root}overall&lsort=rating_overall\">Overall Rating</a></th>\n";
-  		print "<th><a href=\"{$url_root}overall&lsort=rating_overall_off\">Offense Rating</a></th>\n";
-  		print "<th><a href=\"{$url_root}overall&lsort=rating_overall_def\">Defense Rating</a></th>\n";
+    	print "<a href=\"{$url_root}rank_overall&lsort=rank_overall\">Overall Rank</a>";
+  		print "</th><th><a href=\"{$url_root}rank_overall&lsort=rating_overall\">Overall Rating</a></th>\n";
+  		print "<th><a href=\"{$url_root}rank_overall&lsort=rating_overall_off\">Offense Rating</a></th>\n";
+  		print "<th><a href=\"{$url_root}rank_overall&lsort=rating_overall_def\">Defense Rating</a></th>\n";
 	}
 
   // positions rank and rating
@@ -242,7 +242,7 @@
   foreach ($teamsrank as $teamnum=>$rank)
   {
     // set edit field values
-    $editfield = "<input type=\"text\" name=\"{$teamnum}{$sort}\" size=4 maxlength=4 value=\"{$team[$teamnum]["{$sort}"]}\">";
+    $editfield = "<input type=\"text\" name=\"{$teamnum}_{$sort}\" size=4 maxlength=4 value=\"{$team[$teamnum]["{$sort}"]}\">";
 
   	// display values
   	print "<tr>\n";
