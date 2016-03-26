@@ -7,6 +7,9 @@
   //
   // Syncs JSON files and images with tablet server
   //
+  // Use $map_team_tags and $map_match_tags arrays in params.inc
+  //    to map the non-custom fields being entered from tablets
+  //
 
   require "page.inc";
   require "bluealliance.inc";
@@ -38,6 +41,78 @@
     // ****
     //
     case "match_eval":
+      // inform user of pending operation
+      print "Processing match data from tablets...<br>\n";
+
+      // map array of tags to field number for custom mapping
+      for ($i=0; null !== $dispfields["Match"][$i];  $i++)
+        $tagmap[$dispfields["Match"][$i]["tag"]] = $i;
+
+      // scan upload directory for files
+      if (! ($dir = scandir($tablet_ingest)))
+        print "<br><br><b>!!! System error: ingest directory not found for scanning files.<br><br>\n";
+      else
+      {
+        foreach($dir as $file)
+          // check if json file
+          if (preg_match('/.*\.json$/',$file))
+
+          {
+            // get json file
+			if (! ($json_array = json_decode(file_get_contents($tablet_ingest . "/" . $file), TRUE)))
+			{
+			  print "<br>!! JSON conversion failed for $file<br>\n";
+
+			  // move file to unprocessed/error recovery
+			  rename($tablet_ingest . "/" . $file, $tablet_ingest_error . "/" . $file);
+			  print "Moved {$file} to unprocessed error directory.<br>\n";
+			}
+			else
+			{
+			  // build update array using $map_match_tags
+
+			  // set up default match identifier
+			  // temporary (JLV) - assume type = Q
+			  $match_identifiers = array("event_id"=>$sys_event_id, "type"=>"Q");
+
+			  // initialize $db_array
+			  $db_array = [];
+
+			  foreach($json_array as $jsontag=>$jsonvalue)
+			  {
+			    // if a key tag, built tab_identifiers
+			    if ($jsontag == "teamnum")
+			      $match_identifiers = array_merge($match_identifiers, array ("teamnum"=>$jsonvalue));
+			    // check match number
+				elseif ($jsontag == "matchnum")
+			      $match_identifiers = array_merge($match_identifiers, array ("matchnum"=>$jsonvalue));
+			    // check default / system-defined parameters
+			    elseif ((isset($map_match_tags[$jsontag])) && ($jsonvalue != NULL))
+			      $db_array = array_merge($db_array, array($map_match_tags[$jsontag]=>$jsonvalue));
+			    // check custom parameters
+			    elseif ((isset($tagmap[$jsontag])) && ($jsontag != NULL))
+			      $db_array = array_merge($db_array, array("MatchField_" . $tagmap[$jsontag]=>$jsonvalue));
+			  }
+
+			  // update database
+			  db_update("match_team", $match_identifiers, $db_array);
+
+			  // commit
+			  if (! (@mysqli_commit($connection) ))
+                dbshowerror($connection, "die");
+
+              // move file to processed
+              rename($tablet_ingest . "/" . $file, $tablet_ingest_complete . "/" . $file);
+
+			  // inform user
+			  print "Completed {$file}.<br>\n";
+
+			} // end of json decode
+		  }
+        }
+      // inform of completed function
+      print "<br>Match evaluations loaded.<br><br>\n";
+
       break;
 
     // ****
@@ -73,6 +148,52 @@
 
     // ****
     //
+    case "export":
+
+      $query = "select event_id, teamnum,
+  offense_analysis,
+  defense_analysis,
+  robot_analysis,
+  driver_analysis,
+  with_recommendation,
+  against_recommendation,
+  notes
+  from teambot
+  where
+  event_id = '{$sys_event_id}' and
+  offense_analysis is not NULL or
+  defense_analysis is not  NULL or
+  robot_analysis is not NULL or
+  driver_analysis is not NULL or
+  with_recommendation is not NULL or
+  against_recommendation is not NULL or
+  notes is not NULL
+  ";
+
+       if (debug()) print "<br>DEBUG:tabletsync, Select query: " . $query . "<br>\n";
+       if (!($result = @mysqli_query ($connection, $query)))
+            dbshowerror($connection);
+       while ($row = mysqli_fetch_array($result))
+       {
+          if (debug())
+          {
+            print "<br>DEBUG: row result ";
+            print_r($row);
+            print "<br>\n";
+          }
+          $fp = fopen($tablet_export . '/export.json', 'a');
+          fwrite($fp, json_encode($row));
+          fwrite($fp, "\n");
+          fclose($fp);
+       }
+
+      // Inform user
+      print "<br>JSON export of analysis fields completed<br><br>\n";
+
+      break;
+
+    // ****
+    //
     case "photo":
       break;
 
@@ -91,15 +212,17 @@
   print "
   <h4><u>Tablet Sync Functions</u></h4>
   <ul>
-  <li><a href=\"/tabletsync.php?op=match_eval\">Upload match evaluation</a></li>
+  <li><a href=\"/tabletsync.php?op=match_eval\">Upload match evaluations</a></li>
   <br>
-  <li><a href=\"/tabletsync.php?op=pit_eval\">Upload pit evaluation</a></li>
+  <li><a href=\"/tabletsync.php?op=pit_eval\">Upload pit evaluations</a></li>
   <br>
   <li><a href=\"/tabletsync.php?op=match_template\">Prepare match templates</a></li>
   <br>
   <li><a href=\"/tabletsync.php?op=pit_template\">Preapre pit templates</a></li>
   <br>
   <li><a href=\"/tabletsync.php?op=photo\">Upload and test photos</a></li>
+  <br>
+  <li><a href=\"/tabletsync.php?op=export\">Export non-null analysis fields</a></li>
   <br>
   </ul>
   "; // end of print
