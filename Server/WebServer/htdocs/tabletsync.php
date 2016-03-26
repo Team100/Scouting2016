@@ -161,13 +161,13 @@
   from teambot
   where
   event_id = '{$sys_event_id}' and
-  offense_analysis != NULL or
-  defense_analysis != NULL or
-  robot_analysis != NULL or
-  driver_analysis != NULL or
-  with_recommendation != NULL or
-  against_recommendation != NULL or
-  notes != NULL
+  offense_analysis is not NULL or
+  defense_analysis is not  NULL or
+  robot_analysis is not NULL or
+  driver_analysis is not NULL or
+  with_recommendation is not NULL or
+  against_recommendation is not NULL or
+  notes is not NULL
   ";
 
        if (debug()) print "<br>DEBUG:tabletsync, Select query: " . $query . "<br>\n";
@@ -181,8 +181,9 @@
             print_r($row);
             print "<br>\n";
           }
-          $fp = fopen($tablet_export . '/export.json', 'w');
+          $fp = fopen($tablet_export . '/export.json', 'a');
           fwrite($fp, json_encode($row));
+          fwrite($fp, "\n");
           fclose($fp);
        }
 
