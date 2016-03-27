@@ -27,8 +27,11 @@
   // if no teamnum, then select first team num for match
   if (! ($teamnum))
   {
-    if (!($result = @ mysqli_query ($connection,
-    	"select teamnum from match_team where type = '{$type}' and matchnum = {$matchnum} order by teamnum")))
+    $query = "select teamnum from match_team where event_id = '{$event_id}' and type = '{$type}'
+          and matchnum = {$matchnum} order by teamnum";
+
+    if (debug()) print "<br>DEBUG-matchteameval, no teameval: " . $query . "<br>\n";
+    if (!($result = @ mysqli_query ($connection, $query)))
 	    dbshowerror($connection);
   	if (! ($row = mysqli_fetch_array($result)))
   		showerror("Match info not found.  Please try again.","die");
@@ -36,7 +39,7 @@
   }
 
 
-	$matchidentifiers = fields_load("GET", array("type", "matchnum", "teamnum"));
+	$matchidentifiers = fields_load("GET", array("event_id", "type", "matchnum", "teamnum"));
 
     // lock database, using two arrays for each table
     $dblock[0] = array(table=>"match_team",where=>" event_id = '{$sys_event_id}' and type = '{$matchidentifiers["type"]}' and matchnum = '{$matchidentifiers["matchnum"]}' and teamnum = '{$matchidentifiers["teamnum"]}' ");
@@ -186,12 +189,12 @@
   // close first cell and space between next layout
   print "\n</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>\n";
 
-	//print teams block
+	//print teams in match block
 	print "<table border=\"1\"><tr>Teams in Match:</tr><tr>";
 	//prep for displaying colors for the teams
 	//query to get color codes for teams
-	$detail_query = "select type, matchnum, teamnum, color from match_team"
-		. " where event_id = '{$sys_event_id}' and matchnum = {$_GET["matchnum"]} "
+	$detail_query = "select type, matchnum, teamnum, color from match_team where "
+		. $match_sql_identifier
 		. " order by color DESC, matchnum";
 
     if (debug()) print "<br>DEBUG-matchteameval: " . $detail_query . "<br>\n";
