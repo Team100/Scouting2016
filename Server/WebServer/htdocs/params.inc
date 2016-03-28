@@ -173,6 +173,22 @@ $map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=
 //$map_team_tags = array ();
 
 
+//
+// Ranking: custom columns to display
+//
+//  Format:
+//   Array of arrays that include:
+//     - db column name
+//     - display text
+//     - format mask to be used in printf
+$rank_columns_custom  = array (
+  array( "column"=>"opr", "heading"=>"Off Power", "format"=>"%.2f"),
+//  array( "column"=>"opr", "heading"=>"Off Power", ""),
+  array( "column"=>"dpr", "heading"=>"Def Power", "format"=>"%.2f"),
+//  array( "column"=>"dpr", "heading"=>"Def Power", ""),
+  array( "column"=>"ccwm", "heading"=>"CCW Marg", "format"=>"%.2d")
+  );
+  
 
 // ***************************
 //
