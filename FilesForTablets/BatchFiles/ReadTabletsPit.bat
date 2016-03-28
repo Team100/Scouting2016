@@ -5,7 +5,7 @@ adb devices
 
 echo Red1 Tablet
 adb -s 077dbf0c pull sdcard/Scouting/Pit %location%/Red1/Scouting/Pit
-adb -s 077dbf0c pull sdcard/Pictures testfiles/Red1/Pictures
+adb -s 077dbf0c pull sdcard/Pictures %location%/Red1/Pictures
 
 echo Red2 Tablet
 adb -s 08e5add0 pull sdcard/Scouting/Pit %location%/Red2/Scouting/Pit
