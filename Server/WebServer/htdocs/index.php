@@ -80,7 +80,7 @@
 <br>
 <li><a href="/matchlist.php?filter=F">Evaluate a final match</a></li>
 <br>
-<li><a href="/tabletsync.php?filter=F">Sync with tablet servers</a></li>
+<li><a href="/tabletsync.php">Sync with tablet servers</a></li>
 </ul>
 
 <!--- Documentation Section --->

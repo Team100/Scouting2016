@@ -353,6 +353,101 @@ function showupdatedby($dblock)
 }
 
 
+// *******
+// Database update and data creation functions
+//
+
+// function: db_update($tablename, $table_identifiers, $db_array)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $db_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+//
+// Updates database with data
+//   
+
+function db_update($tablename, $table_identifiers, $db_array)
+{
+   global $connection;
+   
+   // set up dummy column for test
+   $dummycol="";
+   foreach($table_identifiers as $column=>$value)
+     if ($dummycol == "") $dummycol = $column;
+
+   // set where clauase
+   $where = fields_insert("where", $table_identifiers, "");
+    
+   // update
+   $query = "update {$tablename} set " . fields_insert("update", $db_array, "")
+          .  " where " . $where;
+   if (debug()) print "<br>DEBUG:page, db_update :" . $query . "<br>\n";
+   if (! (@mysqli_query ($connection, $query) ))
+     dbshowerror($connection, "die");
+   
+   return(TRUE);
+}
+
+// function: db_update_or_create($tablename, $table_identifiers, $db_array)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $db_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+//
+// Updates database with data
+//   Queries for row with data.  If found, updates.  If not found, inserts.
+//
+
+function db_update_or_create($tablename, $table_identifiers, $db_array)
+{
+   global $connection;
+   
+   // set up dummy column for test
+   $dummycol="";
+   foreach($table_identifiers as $column=>$value)
+     if ($dummycol == "") $dummycol = $column;
+
+   // set where clauase
+   $where = fields_insert("where", $table_identifiers, "");
+   
+   // select to see if update or insert
+   $query = "select {$dummycol} from {$tablename} where " . $where;
+   if (debug()) print "<br>DEBUG:page,db_update_or_create, Select query: " . $query . "<br>\n";
+   
+   if (! ($result = @ mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  	  
+   // if return, update, otherwise insert
+   if ($row = mysqli_fetch_array($result))
+   {
+     $query = "update {$tablename} set " . fields_insert("update", $db_array, "")
+            .  " where " . $where;
+     if (debug()) print "<br>DEBUG:page,db_update_or_create, insert :" . $query . "<br>\n";
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   } 
+   else
+   {
+     $query = "insert into {$tablename} (" . fields_insert("nameonly", $db_array, "")
+             . ") values (" . fields_insert("insert", $db_array, "") . " )";
+             
+     if (debug()) print "<br>DEBUG:page,db_update_or_create, update: " . $query . "<br>\n"; 
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   }
+   
+   return;
+}
+
+
+
+
 
 //
 // ****************************************************************************
