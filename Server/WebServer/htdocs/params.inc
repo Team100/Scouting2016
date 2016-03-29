@@ -279,6 +279,10 @@ $dbhost = "localhost";
 // Misc App Configuration
 //
 
+// global default font
+$font_sys_default = "arial";
+//$font_sys_default = "helvetica";
+  
 // background colors used for red and blue teams
 $background_colors = array ("R"=>"#ffaaaa", "Red"=>"#ffaaaa", "B"=>"#aaaaff", "Blue"=>"#aaaaff");
 
@@ -288,7 +292,7 @@ $lgreen = '#ccffcc';
 $lblue = '#ccccff';
 $lred = '#ffcccc';
 
-//length of the updated by field
+//length of the updated-by field.  Should not exceed db schema
 $maxlengthchangeby=200;
 
 

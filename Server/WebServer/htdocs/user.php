@@ -12,6 +12,12 @@
   // header and setup
   pheader("User Administration");
 
+  // if not administrator, display error.  Otherwise show admin section.
+  if (! $admin)
+    print "<h3>You must be an administrator to use this page.</h3>\n";
+  else
+  {
+
   // handle update if needed
   if ($edit == 2)
   {
@@ -43,8 +49,8 @@
     $edit = 0;
   }
 
-?>
-
+// format page
+print <<< EOF_EOF
 <!----- Top of page ----->
 <table valign="top">
 <tr valign="top">
@@ -62,7 +68,7 @@
 
 <td>Password:&nbsp; </td>
 <td>
-<input type="text" name="newpass" size=12 maxlength=16 value="<?php print $default_password; ?>" >
+<input type="text" name="newpass" size=12 maxlength=16 value="{$default_password}" >
 </td></tr>
 
 </table>
@@ -72,11 +78,16 @@
 </form>
 </table>
 
-<br>
-<br>
-<a href="/">Return to Home</a>
-<br>
+EOF_EOF
+; // end of print
+} // end of admin
 
-<?php
+print "
+<br>
+<br>
+<a href=\"{$base}\">Return to Home</a>
+<br>
+";
+
    pfooter();
   ?>

@@ -15,6 +15,12 @@
   pheader("Blue Alliance Updates");
   $connection = dbsetup();
 
+  // if not administrator, display error.  Otherwise show admin section.
+  if (! $admin)
+    print "<h3>You must be an administrator to use this page.</h3>\n";
+  else
+  {
+
   // get variables if they exist
   if (isset($_GET["op"])) $op = $_GET["op"]; else $op = "";
   $edit=$_GET["edit"];
@@ -290,6 +296,7 @@
   </ul>
   "; // end of print
 
+  } // end of "if admin" qualification
 
   print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
 

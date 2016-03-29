@@ -12,6 +12,12 @@
   pheader("Import Schedule CSV File");
   $connection = dbsetup();
 
+ // if not administrator, display error.  Otherwise show admin section.
+ if (! $admin)
+   print "<h3>You must be an administrator to use this page.</h3>\n";
+ else
+ {
+
   // load debug
   if ($_GET['debug']) $debug=TRUE;
 
@@ -280,8 +286,10 @@ EOF_EOF
 
   }
 
-?>
 
-<?php
+ } // end of "if admin" qualification
+
+
+
    pfooter();
  ?>

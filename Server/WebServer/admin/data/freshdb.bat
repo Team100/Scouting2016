@@ -17,3 +17,5 @@ rem mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-team.sql
 
 
 
+rem insert documentation
+
