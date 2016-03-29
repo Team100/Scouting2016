@@ -171,16 +171,6 @@
   // images
   //
 
-  // show medium image again
-  // end var section and show image
-    if ( file_exists ("teamimages/team-{$teamnum}-med.jpg"))
-      print "<br>
-      <img src=\"/teamimages/team-{$teamnum}-med.jpg\" alt=\"Team ${teamnum} thumb\" title=\"Team {$teamnum}\" width=\"1200\" />
-      ";
-
-
-  // look through images
-
   for( $x=1; $x<=6; $x++)
   {
     if (file_exists ("teamimages/team-{$teamnum}-{$x}.jpg"))

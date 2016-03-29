@@ -158,37 +158,41 @@ $dispfields["Match"][34] = array("used"=>TRUE, "tag"=>"Notes", "display"=>"Notes
 // set max length of Match fields to match the database.  Tablet data longer than this is truncated.
 $tablet_max_matchfield = 50;
 
-
-// 
-// Tag to database column mappings, used by tablet server
-//
-
-// map match tags to columns
+// map match tags to standard columns
 //  Format: tag=>column
 $map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=>"rating_defense");
 
-
-// map team tags to columns
+//
+// score breakout
+//
+// map stats tags to columns
 //  Format: tag=>column
-//$map_team_tags = array ();
+$map_stats_tags = array ("opr"=>"opr","dpr"=>"dpr","ccwm"=>"ccwm");
+
+
 
 
 //
 // Ranking: custom columns to display
 //
 //  Format:
-//   Array of arrays that include:
-//     - db column name
-//     - display text
-//     - format mask to be used in printf
-$rank_columns_custom  = array (
-  array( "column"=>"opr", "heading"=>"Off Power", "format"=>"%.2f"),
-//  array( "column"=>"opr", "heading"=>"Off Power", ""),
-  array( "column"=>"dpr", "heading"=>"Def Power", "format"=>"%.2f"),
-//  array( "column"=>"dpr", "heading"=>"Def Power", ""),
-  array( "column"=>"ccwm", "heading"=>"CCW Marg", "format"=>"%.2d")
-  );
+//   key=>array, array of arrays that include:
+//     - key: db column name
+//     - array:
+//       - display text
+//       - format mask to be used in printf
+//$rank_columns_custom  = array (
+//  array( "column"=>"opr", "heading"=>"Off Power", "format"=>"%.2f"),
+//  array( "column"=>"dpr", "heading"=>"Def Power", "format"=>"%.2f"),
+//  array( "column"=>"ccwm", "heading"=>"CCW Marg", "format"=>"%.2d")
+//  );
   
+$rank_columns_custom  = array (
+  "opr"=>array("heading"=>"Off Power", "format"=>"%.2f"),
+  "dpr"=>array("heading"=>"Def Power", "format"=>"%.2f"),
+  "ccwm"=>array("heading"=>"CCW Marg", "format"=>"%.2d")
+  );
+ 
 
 // ***************************
 //
@@ -223,7 +227,7 @@ $rank_columns_custom  = array (
   // auto-update file indicator
   //  If set to 1, turns on every 5 min updates from tBA
   //
-  $auto-update = "sysfiles/autoupdate.ctl";
+  $auto_update = "sysfiles/autoupdate.ctl";
   
   //
   // Tablet Server Home directory

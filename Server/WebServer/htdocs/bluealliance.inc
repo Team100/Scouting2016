@@ -47,6 +47,12 @@ $tba_match_to_match_alliance = array ("score"=>"score");
 $tba_match_to_match_team = array ();
 
 
+// tBA stats to teambot
+$map_stats_to_teambot = array ("opr"=>"opr","dpr"=>"dpr","ccwm"=>"ccwm");
+
+
+// tBA stats to match_instance_alliance
+//$map_stats_to_teambot = array ("opr"=>"opr","dpr"=>"dpr","ccwm"=>"ccwm");
 
 
 
