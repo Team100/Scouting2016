@@ -204,8 +204,8 @@ $rank_columns_custom  = array (
 
   // location of security files and routines
 
-  $htpasswdfile = "..\admin\htpasswd.master";
-  $htpasswdexe = "..\bin\htpasswd.exe";
+  $htpasswdfile = "../admin/htpasswd.master";
+  $htpasswdexe = "../bin/htpasswd.exe";
   // $htpasswdexe = "C:\apps\Apache24\bin\htpasswd.exe";
 
   //
@@ -213,6 +213,17 @@ $rank_columns_custom  = array (
   //
   $schedule_xls = "doc/qualification_schedule.xls";
   $schedule_csv = "doc/qualification_schedule.csv";
+  
+  // 
+  // log directory
+  //
+  $logdir = "log";
+  
+  //
+  // auto-update file indicator
+  //  If set to 1, turns on every 5 min updates from tBA
+  //
+  $auto-update = "sysfiles/autoupdate.ctl";
   
   //
   // Tablet Server Home directory

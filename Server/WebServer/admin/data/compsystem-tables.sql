@@ -72,6 +72,7 @@ create table team
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   name varchar(50),		# tBA, FIRST nickname
   nickname varchar(30),		# our nickname for team
+  rating int,                   # our 0-9 rating of team capabilities and competencies
   org varchar(80),		# high school or other organization
   location varchar(80),		# tBA location, location of team
   students int,			# number of students on team
@@ -211,6 +212,7 @@ create table teambot
   with_recommendation varchar(1000),	# recommendation if partnered with
   against_recommendation varchar(1000),	# recommendation if partnered against
   notes varchar(1000),                  # general notes
+  pit_notes varchar(1000),              # notes from pit
   primary key(event_id,teamnum)
  );
 
