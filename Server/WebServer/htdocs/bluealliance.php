@@ -191,7 +191,29 @@
     // ****
     //
     case "stats":
-      print "<br>Not yet implemented.<br><br>\n";
+      // get data
+      try
+      {
+        $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats";
+        $tba_response = \Httpful\Request::get($tba_url)
+           ->addHeader('X-TBA-App-Id',$tbaAppId)
+           ->send();
+      } catch (Exception $e)
+      {
+      print "Exception";
+         showerror("Caught exception from Blue Alliance: " . $e->getMessage());
+         return;
+      }
+
+      foreach($map_stats_to_teambot as $tag=>$column)
+      {
+        foreach($tba_response->body->$tag as $teamnum=>$value)
+        {
+          $idArray = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
+		  tba_updatedb("teambot", $idArray, array($column=>$value));
+        }
+      }
+      print "<br>Has been implemented, should work.<br><br>\n";
 
 
       break;
