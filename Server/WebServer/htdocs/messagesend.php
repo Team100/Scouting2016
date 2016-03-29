@@ -13,6 +13,12 @@
   pheader("Send a Message to Remote Member");
   $connection = dbsetup();
 
+ // if not administrator, display error.  Otherwise show admin section.
+ if (! $admin)
+   print "<h3>You must be an administrator to use this page.</h3>\n";
+ else
+ {
+
   // define lock array, fields arrays
   $dblock = array(table=>"message",where=>" facility = 'finals'");
 
@@ -88,18 +94,18 @@
   // add edit link or submit button
   // print dblockshowedit($edit, $dblock, "/teamdetails.php?teamnum={$teamnum}") . "\n";
 
-  // return and home buttons
-  print "<a href=\"{$base}\">Return to Home</a>\n";
-
-
   // close the form if in edit mode
   if ($edit) print "\n</form>\n";
 
   print "</tr>\n</table>\n";
 
+ } // end of "if admin" qualification
 
-?>
 
-<?php
+  // return and home buttons
+  print "<br><a href=\"{$base}\">Return to Home</a>\n";
+
+
+
    pfooter();
   ?>

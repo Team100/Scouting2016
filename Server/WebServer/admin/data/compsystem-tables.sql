@@ -1,6 +1,7 @@
 #
 # $Revision: 3.0 $
 # $Date: 2016/03/14 23:00:02 $
+# $Id$
 #
 # Red Rock Robotics, WildHats, Verkler
 # Competition System Table Schema
@@ -135,14 +136,17 @@ create table teambot
   updatedby varchar(200), 	# last updated by users
   bot_name varchar(30),         # tBA robot name
   f_ranking int,                # tBA ranking from FIRST
-  f_rankparam1 varchar(15),     # tBA FIRST parameter 1 in game-specific rankings
-  f_rankparam2 varchar(15),     # tBA FIRST parameter 2 in game-specific rankings
-  f_rankparam3 varchar(15),     # tBA FIRST parameter 3 in game-specific rankings
-  f_rankparam4 varchar(15),     # tBA FIRST parameter 4 in game-specific rankings
-  f_rankparam5 varchar(15),     # tBA FIRST parameter 5 in game-specific rankings
-  f_rankparam6 varchar(15),     # tBA FIRST parameter 6 in game-specific rankings
-  f_rankparam7 varchar(15),     # tBA FIRST parameter 7 in game-specific rankings
-  f_rankparam8 varchar(15),     # tBA FIRST parameter 8 in game-specific rankings
+  f_rank_score real,            # tBA seed points from FIRST
+  f_record varchar(8),          # tBA FIRST records, W-L-T
+  f_gamesplayed int,            # tBA FIRST games played
+  f_rankparam1 real,            # tBA FIRST parameter 1 in game-specific rankings
+  f_rankparam2 real,            # tBA FIRST parameter 2 in game-specific rankings
+  f_rankparam3 real,            # tBA FIRST parameter 3 in game-specific rankings
+  f_rankparam4 real,            # tBA FIRST parameter 4 in game-specific rankings
+  f_rankparam5 real,            # tBA FIRST parameter 5 in game-specific rankings
+  f_rankparam6 real,            # tBA FIRST parameter 6 in game-specific rankings
+  f_rankparam7 real,            # tBA FIRST parameter 7 in game-specific rankings
+  f_rankparam8 real,            # tBA FIRST parameter 8 in game-specific rankings
   opr real,                     # tBA oprs, Offensive power rating
   dpr real,                     # tBA dprs, defensive power rating
   ccwm real,                    # tBA ccwm, calculated contribution to winning margin
@@ -303,14 +307,18 @@ create table match_instance
   match_key varchar(5),         # tBA part after _ in match key, e.g. qm20
   final_type varchar(1),	# used in finals: Q=qarter, S=Semi, F=Final
   tba_match_num int,            # tBA match_number
-  scheduled_time time,		# scheduled time
-  actual_time time,		# actual time
-  schedule_utime int,           # schedule time - unix time
+  scheduled_time time,		# scheduled time - depricate?
+  actual_time time,		# actual time - depricate?
+  scheduled_utime int,          # schedule time - unix time
   actual_utime int,             # actual time - unix time
   game_plan varchar(2000), 	# our game plan for the match.  Note: this is the only field 
 				#   that is not match statistics but instead our analysis
   primary key (event_id, type, matchnum)
  );
+
+# could add video
+#
+
 
 
 #
@@ -413,23 +421,25 @@ create table match_team
 #
 # Alliance entry for match (one per alliance)
 # 
-create table match_alliance_team
- (
-  event_id varchar(8),          # FK to event table 
-  type varchar(1), 		# foreign key to match_instance table
-  matchnum int,			# match number, foreign key to match_instance table
-  alliancenum int,		# Alliance - #1 through #8, foreign key to alliance table
-  locked varchar(12), 		# row locked for editing by user.  Can clear in application.
-  updatedby varchar(200), 	# last updated by users
-  color varchar(1),		# R=Red, B=Blue
-  position varchar(3),		# position played on field
-  rating_offense int,		# 0-9 (9 high) rating on offense strength
-  rating_defense int,		# 0-9 (9 high) rating on defense strength
-  raw_points int,		# raw points scored
-  human_points int,		# human points scored
-  penalties int,		# penalty points
-  primary key (event_id, type, matchnum, alliancenum)
- );
+# JLV- Depricate
+#
+#create table match_alliance_team
+# (
+#  event_id varchar(8),          # FK to event table 
+#  type varchar(1), 		# foreign key to match_instance table
+#  matchnum int,			# match number, foreign key to match_instance table
+#  alliancenum int,		# Alliance - #1 through #8, foreign key to alliance table
+#  locked varchar(12), 		# row locked for editing by user.  Can clear in application.
+#  updatedby varchar(200), 	# last updated by users
+#  color varchar(1),		# R=Red, B=Blue
+#  position varchar(3),		# position played on field
+#  rating_offense int,		# 0-9 (9 high) rating on offense strength
+#  rating_defense int,		# 0-9 (9 high) rating on defense strength
+#  raw_points int,		# raw points scored
+#  human_points int,		# human points scored
+#  penalties int,		# penalty points
+#  primary key (event_id, type, matchnum, alliancenum)
+# );
 
 
 #
@@ -514,7 +524,9 @@ insert into message (facility) values ('finals_selection');	# finals selection
 create table user_profile
  (
   user varchar(30),		# userd (matches that used for system authentication)
-  matchview varchar(5),		# view preferences on matchlist view
+  matchview varchar(5),		# user preference: match type view preference on matchlist view
+  needeval bool,                # user preference: show teams that still need evaluation
+  showevaluators bool,          # user preference: show other evaluators in matcheval and matchteameval screens
   primary key (user)
  );
 

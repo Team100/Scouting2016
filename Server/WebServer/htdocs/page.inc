@@ -347,7 +347,7 @@ function showupdatedby($dblock)
 			if (! ($result = @mysqli_query ($connection, $query) ))
 				dbshowerror($connection, "die");
 			$row = mysqli_fetch_array($result);
-			print "<br>{$wlock["table"]} Updated by: {$row["updatedby"]}";
+			print "<br>{$wlock["table"]} row updated by: {$row["updatedby"]}";
 		}
 	}
 }
@@ -490,6 +490,7 @@ function pheader($title, $titleonly, $options)
   global $admins;
   global $admin;
   global $event_id;
+  global $font_sys_default;
   
   // get user if exists, then set admin privledge
   if (isset($_SERVER["PHP_AUTH_USER"]))
@@ -509,6 +510,9 @@ function pheader($title, $titleonly, $options)
   
   // if not "openhead"
   if (! (isset ($options["openhead"]))) print "</HEAD>\n<BODY>\n";
+  
+  // add global font if set
+  if ((isset($font_sys_default)) && ($font_sys_default != NULL)) print "<font face=\"arial\">\n";
   
   // if not titleonly
   if (! (isset ($titleonly)) || (! ($titleonly == "titleonly" )))
@@ -532,6 +536,7 @@ function pfooter()
   global $sys_event_name;       // event name
   global $site;         // site in site URL
   global $base;         // base in site URL
+  global $font_sys_default;
   
   print "<br><br><hr>" 
     . "<a href=\"{$base}\">Competition System Home</a><br>";
@@ -545,6 +550,9 @@ function pfooter()
         print "<a href=\"http://logout@{$site}{$base}/\">Logout</a>";
   	print "<br>\n";
   }
+  
+  // add global font if set
+  if ((isset($font_sys_default)) && ($font_sys_default != NULL)) print "</font>\n";
   
   print "<i>{$host_team_name} -- {$sys_event_name}</i>\n</BODY>\n</HTML>";
   

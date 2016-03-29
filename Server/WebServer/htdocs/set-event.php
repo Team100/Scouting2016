@@ -18,6 +18,13 @@
   pheader("Set System Event Code");
   $connection = dbsetup();
 
+ // if not administrator, display error.  Otherwise show admin section.
+ if (! $admin)
+   print "<h3>You must be an administrator to use this page.</h3>\n";
+ else
+ {
+
+
   // get variables if they exist
   if (isset($_GET["new_sys_event_id"])) $new_sys_event_id = $_GET["new_sys_event_id"];
   $edit=$_GET["edit"];
@@ -256,6 +263,10 @@
     print "</table>\n";
 
   }
+
+
+ } // end of "if admin" qualification
+
 
   print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
 

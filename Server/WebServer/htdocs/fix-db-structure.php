@@ -16,6 +16,12 @@
   // return home
   print "<a href=\"{$base}\">Return to Home</a><br><br>\n";
 
+ // if not administrator, display error.  Otherwise show admin section.
+ if (! $admin)
+   print "<h3>You must be an administrator to use this page.</h3>\n";
+ else
+ {
+
   print "
   	This funtion tests database structure, reports errors, and fixes what is possible to fix.
   	<p>
@@ -77,13 +83,13 @@
 
    }
 
+
+ } // end of "if admin" qualification
+
+
    // return home
    print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
 
-  ?>
 
-
-
-<?php
    pfooter();
  ?>
