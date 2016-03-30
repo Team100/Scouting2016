@@ -7,13 +7,34 @@
 //
 // Functions and field mappings to be used for The Blue Alliance API
 //
+// There are three broad areas in this file:
+//  1. custom field mapping and functions to map The Blue Alliance data
+//      into the compsystem database
+//  2. Update functions which perform retreival and updating of data,
+//      usually called by a web page or background process
+//  3. Library functions used by update and other functions that simplify
+//      writing an update function.
+//
 
 // inlucde httpful library
 include ('lib/httpful.phar');
 
+
+// ***********************************************************************************
+//
+// Custom field mapping section
+//
+// Functions and variables in this section set up maps from Blue Alliance data 
+//  to compsystem database columns
+//
+// - These maps may change and Blue Alliance data structures change
+// - Some of the maps change each year for the game, i.e.
+//
+
+
 // ***************************
 //
-// The Blue Alliance API fieldmap
+// The Blue Alliance API fieldmaps
 //
 // Sets up map from Blue Alliance to our scheme structure
 //
@@ -52,37 +73,20 @@ $map_stats_to_teambot = array ("oprs"=>"opr","dprs"=>"dpr","ccwms"=>"ccwm");
 
 
 // tBA stats to match_instance_alliance
-//$map_stats_to_teambot = array ("opr"=>"opr","dpr"=>"dpr","ccwm"=>"ccwm");
-
+$map_ranking_to_teambot = array (0=>"f_ranking", 1=>"teamnum");
 
 
 
 
 // ***************************
 //
-// The Blue Alliance API functions
+// The Blue Alliance API functions -- Custom Mapping Functions
 //
-//
-
-
-//
-// function: tba_getlastmod($tba_url)
-//   $tbaurl - URL that returned last modified time
-//
-// searchs database for last modified time returned from tBA for URL 
-//  and returns the string.
+// The first functions are defined as part of custom-mapping the Blue Alliance
+//  data to competition system database.  These functions are essentially custom.
 //
 
-//
-// function: tba_setlastmod($tba_url, $lastmod)
-//   $tbaurl - URL that returned last modified time
-//   $lastmod - string with last modified time 
-//
-// stores last modified string for URL
-// returns nothing.
-//
-
-
+      
 //
 // Specific field to field mapper functions 
 //
@@ -112,7 +116,6 @@ $map_stats_to_teambot = array ("oprs"=>"opr","dprs"=>"dpr","ccwms"=>"ccwm");
 //
 //  Maps team key to teamnum
 //     from blue alliance returned object in array to a tba_dbarray.
-
 
 function tba_map_teamnum($tba_response_array,$tba_dbarray)
 {
@@ -181,7 +184,136 @@ function tba_getmatcharray ($tba_response_array)
 }
 
 
+// ***********************************************************************************
+//
+// Data Retrieval and Update Functions
+//
+// These functions are usually called from a web page or from a background daemon
+//  periodically processing updates
+//
+//
 
+
+
+// ***********************************************************************************
+//
+// The Blue Alliance API functions -- Standard functions / Library section
+//
+//
+
+// 
+// $tba_error array
+//   This array is populated when a function needs to return more descriptive 
+//   data.  The array includes the following keyed elements:
+//    - state - boolean that is true if in error or advisory condition 
+//    - fatal - boolean if function things functions above should stop processing
+//    - code - the error code being returned by function
+//    - message - a message to display to user
+//    - response - (object or array) functional details of entire response
+//       (example: the http response object
+//
+// Example array def:
+//  array('state'=>FALSE, 'fatal'=>FALSE, 'code'=>, 'message'=>"", 'response'=>"");
+//
+
+
+//  
+// function: tba_getdata($tba_url) - 
+//   $tba_url - URL to call
+//
+// Returns:
+//   $tba_response if success
+//   0 if call created an error
+//   NOTE: 
+//
+// looks up last modified in database and sends with data.
+// Calls $tBA_url and returns the data.  
+// Prepares global $tba_error array if in error state.  See $tba_error doc
+//  for structure of the error array
+
+function tba_getdata($tba_url)
+{
+  global $tba_AppId;
+  global $tba_error;
+  $tba_error = array("state"=>FALSE);
+  
+  
+  // test - change with real functions
+  // $last = "Tue, 29 Mar 2016 14:46:03 GMT";
+  //$last = "";
+  
+  try
+  {
+    $tba_response = \Httpful\Request::get($tba_url)
+       ->addHeader('X-TBA-App-Id',$tba_AppId)
+       ->addHeader('If-Modified-Since',$last)
+       ->send();
+  } catch (Exception $e)
+  {
+    showerror("Caught exception from Blue Alliance: " . $e->getMessage());
+        return(0);
+  }
+
+  // process return code
+  // get first letter of code and switch off
+  $code = $tba_response->code;
+  $code1 = substr($code, 0, 1);
+  
+  // debug
+  if (debug()) print_r($tba_response);
+  
+  switch ($code1)
+  {
+    case "4":
+      $tba_error = array('state'=>FALSE, 'fatal'=>TRUE, 'code'=>$code, 
+         'message'=>"received error {$code} from server. " . $tba_response->body->Error,
+         'response'=>$tba_response);
+      return(FALSE);
+      break;
+    
+    case "3":
+      $tba_error = array('state'=>FALSE, 'fatal'=>FALSE, 'code'=>$code, 
+         'message'=>"your data is up-to-date. No update needed.",
+         'response'=>$tba_response);
+      return(FALSE);
+      break;
+      
+    default:
+      return($tba_response);
+      break;
+  }
+  if ($code1 != "2")
+    return(FALSE);
+
+
+  // tba_setlastmod($tba_url, $response->headers['last-modified']);
+
+  
+  return($tba_response);
+}
+
+
+
+//
+// function: tba_getlastmod($tba_url)
+//   $tbaurl - URL that returned last modified time
+//
+// searchs database for last modified time returned from tBA for URL 
+//  and returns the string.
+//
+
+//
+// function: tba_setlastmod($tba_url, $lastmod)
+//   $tbaurl - URL that returned last modified time
+//   $lastmod - string with last modified time 
+//
+// stores last modified string for URL
+// returns nothing.
+//
+
+
+
+// ****
 //
 // tBA field general mapping and database functions
 //

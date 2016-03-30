@@ -27,7 +27,8 @@
   //
 
 
-  print "<a href=\"{$base}\">Return to Home</a><br>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
+  print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a><br>\n";
 
   print "\n<br>\nLook through the parameter listing below for what the system has read and interpretted.\n";
   print "
@@ -56,7 +57,9 @@
  } // end of "if admin" qualification
 
 
-  print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
+  print "<br><br><a href=\"{$base}\">Return to Home</a>\n";
+  if ($admin) print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>\n";
+  print "<br>\n";
 
   pfooter();
  ?>

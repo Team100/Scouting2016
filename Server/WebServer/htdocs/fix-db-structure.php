@@ -14,7 +14,8 @@
   $connection = dbsetup();
 
   // return home
-  print "<a href=\"{$base}\">Return to Home</a><br><br>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
+  print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a><br>\n";
 
  // if not administrator, display error.  Otherwise show admin section.
  if (! $admin)
@@ -23,7 +24,8 @@
  {
 
   print "
-  	This funtion tests database structure, reports errors, and fixes what is possible to fix.
+    <br>
+  	This function tests database structure, reports errors, and fixes what is possible to fix.
   	<p>
   	<b>Please read carefully through results and verify they match what is expected from the data.</b>
   	<p>
@@ -88,8 +90,9 @@
 
 
    // return home
-   print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
-
+   print "<br><br><a href=\"{$base}\">Return to Home</a>\n";
+   if ($admin) print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>\n";
+   print "<br>\n";
 
    pfooter();
  ?>

@@ -28,7 +28,7 @@ $frcteam=sprintf("frc%'04d",$host_teamnum);
 //
 // The Blue Alliance API id
 //   Format is FRC team number:user:version.  Change as needed.
-$tbaAppId= $frcteam . ':compsystem:v02';
+$tba_AppId= $frcteam . ':compsystem:v02';
 
 
 // Site parameters

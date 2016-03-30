@@ -9,19 +9,19 @@
 include ('../../htdocs/lib/httpful.phar');
 
 $ourteam='frc0100';
-$tbaAppId= $ourteam . ':compsystem:v02';
+$tba_AppId= $ourteam . ':compsystem:v02';
 
 $queryteam='frc3006';
 //$queryteam='frcx3006';
 
-print $tbaAppId . "\n\n";
+print $tba_AppId . "\n\n";
 
 $url = "http://www.thebluealliance.com/api/v2/team/{$queryteam}";
 
 try
 {
   $response = \Httpful\Request::get($url)
-      ->addHeader('X-TBA-App-Id',$tbaAppId)
+      ->addHeader('X-TBA-App-Id',$tba_AppId)
       ->send();
 } catch (Exception $e) {
   print 'Caught exception: ' . $e->getMessage() . "\n";
