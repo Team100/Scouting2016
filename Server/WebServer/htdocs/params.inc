@@ -6,11 +6,20 @@
 // params.inc
 //
 // Contains all user and admin settable parameters needed by the competition system
+//  PLEASE READ through the entire paramaters file to ascertain what is already 
+//   parameter-driven.  You may find there is a parameter-based way to control the app
+//   to do what you want without needing to write/modify code.
 //
-// Notes:
-//  - General params are in first section
-//  
-//  - 
+// Additional Notes:
+// - Configuration of Blue Alliance data loading is generally configured in 
+//    bluealliance.inc.  Field mappings are defined there and should generally
+//    obviate the need to reprogram when fields change.
+//    - There are a couple of Blue Alliance mappings that are handled in this file
+//      instead of in bluealliance.inc.  These mappings change every year and involve
+//      also changing UI display tags, so there are covered in a different structure
+//      than the more simple tag mapping defined in bluealliance.inc.  Because they
+//      change the UI, they are defined here.
+// 
 
 // Timezone setting
 //  -- the string must come from a PHP list found here:
@@ -28,7 +37,7 @@ $frcteam=sprintf("frc%'04d",$host_teamnum);
 //
 // The Blue Alliance API id
 //   Format is FRC team number:user:version.  Change as needed.
-$tbaAppId= $frcteam . ':compsystem:v02';
+$tba_AppId= $frcteam . ':compsystem:v02';
 
 
 // Site parameters
@@ -158,37 +167,41 @@ $dispfields["Match"][34] = array("used"=>TRUE, "tag"=>"Notes", "display"=>"Notes
 // set max length of Match fields to match the database.  Tablet data longer than this is truncated.
 $tablet_max_matchfield = 50;
 
-
-// 
-// Tag to database column mappings, used by tablet server
-//
-
-// map match tags to columns
+// map match tags to standard columns
 //  Format: tag=>column
 $map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=>"rating_defense");
 
-
-// map team tags to columns
+//
+// score breakout
+//
+// map stats tags to columns
 //  Format: tag=>column
-//$map_team_tags = array ();
+$map_stats_tags = array ("opr"=>"opr","dpr"=>"dpr","ccwm"=>"ccwm");
+
+
 
 
 //
 // Ranking: custom columns to display
 //
 //  Format:
-//   Array of arrays that include:
-//     - db column name
-//     - display text
-//     - format mask to be used in printf
-$rank_columns_custom  = array (
-  array( "column"=>"opr", "heading"=>"Off Power", "format"=>"%.2f"),
-//  array( "column"=>"opr", "heading"=>"Off Power", ""),
-  array( "column"=>"dpr", "heading"=>"Def Power", "format"=>"%.2f"),
-//  array( "column"=>"dpr", "heading"=>"Def Power", ""),
-  array( "column"=>"ccwm", "heading"=>"CCW Marg", "format"=>"%.2d")
-  );
+//   key=>array, array of arrays that include:
+//     - key: db column name
+//     - array:
+//       - display text
+//       - format mask to be used in printf
+//$rank_columns_custom  = array (
+//  array( "column"=>"opr", "heading"=>"Off Power", "format"=>"%.2f"),
+//  array( "column"=>"dpr", "heading"=>"Def Power", "format"=>"%.2f"),
+//  array( "column"=>"ccwm", "heading"=>"CCW Marg", "format"=>"%.2d")
+//  );
   
+$rank_columns_custom  = array (
+  "opr"=>array("heading"=>"Off Power", "format"=>"%.2f"),
+  "dpr"=>array("heading"=>"Def Power", "format"=>"%.2f"),
+  "ccwm"=>array("heading"=>"CCW Marg", "format"=>"%.2d")
+  );
+ 
 
 // ***************************
 //
@@ -204,8 +217,8 @@ $rank_columns_custom  = array (
 
   // location of security files and routines
 
-  $htpasswdfile = "..\admin\htpasswd.master";
-  $htpasswdexe = "..\bin\htpasswd.exe";
+  $htpasswdfile = "../admin/htpasswd.master";
+  $htpasswdexe = "../bin/htpasswd.exe";
   // $htpasswdexe = "C:\apps\Apache24\bin\htpasswd.exe";
 
   //
@@ -213,6 +226,17 @@ $rank_columns_custom  = array (
   //
   $schedule_xls = "doc/qualification_schedule.xls";
   $schedule_csv = "doc/qualification_schedule.csv";
+  
+  // 
+  // log directory
+  //
+  $logdir = "log";
+  
+  //
+  // auto-update file indicator
+  //  If set to 1, turns on every 5 min updates from tBA
+  //
+  $auto_update = "sysfiles/autoupdate.ctl";
   
   //
   // Tablet Server Home directory

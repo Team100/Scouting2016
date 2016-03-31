@@ -56,17 +56,24 @@
   {
     if ($op == "Yes")
     {
+      // verify event id
+      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}")))
+        print "API returned " . $tba_error['message'] . "<br>\n";
+      else
+      {
+/*
       try
       {
         $tba_url = "http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}";
         $tba_response = \Httpful\Request::get($tba_url)
-           ->addHeader('X-TBA-App-Id',$tbaAppId)
+           ->addHeader('X-TBA-App-Id',$tba_AppId)
            ->send();
       } catch (Exception $e)
       {
          showerror("Caught exception from Blue Alliance: " . $e->getMessage());
          return;
       }
+*/
 
       // map fields from response
       $tba_dbarray = tba_mapfields($tba_event_to_event, $tba_response->body, "");
@@ -94,6 +101,7 @@
       $sys_event_id = $row["value"];
       $sys_event_name = $row["name"];
 
+      } // end of tba_getdata else
     }
     else
       $edit="";
@@ -113,11 +121,22 @@
       $edit="";
     else
     {
+
+      // get data
+      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}")))
+      {
+        print "API returned " . $tba_error['message'] . "<br>\n";
+        showerror("Event ID '{$new_sys_event_id}' probably does not exist or server is not connected.");
+      }
+      else
+      {
+
+/*
       try
       {
         $tba_url = "http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}";
           $tba_response = \Httpful\Request::get($tba_url)
-             ->addHeader('X-TBA-App-Id',$tbaAppId)
+             ->addHeader('X-TBA-App-Id',$tba_AppId)
              ->send();
 
       } catch (Exception $e)
@@ -126,10 +145,12 @@
         showerror("Event ID '{$new_sys_event_id}' probably does not exist or server is not connected.");
         $edit="";
       }
-
+*/
       // set new variables
       $new_sys_event_name = $tba_response->body->short_name;
       $new_sys_event_year = $tba_response->body->year;
+
+      } // end of tba_getdata else
     }
   }
 
@@ -152,7 +173,8 @@
   // Page formatting
   //
 
-  print "<a href=\"{$base}\">Return to Home</a><br>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
+  print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a><br>\n";
 
   // format inside a table
   print "<br><table border=\"0\">\n<tr>\n";
@@ -230,11 +252,17 @@
     print "<br><br>\n";
 
     // get data
+    if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/events/{$listyear}")))
+      print "API returned " . $tba_error['message'] . "<br>\n";
+    else
+    {
+/*
+    // get data
     try
     {
       $tba_url = "http://www.thebluealliance.com/api/v2/events/{$listyear}";
       $tba_response = \Httpful\Request::get($tba_url)
-         ->addHeader('X-TBA-App-Id',$tbaAppId)
+         ->addHeader('X-TBA-App-Id',$tba_AppId)
          ->send();
     } catch (Exception $e)
     {
@@ -242,6 +270,7 @@
        showerror("Caught exception from Blue Alliance: " . $e->getMessage());
        return;
     }
+*/
 
     print "<table border=2>\n<tr><th>EventID</th><th>Year</th><th>Event Name</th><th>Location</th></tr>\n";
 
@@ -262,13 +291,17 @@
     // close table
     print "</table>\n";
 
+    } // end of tba_getdata else
+
   }
 
 
  } // end of "if admin" qualification
 
 
-  print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
+  print "<br><br><a href=\"{$base}\">Return to Home</a>\n";
+  if ($admin) print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>\n";
+  print "<br>\n";
 
   pfooter();
  ?>

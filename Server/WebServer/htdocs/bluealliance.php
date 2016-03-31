@@ -47,14 +47,26 @@
 
       // inform user
       print "Processing event teams...<br>\n";
-      print "Updated team \n";
+      if (tba_get_event_teams())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>";
+      break;
 
+
+      // get data
+      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams")))
+        print "API returned " . $tba_error['message'] . "<br>\n";
+      else
+      {
+  /*
       // get data
       try
       {
         $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams";
         $tba_response = \Httpful\Request::get($tba_url)
-           ->addHeader('X-TBA-App-Id',$tbaAppId)
+           ->addHeader('X-TBA-App-Id',$tba_AppId)
            ->send();
       } catch (Exception $e)
       {
@@ -62,6 +74,8 @@
          showerror("Caught exception from Blue Alliance: " . $e->getMessage());
          return;
       }
+*/
+
 
       foreach($tba_response->body as $key=>$teamobj)
       {
@@ -94,23 +108,44 @@
         dbshowerror($connection, "die");
 
       // Inform user
-      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance loading complete.<br><br>\n";
+      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance team loading complete.<br>\n";
 
+      } // end of else from REST query
+
+      print "<br>";
       break;
 
     // ****
     // get match data
     case "matchdata":
+
+      // inform user
+      print "Processing event matches...<br>\n";
+      if (tba_get_matches())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>";
+      break;
+
+
       // inform user
       print "Processing match data...<br>\n";
       print "Updated match \n";
 
       // get data
+      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches")))
+        print "API returned " . $tba_error['message'] . "<br>\n";
+      else
+      {
+
+/*
+      // get data
       try
       {
         $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches";
         $tba_response = \Httpful\Request::get($tba_url)
-           ->addHeader('X-TBA-App-Id',$tbaAppId)
+           ->addHeader('X-TBA-App-Id',$tba_AppId)
            ->send();
       } catch (Exception $e)
       {
@@ -118,6 +153,7 @@
          showerror("Caught exception from Blue Alliance: " . $e->getMessage());
          return;
       }
+*/
 
       foreach($tba_response->body as $key=>$matchobj)
       {
@@ -180,20 +216,59 @@
       } // end of match
 
       // commit
-      //if (! (@mysqli_commit($connection) ))
-      //  dbshowerror($connection, "die");
+      if (! (@mysqli_commit($connection) ))
+        dbshowerror($connection, "die");
 
       // Inform user
-      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance loading complete.<br><br>\n";
+      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance match loading complete.<br>\n";
+      } // end of else from REST query
 
+      print "<br>";
       break;
 
     // ****
     //
     case "stats":
-      print "<br>Not yet implemented.<br><br>\n";
+
+      // inform user
+      print "Retrieving event stats...<br>\n";
+      if (tba_get_event_stats())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>";
+      break;
 
 
+      // inform user
+      print "Retrieving stats data...<br>\n";
+
+      // get data
+      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats")))
+        print "API returned " . $tba_error['message'] . "<br>\n";
+      else
+      {
+        print " &nbsp;&nbsp; Team..\n";
+        print "<br>still proceeding";
+        // loop through each type of stat in map function
+        foreach($map_stats_to_teambot as $tag=>$column)
+          foreach($tba_response->body->$tag as $teamnum=>$value)
+          {
+            $id_array = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
+		    tba_updatedb("teambot", $id_array, array($column=>$value));
+		    print $teamnum . ", ";
+          }
+
+        // commit
+        if (! (@mysqli_commit($connection) ))
+          dbshowerror($connection, "die");
+
+        // Inform user
+        print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance stats loading complete.<br>\n";
+
+      } // end of else from REST query
+
+      print "<br>";
       break;
 
     // ****
@@ -214,7 +289,7 @@
       {
         $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams";
         $tba_response = \Httpful\Request::get($tba_url)
-           ->addHeader('X-TBA-App-Id',$tbaAppId)
+           ->addHeader('X-TBA-App-Id',$tba_AppId)
            ->send();
       } catch (Exception $e)
       {
@@ -254,16 +329,18 @@
         dbshowerror($connection, "die");
 
       // Inform user
-      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance loading complete.<br><br>\n";
+      print "<br>&nbsp;&nbsp;&nbsp; ... Blue Alliance loading complete.<br>\n";
 
+      print "<br>";
       break;
 
     // ****
     //
     case "allteams":
-      print "<br>Not yet implemented.<br><br>\n";
+      print "<br>Not yet implemented.<br>\n";
 
 
+      print "<br>";
       break;
 
 
@@ -273,11 +350,17 @@
   }
 
 
+  // check on auto-update state
+  $auto_state="on";
+
+
+
   //
   // Page formatting
   //
 
-  print "<a href=\"{$base}\">Return to Home</a><br>\n";
+  print "<a href=\"{$base}\">Return to Home</a>\n";
+  print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a><br>\n";
 
   print "
   <h4><u>Update Functions</u></h4>
@@ -290,7 +373,11 @@
   <br>
   <li><a href=\"/bluealliance.php?op=history\">Update history and award info for teams in our database</a></li>
   <br>
-  <li><a href=\"/bluealliance.php?op=allteams\">Update all FIRST teams (lots of data)</a></li>
+  <br>
+  <li><a href=\"/bluealliance.php?op=auto_{$auto_state}\">Turn <b>{$auto_state}</b> automatic updates until 6:30pm.</a></li>
+  <br>
+  <br>
+  <li><a href=\"/bluealliance.php?op=allteams\">Update all FIRST teams (! be careful - lots of data)</a></li>
   <br>
 
   </ul>
@@ -298,7 +385,9 @@
 
   } // end of "if admin" qualification
 
-  print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
+  print "<br><br><a href=\"{$base}\">Return to Home</a>\n";
+  if ($admin) print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>\n";
+  print "<br>\n";
 
   pfooter();
  ?>

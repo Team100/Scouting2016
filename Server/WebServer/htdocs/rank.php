@@ -162,11 +162,11 @@
       $columns = $columns . $column . ", ";
 
     // custom columns
-    foreach($rank_columns_custom as $col_def)
-      $columns = $columns . $col_def['column'] . ", ";
+    foreach($rank_columns_custom as $column=>$col_def)
+      $columns = $columns . $column . ", ";
 
     // order by
-    if ($sort) $orderby = " order by isnull({$lsort}), {$lsort} ";
+    if ($sort) $orderby = " order by isnull({$lsort}), {$lsort}, rank_overall, rating_overall, rating_overall_off, teamnum";
 
   $query = "select teambot.teamnum teamnum, name, nickname, {$columns} rank_pos1, rating_pos1, rank_pos2, rating_pos2,
   			rank_pos3, rating_pos3
@@ -291,11 +291,16 @@
   //
   // look for custom columns and add
   //
-  foreach($rank_columns_custom as $col_def)
-    if (($col_def['column'] == $lsort) || ($edit))
+//  foreach($rank_columns_custom as $column=>$col_def)
+//    if (($col_def['column'] == $lsort) || ($edit))
+//      print "<th>{$col_def['heading']}</th>\n";
+//    else
+//      print "<th><a href=\"{$url_root}rank_overall&lsort={$col_def['column']}\">{$col_def['heading']}</a></th>\n";
+  foreach($rank_columns_custom as $column=>$col_def)
+    if (($column == $lsort) || ($edit))
       print "<th>{$col_def['heading']}</th>\n";
     else
-      print "<th><a href=\"{$url_root}rank_overall&lsort={$col_def['column']}\">{$col_def['heading']}</a></th>\n";
+      print "<th><a href=\"{$url_root}rank_overall&lsort={$column}\">{$col_def['heading']}</a></th>\n";
 
   // end heaing row
   print "</th></tr>\n";
@@ -362,14 +367,17 @@
    //
    // look for custom columns and add
    //
-   foreach($rank_columns_custom as $col_def)
+   foreach($rank_columns_custom as $column=>$col_def)
    {
      // if format isn't null and value isn't null then format
-     if (($col_def["format"] != NULL) && ($team[$teamnum][$col_def['column']] != NULL))
-       $value = sprintf($col_def["format"], $team[$teamnum][$col_def['column']]);
+     if (($col_def["format"] != NULL) && ($team[$teamnum][$column] != NULL))
+       $value = sprintf($col_def["format"], $team[$teamnum][$column]);
      else
-       $value = $team[$teamnum][$col_def['column']];
-
+       $value = $team[$teamnum][$column];
+//     if (($col_def["format"] != NULL) && ($team[$teamnum][$col_def['column']] != NULL))
+//       $value = sprintf($col_def["format"], $team[$teamnum][$col_def['column']]);
+//     else
+//       $value = $team[$teamnum][$col_def['column']];
      print "<td align=\"center\">{$value}</td>\n";
    }
 

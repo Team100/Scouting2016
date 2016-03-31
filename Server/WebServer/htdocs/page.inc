@@ -84,8 +84,20 @@ function dbsetup()
   $row = mysqli_fetch_array($result);
   $sys_event_id = $row["value"];
   $sys_event_name = $row["name"];
+  mysqli_free_result($result);
   
   if ($sys_event_id == "") $sys_event_name = "No competition event selected !!";
+ 
+  // check for autocommit off
+  //if (debug()) 
+  //  if (! ($result = @mysqli_query($connection, "SELECT @@autocommit")))
+  //       dbshowerror($connection, "die");
+  //  else
+  //  {
+  //    $row = mysqli_fetch_row($result);
+  //    printf("Autocommit is %s<br>\n", $row[0]);
+  //    mysqli_free_result($result);
+  //  }
 
   return($connection);
 }
@@ -556,14 +568,14 @@ function pfooter()
   
   print "<i>{$host_team_name} -- {$sys_event_name}</i>\n</BODY>\n</HTML>";
   
-  // if database connection, close down
+  // if database connection, commit and close down
   if ($connection)
   {
-  	// commit any transactions
-	  if (! (@mysqli_commit ($connection) ))
-		dbshowerror($connection, "die");
-	  // close database connection
-	  mysqli_close($connection);
+    // commit any transactions
+    if (! (@mysqli_commit ($connection) ))
+	dbshowerror($connection, "die");
+    // close database connection
+    mysqli_close($connection);
   }
 }
 

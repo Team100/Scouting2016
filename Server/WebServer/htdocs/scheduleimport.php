@@ -26,6 +26,7 @@
 <!--- Comment Section --->
 
 <a href="/">Return to Home</a>
+&nbsp;&nbsp;&nbsp; <a href="/admin.php">Sys Admin</a>
 <p>
 
 Imports a comma-separated schedule in the standard FIRST format.  Checks the format first, then populates database.
@@ -281,6 +282,7 @@ EOF_EOF
 
   		<br>
   		<a href=\"{$base}\">Return to Home</a>
+  		nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>
   		";  // end of print
   	}
 
@@ -288,7 +290,6 @@ EOF_EOF
 
 
  } // end of "if admin" qualification
-
 
 
    pfooter();
