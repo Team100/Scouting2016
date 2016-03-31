@@ -1,0 +1,51 @@
+totalPoints
+techFoulCount
+adjustPoints
+capturePoints
+teleopPoints
+autoPoints
+breachPoints
+foulCount
+foulPoints
+towerFaceA
+towerFaceB
+towerFaceC
+autoCrossingPoints
+autoBoulderPoints
+autoBouldersLow
+autoBouldersHigh
+autoReachPoints
+teleopCrossingPoints
+teleopBoulderPoints
+teleopBouldersHigh
+teleopBouldersLow
+teleopDefensesBreached
+teleopScalePoints
+teleopTowerCaptured
+teleopChallengePoints
+towerEndStrength
+robot1Auto
+robot2Auto
+robot3Auto
+position1
+position2
+position3
+position4
+position5
+position1crossings
+position2crossings
+position3crossings
+position4crossings
+position5crossings
+
+
+[0] => Rank
+[1] => Team
+[2] => Ranking Score
+[3] => Auto
+[4] => Scale/Challenge
+[5] => Goals
+[6] => Defense
+[7] => Record (W-L-T)
+[8] => Played
+ 

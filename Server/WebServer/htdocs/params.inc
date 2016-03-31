@@ -43,9 +43,10 @@ $tba_AppId= $frcteam . ':compsystem:v02';
 // Site parameters
 //
 // site names as in http://site/
-$site = "localhost";
+$site = $_SERVER['SERVER_NAME'];
 // base - everything after site.  Example: /compsys.  Leave at "/" if nothing.
 $base = "/";
+
 
 // 
 // Field positions
@@ -179,8 +180,6 @@ $map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=
 $map_stats_tags = array ("opr"=>"opr","dpr"=>"dpr","ccwm"=>"ccwm");
 
 
-
-
 //
 // Ranking: custom columns to display
 //
@@ -264,7 +263,8 @@ if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
 //
 
 $tablet_templates = $tablet_server_home . "/templates";
-$tablet_ingest = $tablet_server_home . "/ingest";
+$tablet_ingest_match = $tablet_server_home . "/ingest-match";
+$tablet_ingest_pit = $tablet_server_home . "/ingest-pit";
 $tablet_ingest_complete = $tablet_server_home . "/ingest-complete";
 $tablet_ingest_error = $tablet_server_home . "/ingest-error";
 $tablet_teamimages = $tablet_server_home . "/teamimages";

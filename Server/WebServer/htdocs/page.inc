@@ -559,7 +559,7 @@ function pfooter()
   	print "Logged in as {$user} ";
   	if ($admin) print " -- administrator";
   	print "\n&nbsp;&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  \n";
-        print "<a href=\"http://logout@{$site}{$base}/\">Logout</a>";
+        print "<a href=\"http://logout@{$site}/\">Logout</a>";
   	print "<br>\n";
   }
   

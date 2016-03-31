@@ -285,23 +285,6 @@ function tba_get_matches()
     print "API returned " . $tba_error['message'] . "<br>\n";
   else
   {
-
-/*
-      // get data
-    try
-    {
-      $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches";
-      $tba_response = \Httpful\Request::get($tba_url)
-         ->addHeader('X-TBA-App-Id',$tba_AppId)
-         ->send();
-    } catch (Exception $e)
-    {
-    print "Exception";
-       showerror("Caught exception from Blue Alliance: " . $e->getMessage());
-       return;
-    }
-*/
-
     foreach($tba_response->body as $key=>$matchobj)
     {
       // get match array from match
@@ -388,26 +371,29 @@ function tba_get_event_stats()
   global $tba_stats_to_teambot;
 
   // get data
-  //                                  http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats
   if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats")))
     print "API returned " . $tba_error['message'] . "<br>\n";
   else
   {
     // loop through each type of stat in map function
     foreach($tba_stats_to_teambot as $tag=>$column)
+    {
+      print $tag . ":";
       foreach($tba_response->body->$tag as $teamnum=>$value)
       {
         $id_array = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
         tba_updatedb("teambot", $id_array, array($column=>$value));
         print $teamnum . ", ";
       }
+      print "<br>\n";
+    }
 
     // commit
     if (! (@mysqli_commit($connection) ))
       dbshowerror($connection, "die");
 
     // Inform user
-    print "<br>&nbsp;&nbsp;&nbsp; ... stats loading complete.<br>\n";
+    print "&nbsp;&nbsp;&nbsp; ... stats loading complete.<br>\n";
 
     return(TRUE);
 
@@ -452,6 +438,7 @@ function tba_get_team_history($teamnum)
   global $tba_AppId;
   global $tba_error;
   global $connection;
+  global $tba_history_to_history;
   {
   
     return(TRUE);
