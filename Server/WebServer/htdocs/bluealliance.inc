@@ -223,23 +223,7 @@ function tba_get_event_teams()
   }
   else
   {
-  /*
-      // get data
-      try
-      {
-        $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams";
-        $tba_response = \Httpful\Request::get($tba_url)
-           ->addHeader('X-TBA-App-Id',$tba_AppId)
-           ->send();
-      } catch (Exception $e)
-      {
-      print "Exception";
-         showerror("Caught exception from Blue Alliance: " . $e->getMessage());
-         return;
-      }
-*/
-
-    // start message
+    // inform user
     print "<br>Updated team ";
 
     foreach($tba_response->body as $key=>$teamobj)
