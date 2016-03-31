@@ -30,6 +30,21 @@
   $table_team = array("name","nickname","org","location","students","website");
 
   //
+  // define default column list that is always shown.
+  //
+  // custom columns are defined in params.inc, $rank_columns_custom
+  //
+  //
+  //  Note: does not include position functionality
+  //  Format:
+  //   Array of:
+  //     - tag or column name
+  //     - display text
+  //     - format mask to be used in printf
+  $rank_columns_always  = array ("rank_overall"=>"Overall Rank", "rating_overall"=>"Overall Rating",
+           "rating_overall_off"=>"Offense Rating", "rating_overall_def"=>"Defense Rating");
+
+  //
   // doc from below
   //
   // add edit link or submit button
@@ -140,9 +155,20 @@
 
   unset( $teamsrank);  // unsetting rank arry
 
-  if ($sort) $orderby = " order by {$lsort} ";
-  $query = "select teambot.teamnum teamnum, name, nickname, rank_overall, rating_overall,
-  			rating_overall_off, rating_overall_def, rank_pos1, rating_pos1, rank_pos2, rating_pos2,
+  // build query
+    // build columns list
+    // standard columns
+    foreach($rank_columns_always as $column=>$heading)
+      $columns = $columns . $column . ", ";
+
+    // custom columns
+    foreach($rank_columns_custom as $col_def)
+      $columns = $columns . $col_def['column'] . ", ";
+
+    // order by
+    if ($sort) $orderby = " order by isnull({$lsort}), {$lsort} ";
+
+  $query = "select teambot.teamnum teamnum, name, nickname, {$columns} rank_pos1, rating_pos1, rank_pos2, rating_pos2,
   			rank_pos3, rating_pos3
   			from teambot, team where teambot.event_id = '{$sys_event_id}' and teambot.teamnum=team.teamnum {$orderby}";
 
@@ -194,26 +220,53 @@
   <!--- table for display data --->
   <table valign=\"top\">
   <tr><th></th>
-  <th>
   "; // end of print
 
+
+  // display column headings
+  //  iterate through always columns, position columns, then customer columns
+  //
+  // if in edit, show button otherwise show as link (no link sorting if in edit mode)
+  //
+  // iterate through array and select heading
+  foreach($rank_columns_always as $column=>$heading)
+    if (($column == "rank_overall") && ($edit))
+      print "<th>Overall Rank<br>\n<input type=\"submit\" name=\"overall_save\" value=\"Save-Edit\">\n";
+    else
+    // don't show link if this is the current sort column
+      if (($column == $lsort) || ($edit))
+        print "<th>{$heading}</th>\n";
+      else
+        print "<th><a href=\"{$url_root}rank_overall&lsort={$column}\">{$heading}</a></th>\n";
+
+
+/*
   // if edit, show button otherwise show as link
   if ($edit)
     {
-  		print "Overall Rank<br>\n<input type=\"submit\" name=\"overall_save\" value=\"Save-Edit\">\n";
+  		print "<th>Overall Rank<br>\n<input type=\"submit\" name=\"overall_save\" value=\"Save-Edit\">\n";
         print "</th><th>Overall Rating</th>\n";
         print "<th>Offense Rating</th>\n";
         print "<th>Defense Rating</th>\n";
     }
   else
-    {
-    	print "<a href=\"{$url_root}rank_overall&lsort=rank_overall\">Overall Rank</a>";
-  		print "</th><th><a href=\"{$url_root}rank_overall&lsort=rating_overall\">Overall Rating</a></th>\n";
-  		print "<th><a href=\"{$url_root}rank_overall&lsort=rating_overall_off\">Offense Rating</a></th>\n";
-  		print "<th><a href=\"{$url_root}rank_overall&lsort=rating_overall_def\">Defense Rating</a></th>\n";
-	}
+    // iterate through array and select heading
+    foreach($rank_columns_always as $column=>$heading)
+      // don't show link if this is the current sort column
+      if ($column == $lsort)
+        print "<th><a href=\"{$url_root}rank_overall&lsort={$column}\">{$heading}</a></th>\n";
+      else
+        print "<th>{$heading}</th>\n";
 
-  // positions rank and rating
+*/
+//    {
+//    	print "<a href=\"{$url_root}rank_overall&lsort=rank_overall\">Overall Rank</a>";
+//  		print "</th><th><a href=\"{$url_root}rank_overall&lsort=rating_overall\">Overall Rating</a></th>\n";
+//  		print "<th><a href=\"{$url_root}rank_overall&lsort=rating_overall_off\">Offense Rating</a></th>\n";
+//  		print "<th><a href=\"{$url_root}rank_overall&lsort=rating_overall_def\">Defense Rating</a></th>\n";
+//   	}
+
+  // positions rank and rating if positoins is turned on
   if ($field_positions)  // if using field positions
   {
 	  // loop through positions
@@ -234,10 +287,22 @@
 		  	  }
 	  }
   }
+
+  //
+  // look for custom columns and add
+  //
+  foreach($rank_columns_custom as $col_def)
+    if (($col_def['column'] == $lsort) || ($edit))
+      print "<th>{$col_def['heading']}</th>\n";
+    else
+      print "<th><a href=\"{$url_root}rank_overall&lsort={$col_def['column']}\">{$col_def['heading']}</a></th>\n";
+
   // end heaing row
   print "</th></tr>\n";
 
-
+  //
+  // print data fields
+  //
   // loop through each entry
   foreach ($teamsrank as $teamnum=>$rank)
   {
@@ -253,6 +318,20 @@
     if ($team[$teamnum]["nickname"]) print " ({$team[$teamnum]["nickname"]})";
     print "</a></td>\n";
 
+
+    // iterate through columns array and select heading
+    //   if in edit, show appropriate edit box
+    foreach($rank_columns_always as $column=>$heading)
+      {
+        print "<td align=\"center\">";
+        if (($column == "rank_overall") && ($edit) && ($sort=="rank_overall"))
+          print $editfield;
+        else
+          print "{$team[$teamnum][$column]}";
+        print "</td>\n";
+      }
+
+/*
     // overall rank
     print "\n<td align=\"center\">";
     if (($edit) && ($sort=="rank_overall")) print $editfield; else print $team[$teamnum]["rank_overall"];
@@ -265,7 +344,7 @@
 
     // defense rating
     print "<td align=\"center\">{$team[$teamnum]["rating_overall_def"]}</td>";
-
+*/
     // positions rank and rating
     if ($field_positions === TRUE)  // if using field positions
     {
@@ -278,6 +357,21 @@
 			print "</td><td align=\"center\">{$team[$teamnum]["rating_pos" . $i]}</td>";
 		}
 	}
+
+
+   //
+   // look for custom columns and add
+   //
+   foreach($rank_columns_custom as $col_def)
+   {
+     // if format isn't null and value isn't null then format
+     if (($col_def["format"] != NULL) && ($team[$teamnum][$col_def['column']] != NULL))
+       $value = sprintf($col_def["format"], $team[$teamnum][$col_def['column']]);
+     else
+       $value = $team[$teamnum][$col_def['column']];
+
+     print "<td align=\"center\">{$value}</td>\n";
+   }
 
     // close row
   	print "</tr>\n";

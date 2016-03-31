@@ -59,14 +59,15 @@
 	//   2 = save and return to non-edit mode
 	//   3 = save and stay in edit mode
 	//
-	//   10 = sequential entering of data
-	//   11 = clear table and enter teams
+	//   10 = sequential entering of teams, continue the name
+	//   11 = clear table and enter teams from the beginning
 	//   12 = enter teams just entered from 11
-	//   13 = edit all teams
+	//   13 = edit all teams in a grid
 	//   14 = submit all teams from 13
 	//	 15 = duplicate of 11 but does not delete the tables,
 	//			allows user to keep data when in edit 11 and clicks on an ordering link
 
+    // clear teams before starting an edit
 	if($edit == 11 || $edit == 12)
 	{
 		if (! (@mysqli_query ($connection, "delete from alliance_team where event_id = '{$sys_event_id}'") ))
@@ -137,6 +138,7 @@
 	}
 	if($edit == 14)
 	{
+		// clear existing entries and reset to fresh alliances
 		$error_message="";
 		if (! (@mysqli_query ($connection, "delete from alliance_team where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
@@ -145,6 +147,7 @@
 		if (! (@mysqli_query ($connection, "delete from alliance_unavailable where event_id = '{$sys_event_id}'") ))
 			dbshowerror($connection, "die");
 
+		// add alliance numbers
 		for($i=1; $i<=8; $i++)
 			if (! (@mysqli_query ($connection, "insert into alliance (event_id, alliancenum) values
 				('{$sys_event_id}', {$i})") ))
@@ -170,6 +173,7 @@
 					}//team does not exist
 					else
 					{
+						// team does exist, add to database
 						$query = "select * from alliance_team where event_id = '{$sys_event_id}' and teamnum={$temp}";
 						if (!($result=@mysqli_query ($connection, $query) ))
 							dbshowerror($connection, "die");
@@ -214,13 +218,13 @@
 	// Start page
 	//
 
-	//**links:
+	//** mode seclection links
 	if($edit)
 	{
-		print "<a href=\"/finalselect.php?edit=11\">Start Sequential Selection</a>&nbsp;&nbsp;&nbsp;";
-		print "<a href=\"/finalselect.php?edit=10\">Continue Sequential Selection</a>&nbsp;&nbsp;&nbsp;";
-		print "<a href=\"/finalselect.php?edit=13\">Edit all Teams</a>&nbsp;&nbsp;&nbsp;";
-		print "<a href=\"/finalselect.php\">Continue/Cancel Editing</a><br>";
+		print "<a href=\"/finalselect.php?edit=11\">Start Sequential Selection</a> (erases current)&nbsp;&nbsp;&nbsp;\n";
+		print "<a href=\"/finalselect.php?edit=10\">Continue Sequential Selection</a>&nbsp;&nbsp;&nbsp;\n";
+		print "<a href=\"/finalselect.php?edit=13\">Edit all Teams</a>&nbsp;&nbsp;&nbsp;\n";
+		print "<a href=\"/finalselect.php\">Continue/Cancel Editing</a><br>\n";
 
 		if(!$dbcontrol)
 			dblock($dblock, "lock");
@@ -234,19 +238,19 @@
 		print "<a href=\"/finalselect.php?edit=1\">Edit this page</a><br>";
 	else if($dbcontrol && $dbcontrol!=$user)
 	{
-		print "Locked by {$dbcontrol}- <a href=\"/finalselect.php?dblocksteal=1&edit=1\">!Steal the page!</a><br>";
+		print "Locked by {$dbcontrol}- <a href=\"/finalselect.php?dblocksteal=1&edit=1\">!Steal the page!</a><br>\n";
 	}//page stealing
 
 	if($error_message)
-		print "<br><font color=\"red\"><b>{$error_message}</font></b>";
+		print "<br><font color=\"red\"><b>{$error_message}</font></b>\n";
 
-//************************************************
+    //************************************************
   	//Conrads Work:
 
 	$error_message="";
 	if($edit == 10)
 	{
-		//enter refusal:
+		// commit refusal:
 		$refused=mysqli_real_escape_string($connection, $_POST["refused"]);
 		if(isset($refused) && $refused!="")
 		{
@@ -470,24 +474,23 @@
 	}
 
 	if($error_message!="")
-		print "<br><br><font color=\"red\"><b>{$error_message}</font></b>";
+		print "<br><br><font color=\"red\"><b>{$error_message}</font></b>\n";
 
+    // seqential entry display
 	if($edit==10)//this might change if all other data fields are filled in
 	{
-		print "<form method=\"POST\" action=\"/finalselect.php?edit=10\">";
+		print "<form method=\"POST\" action=\"/finalselect.php?edit=10\">\n";
 
-		?>
-			<br>
-			<INPUT TYPE="submit" name="Submit" VALUE="Submit" ALIGN=middle BORDER=0>
-		<?php
+		// submit button
+		print "<br><INPUT TYPE=\"Submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0>\n";
 
-		print "<br><table><tr valign = \"top\"><td><table>";
+		print "<br><table>\n<tr valign = \"top\"><td><table>\n";
 
 		//print Alliance numbers:
-		print "<tr><td><table border=1>";
+		print "<tr><td><table border=1>\n";
 		for($i=1; $i<=8; $i++)
-			print "<tr><td>Alliance {$i}</td></tr>";
-		print "</table></td>";
+			print "<tr><td>Alliance {$i}</td></tr>\n";
+		print "</table></td>\n";
 
 		$declared_next = 1;
 		$last_data = array();
@@ -496,7 +499,7 @@
 
 		for($num = 1; $num <=3; $num++)
 		{
-			print "<td><table border=1>";
+			print "<td><table border=1>\n";
 
 			for($tnQ=1; $tnQ<=8; $tnQ++)
 			{
@@ -527,9 +530,9 @@
 							while($row2 = mysqli_fetch_array($result2))
 								$un=1;
 							if(un==0)
-								print "<tr><td>{$row["teamnum"]}</td></tr>";
+								print "<tr><td>{$row["teamnum"]}</td></tr>\n";
 							else
-								print "<tr><td><b>{$row["teamnum"]}</b></td></tr>";
+								print "<tr><td><b>{$row["teamnum"]}</b></td></tr>\n";
 						}
 					}
 					$found = 1;
@@ -543,14 +546,14 @@
 						if($num==3)
 							$last_data[$tn]=-1;
 						else
-							print "<tr><td><input type=\"text\" name=next size=4 maxlength=4></td></tr>";
+							print "<tr><td><input type=\"text\" name=next size=4 maxlength=4></td>\n";
 					}//next place
 					else
 					{
 						if($num==3)
 							$last_data[$tn]=-2;
 						else
-							print "<tr><td>-</td></tr>";
+							print "<tr><td>-</td>\n";
 					}
 				}
 			}//end of for loop to 8 to count teams
@@ -559,16 +562,25 @@
 			{
 				for($tn=1; $tn<=8; $tn++)
 				{
-					if($last_data[$tn]==-2)
-						print "<tr><td>-</td></tr>";
-					else if($last_data[$tn]==-1)
-						print "<tr><td><input type=\"text\" name=next size=4 maxlength=4></td></tr>";
-					else
-						print "<tr><td>$last_data[$tn]</td></tr>";
+				  if($last_data[$tn]==-2)
+					print "<tr><td>-</td>\n";
+				  else if($last_data[$tn]==-1)
+					print "<tr><td><input type=\"text\" name=next size=4 maxlength=4></td>\n";
+				  else
+				    print "<tr><td>$last_data[$tn]</td>";
+
+				// display submit button
+				// JLV work on later -- need to redo entire table struction and query order for this to work
+			    // print "<td>";
+				// print "<INPUT TYPE=\"submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0>\n";
+			    // print "</td>\n";
+
 				}
 			}
 
-			print "</table></td>";
+            print "<tr>\n";
+
+			print "</table></td>\n";
 		}//end of for counter to 3 for each column
 		print "</tr></table></td>";
 
@@ -578,34 +590,34 @@
 			where event_id = '{$sys_event_id}' and refused=true") ))
 			dbshowerror($connection, "die");
 		while($row = mysqli_fetch_array($result))
-			print "<tr><td>{$row["teamnum"]}</td></td>";
-		print "</table></table>";
-		//** end fo printing refused list
+			print "<tr><td>{$row["teamnum"]}</td></td>\n";
+		print "</table>\n</table>\n";
+		//** end of printing refused list
 
-		print "<br>Refusal: <input type=\"text\" name=refused size=4 maxlength=4><br><br>";
-	}//big one, only runs if in edit mode 10
+		print "<br>Refusal: <input type=\"text\" name=refused size=4 maxlength=4><br><br>\n";
+
+	} //big one, only runs if in edit mode 10
+
 //****************************************************
 
   	//display all the alliances
 
-	if($edit!=10)
+	if($edit != 10)
 	{
 		if($edit == 11)
-			print "<form method=\"POST\" action=\"/finalselect.php?edit=12\">";
+			print "<form method=\"POST\" action=\"/finalselect.php?edit=12\">\n";
 		else if($edit == 13)
-			print "<form method=\"POST\" action=\"/finalselect.php?edit=14\">";
-		else print "<form method=\"POST\" action=\"/finalselect.php?edit=1\">";
+			print "<form method=\"POST\" action=\"/finalselect.php?edit=14\">\n";
+		else print "<form method=\"POST\" action=\"/finalselect.php?edit=1\">\n";
 
-		?>
-			<br>
-			<INPUT TYPE="submit" name="Submit" VALUE="Submit" ALIGN=middle BORDER=0>
-		<?php
+        // submit button
+		print "<br> <INPUT TYPE=\"submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0>\n";
 
-		print "<br><table><tr valign = \"top\"><td><table border=1>";
+		print "<br><table>\n<tr valign = \"top\"><td><table border=1>\n";
 
 		for($i=1; $i<=8; $i++)
 		{
-			print "<tr><td>Alliance {$i}</td>";
+			print "<tr><td>Alliance {$i}</td>\n";
 
 			if($edit!=11 && $edit!=13)
 			{
@@ -618,6 +630,7 @@
 						print "<td>".teamhref($row2[0]).$row2[0]."</a></td>";
 				}
 			}
+
 			if($edit == 11)
 			{
 				if (! ($result = @ mysqli_query ($connection, "select teamnum from alliance_team
@@ -626,9 +639,9 @@
 				$row = mysqli_fetch_array($result);
 
 				if($row)
-					print "<td><input type=\"text\" name=\"team{$i}\" size=4 maxlength=4 value=\"{$row["teamnum"]}\"><td>";
+					print "<td><input type=\"text\" name=\"team{$i}\" size=4 maxlength=4 value=\"{$row["teamnum"]}\"><td>\n";
 				else
-					print "<td><input type=\"text\" name=\"team{$i}\" size=4 maxlength=4><td>";
+					print "<td><input type=\"text\" name=\"team{$i}\" size=4 maxlength=4><td>\n";
 			}
 			if($edit == 13)
 			{
@@ -643,28 +656,38 @@
 					{
 						$tmp = $row2["teamnum"];
 						print "<td><input type=\"text\" name=\"team{$i}{$q}\" size=4 maxlength=4
-							value=\"$tmp\"><td>";
+							value=\"$tmp\"><td>\n";
 					}
 					else
-						print "<td><input type=\"text\" name=\"team{$i}{$q}\" size=4 maxlength=4><td>";
+						print "<td><input type=\"text\" name=\"team{$i}{$q}\" size=4 maxlength=4><td>\n";
 				}
+
 			}
 
-			print "</tr>";
+			print "</tr>\n";
 		}
 
 		//** print refused list:
-		print "</td></table><td>&nbsp;&nbsp;</td><td><table border=1><tr><td>Refused:</td></tr>";
+		print "</td></table>\n<td>&nbsp;&nbsp;</td><td>\n<table border=1>\n<tr><td>Refused:</td></tr>\n";
 		if(!($result = @ mysqli_query ($connection, "select teamnum from alliance_unavailable
 			where event_id = '{$sys_event_id}' and refused=true") ))
 			dbshowerror($connection, "die");
 		while($row = mysqli_fetch_array($result))
-			print "<tr><td>{$row["teamnum"]}</td></td>";
-		print "</table></table><br>";
-		//** end fo printing refused list
-		//print "</table><br>";
+			print "<tr><td>{$row["teamnum"]}</td></td>\n";
+		print "</table></table><br>\n";
+		//** end of printing refused list
+		//print "</table><br>\n";
+
+		// enter refused
+		// JLV fix entry
+		// print "<br>Refusal: <input type=\"text\" name=refused size=4 maxlength=4><br><br>\n";
+
 	}
 
+
+    //
+    // messaging to the field
+    //
 
 	if($_POST["message"])
 		$message=mysqli_real_escape_string($connection, $_POST["message"]);
@@ -686,12 +709,14 @@
 
 	if($edit)
 	{
-		print "Message to field: <input type=\"text\" name=\"message\" size=100 maxlength=200 value=\"{$message}\"><br>";
+		print "Message to field: \n<input type=\"text\" name=\"message\" size=100 maxlength=200 value=\"{$message}\"><br>\n";
 
-		?>
-			<INPUT TYPE="submit" name="Submit" VALUE="Submit" ALIGN=middle BORDER=0>
-			</form><br>
-		<?php
+        // submit button
+		print "<INPUT TYPE=\"submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0><br>\n";
+
+        // end form
+        print "</form>\n";
+
 	}
 	else
 		print "Message to field: {$message}<br>";

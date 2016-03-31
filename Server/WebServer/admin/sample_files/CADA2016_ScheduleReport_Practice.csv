@@ -1,0 +1,47 @@
+Practice Match Schedule,,,,,,,,
+,,,,,,,,
+Sacramento Regional,,,,,,,,
+Matches Per Team,,4,,,,,,
+Time,Description,Match,Blue 1,Blue 2,Blue 3,Red 1,Red 2,Red 3
+Thu 12:00,Practice 1,1,604,1280,2367,4904,5134,3598
+Thu 12:10,Practice 2,2,581,6174,4159,2204,3501,3859
+Thu 12:20,Practice 3,3,114,4135,1671,668,3615,4669
+Thu 12:30,Practice 4,4,841,5869,1351,2854,3257,2073
+Thu 12:40,Practice 5,5,1458,5808,3189,1323,766,5026
+Thu 12:50,Practice 6,6,1678,5430,4643,100,3250,852
+Thu 1:00,Practice 7,7,5250,5274,1056,295,4698,701
+Thu 1:10,Practice 8,8,2035,2085,2141,5496,971,5458
+Thu 1:20,Practice 9,9,5924,597,2102,1072,692,2551
+Thu 1:30,Practice 10,10,2144,3669,4543,4973,4186,5507
+Thu 1:40,Practice 11,11,2854,604,1458,4135,4643,4159
+Thu 1:50,Practice 12,12,701,100,1280,3189,1351,581
+Thu 2:00,Practice 13,13,3250,5808,4669,3859,5250,5869
+Thu 2:10,Practice 14,14,2204,4698,3598,5026,971,841
+Thu 2:20,Practice 15,15,1323,5507,2367,2035,5274,5924
+Thu 2:30,Practice 16,16,5458,1671,4904,4973,852,2102
+Thu 2:40,Practice 17,17,5430,2073,668,2141,597,3669
+Thu 2:50,Practice 18,18,5496,3615,1072,1678,4543,1056
+Thu 3:00,Practice 19,19,6174,2144,2551,295,5134,766
+Thu 3:10,Practice 20,20,114,3257,4186,3501,692,2085
+Thu 3:20,Practice 21,21,604,5274,3859,1671,1351,5026
+Thu 3:30,Practice 22,22,841,5924,2141,5250,4159,4904
+Thu 3:40,Practice 23,23,5507,597,4669,1458,2204,100
+Thu 3:50,Practice 24,24,971,852,5869,2144,1056,581
+Thu 4:00,Practice 25,25,2085,766,2854,4973,5430,1280
+Thu 4:10,Practice 26,26,295,1072,3189,2367,114,3669
+Thu 4:20,Practice 27,27,3250,692,4698,3615,2035,2073
+Thu 4:30,Practice 28,28,2551,3257,4643,668,5808,4543
+Thu 4:40,Practice 29,29,5134,4135,3501,701,2102,5496
+Thu 4:50,Practice 30,30,1678,1323,4186,5458,3598,6174
+Thu 5:00,Practice 31,31,1280,3859,1458,5924,2144,114
+Thu 5:10,Practice 32,32,5250,852,766,3615,604,3669
+Thu 5:20,Practice 33,33,2367,1056,2854,2141,2551,4669
+Thu 5:30,Practice 34,34,4159,597,1351,4698,4543,2085
+Thu 5:40,Practice 35,35,3501,5274,100,5458,5808,2073
+Thu 5:50,Practice 36,36,841,5134,4186,581,5430,1072
+Thu 6:00,Practice 37,37,3598,5869,2035,1671,701,4643
+Thu 6:10,Practice 38,38,668,692,4904,2204,5496,1323
+Thu 6:20,Practice 39,39,5026,2102,295,5507,1678,3257
+Thu 6:30,Practice 40,40,6174,971,4973,3250,4135,3189
+"SURROGATE matches will be marked with an ""*"" to the right of the SURROGATE Team's Number. The Audience defense selection group is rotated once per round of MATCHES. A round of MATCHES equals the total number of MATCHES divided by the number of MATCHES per Team rounded down to the nearest whole number. Due to the MATCH Assignment criteria (per FRC Game Manual, 5.3.2), it is possible for a team to not play with a particular audience selection in one round, and play with another selection twice in a different round.
+",,,,,,,,

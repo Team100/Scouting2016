@@ -8,7 +8,7 @@
   require "page.inc";
   // get variables
 
-  pheader("Template", "titleonly", array ("openhead"=>1) );
+  pheader($host_team_name . " - Finals on Field", "titleonly", array ("openhead"=>1) );
   $connection = dbsetup();
 
   // add retrieve header
@@ -21,15 +21,23 @@
   // show top 2 ranked teams
   //
 
-  		$query = "select teamnum from teambot where event_id = '${sys_event_id}' and
+  	$query = "select teamnum from teambot where event_id = '${sys_event_id}' and
   		         teamnum not in (select teamnum from alliance_unavailable) order by rank_overall";
       if (!($result = @ mysqli_query ($connection, $query)))
   	    dbshowerror($connection);
+
+  	  // first ranked team
     	if (! ($row = mysqli_fetch_array($result)))
     		showerror("Match info not found.  Please try again.","die");
     	$teamnum = $row["teamnum"];
-    	print "<br><p style=\"font-size:80px;\">Team: $teamnum</p><br>";
+    	print "<p style=\"font-size:60px;\">1st Team: $teamnum</p>";
 
+
+  	  // second ranked team
+    	if (! ($row = mysqli_fetch_array($result)))
+    		showerror("Match info not found.  Please try again.","die");
+    	$teamnum = $row["teamnum"];
+    	print "<p style=\"font-size:40px;\">2nd Team: $teamnum</p>";
 
 
 
@@ -40,10 +48,8 @@
   $message = mysqli_fetch_array($result);
 
 
-   print "<p style=\"font-size:80px;\">{$message["message"]}</p>";
+   print "<p style=\"font-size:50px;\">{$message["message"]}</p>";
 
-  ?>
 
-<?php
    pfooter();
  ?>

@@ -99,6 +99,12 @@
 <?php
   // if administrator, show admin section.  Otherwise skip
   if ($admin)
+  {
+    print "<h4><center><a href=\"/admin.php\">Sys Admin Functions</a></center></h4>\n";
+    print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}\n";
+  }
+
+  /*
    print "
    <br>
    <h3><center><u>Admin</u></center></h3>
@@ -114,6 +120,8 @@
    </ul>
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}
    ";
+/*
+
 ?>
 
 </td>

@@ -15,6 +15,12 @@
   pheader("Verifying Customer Parameter Configuration");
   $connection = dbsetup();
 
+ // if not administrator, display error.  Otherwise show admin section.
+ if (! $admin)
+   print "<h3>You must be an administrator to use this page.</h3>\n";
+ else
+ {
+
 
   //
   // Walk through parameters and display to user
@@ -46,6 +52,8 @@
     print "<br>";
   }
 
+
+ } // end of "if admin" qualification
 
 
   print "<br><br><a href=\"{$base}\">Return to Home</a><br>\n";
