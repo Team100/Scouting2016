@@ -28,7 +28,12 @@ include ('lib/httpful.phar');
 //  to compsystem database columns
 //
 // - These maps may change and Blue Alliance data structures change
-// - Some of the maps change each year for the game, i.e.
+// - Some of the maps change each year for the game
+// - Some yearly-changing maps are defined in params.inc instead of here
+//    because they also involve UI configuration.  Try to reference that map in 
+//    comments below, then direct people to the params.inc file for configuration.
+// - In general, the map definitions should provide configuration of the data loads
+//    without additional programming.
 //
 
 
@@ -54,6 +59,8 @@ $tba_event_to_event = array ("key"=>"event_id","short_name"=>"name","name"=>"lon
 // tBA team to team table
 $tba_team_to_team = array ("team_number" =>"teamnum","nickname"=>"name","location"=>"location",
    "website"=>"website","name"=>"sponsors","rookie_year"=>"rookie_year");
+   
+// tBA history
 
 // tBA team to teambot table
 $tba_team_to_teambot = array ("botname"=>"name");
@@ -67,9 +74,8 @@ $tba_match_to_match_alliance = array ("score"=>"score");
 // tBA match to match_team table
 $tba_match_to_match_team = array ();
 
-
 // tBA stats to teambot
-$map_stats_to_teambot = array ("oprs"=>"opr","dprs"=>"dpr","ccwms"=>"ccwm");
+$tba_stats_to_teambot = array ("oprs"=>"opr","dprs"=>"dpr","ccwms"=>"ccwm");
 
 
 // tBA stats to match_instance_alliance
@@ -191,7 +197,307 @@ function tba_getmatcharray ($tba_response_array)
 // These functions are usually called from a web page or from a background daemon
 //  periodically processing updates
 //
+// Note: these functions directly print errors or progress messages rather than
+//  returning up the stack.
 //
+
+
+// function: tba_get_event_teams()
+//   Returns - TRUE if successful, FALSE if otherwise
+//
+// Gets event teams based on $sys_event_id
+
+function tba_get_event_teams()
+{
+  global $sys_event_id;
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  global $tba_team_to_team, $tba_team_to_teambot;
+
+  // get data
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams")))
+  {
+    print "API returned " . $tba_error['message'] . "<br>\n";
+    return(FALSE);
+  }
+  else
+  {
+  /*
+      // get data
+      try
+      {
+        $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams";
+        $tba_response = \Httpful\Request::get($tba_url)
+           ->addHeader('X-TBA-App-Id',$tba_AppId)
+           ->send();
+      } catch (Exception $e)
+      {
+      print "Exception";
+         showerror("Caught exception from Blue Alliance: " . $e->getMessage());
+         return;
+      }
+*/
+
+    // start message
+    print "<br>Updated team ";
+
+    foreach($tba_response->body as $key=>$teamobj)
+    {
+      // get teamnum
+      $tba_dbarray = tba_map_teamnum($teamobj, "");
+      // map fields from response for team table
+      $tba_dbarray = tba_mapfields($tba_team_to_team, $teamobj, $tba_dbarray);
+
+      // update event data in event table
+      tba_updatedb("team", array ("teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
+
+      // get teamnum and reset db array
+      $tba_dbarray = tba_map_teamnum($teamobj, "");
+      $tba_dbarray['event_id']=$sys_event_id;
+
+      // map fields from response for teambot  table
+      $tba_dbarray = tba_mapfields($tba_team_to_teambot, $teamobj, $tba_dbarray);
+
+      // update event data in event table
+      tba_updatedb("teambot", array ("event_id"=>$sys_event_id, "teamnum"=>$tba_dbarray["teamnum"]), $tba_dbarray);
+
+      // inform user
+      print "{$tba_dbarray["teamnum"]}, ";
+
+      }
+
+    // commit
+    if (! (@mysqli_commit($connection) ))
+      dbshowerror($connection, "die");
+
+    // Inform user
+    print "<br>&nbsp;&nbsp;&nbsp; ... team loading complete.<br>\n";
+    
+    return(TRUE);
+
+  } // end of else from REST query
+
+  return(TRUE);
+  
+} // end of function
+
+
+// function: tba_get_match_data()
+//   Returns - message string of what to print as a final message
+//
+// Gets match data for event based on $sys_event_id
+
+function tba_get_matches()
+{
+  global $sys_event_id;
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  global $tba_match_to_match_instance, $tba_match_to_match_alliance, $tba_match_to_match_team;
+  
+  // get data
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches")))
+    print "API returned " . $tba_error['message'] . "<br>\n";
+  else
+  {
+
+/*
+      // get data
+    try
+    {
+      $tba_url = "http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches";
+      $tba_response = \Httpful\Request::get($tba_url)
+         ->addHeader('X-TBA-App-Id',$tba_AppId)
+         ->send();
+    } catch (Exception $e)
+    {
+    print "Exception";
+       showerror("Caught exception from Blue Alliance: " . $e->getMessage());
+       return;
+    }
+*/
+
+    foreach($tba_response->body as $key=>$matchobj)
+    {
+      // get match array from match
+      $matcharray = tba_getmatcharray($matchobj);
+       // create match ID array and use and starting dbarray
+      $tba_dbarray = array_merge ( array ("event_id"=>$sys_event_id, ), $matcharray);
+      $match_id_array = array ("event_id"=>$sys_event_id, "type"=>$matcharray['type'],
+                          "matchnum"=>$matcharray['matchnum']);
+      // map fields from response for match_instance table
+      // $tba_dbarray = tba_mapfields($tba_match_to_match_instance, $matchobj, $tba_dbarray);
+      // update event data in event table
+      tba_updatedb("match_instance", $match_id_array, $tba_dbarray);
+
+      // update match alliance table
+      // iterate match alliances
+      foreach($matchobj->alliances as $colorkey=>$allianceobj)
+      {
+        if ($colorkey == "blue") $color='B'; else $color='R';
+        
+        // set match alliance array
+        $match_alliance_array = array_merge ($match_id_array,array("color"=>$color));
+        $tba_dbarray = $match_alliance_array;
+        
+        // map fields from response for match_instance table
+        $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $allianceobj, $tba_dbarray);
+
+        // update event data in event table
+        tba_updatedb("match_instance_alliance", $match_alliance_array, $tba_dbarray);
+        
+        // loop through each team in alliance and update match_team table
+        foreach($allianceobj->teams as $teamkey)
+        {
+          // turn teamkey to teamnum
+          sscanf($teamkey, "frc%d", $teamnum);
+
+          // set match key array
+          //   Note: it doesn't use color in the kay or the alliance key;
+          //     however, color must be inserted in the table (avoids a crazy join)
+          $match_team_array = array_merge ($match_id_array, array ("teamnum"=>$teamnum));
+          $tba_dbarray = $match_team_array;
+          
+          // map fields from response for match_instance table
+          // $tba_dbarray = tba_mapfields($tba_match_to_match_team, $match_team_array, $tba_dbarray);
+
+          // manually add color
+          $tba_dbarray = array_merge ($tba_dbarray, array("color"=>$color));
+
+          // update event data in event table
+          tba_updatedb("match_team", $match_team_array, $tba_dbarray);
+          }
+        } // end of alliance
+
+      // inform user
+      print "{$tba_dbarray["type"]}{$tba_dbarray["matchnum"]}, ";
+
+    } // end of match
+
+    // commit
+    if (! (@mysqli_commit($connection) ))
+      dbshowerror($connection, "die");
+
+    // Inform user
+    print "<br>&nbsp;&nbsp;&nbsp; ... match loading complete.<br>\n";
+    return(TRUE);
+
+  } // end of else from REST query
+
+  return(TRUE);
+
+} // end of function
+
+
+// function: tba_get_event_stats()
+//   Returns - message string of what to print as a final message
+//
+// Gets event stats based on $sys_event_id
+
+function tba_get_event_stats()
+{
+  global $sys_event_id;
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  global $tba_stats_to_teambot;
+
+  // get data
+  //                                  http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats")))
+    print "API returned " . $tba_error['message'] . "<br>\n";
+  else
+  {
+    // loop through each type of stat in map function
+    foreach($tba_stats_to_teambot as $tag=>$column)
+      foreach($tba_response->body->$tag as $teamnum=>$value)
+      {
+        $id_array = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
+        tba_updatedb("teambot", $id_array, array($column=>$value));
+        print $teamnum . ", ";
+      }
+
+    // commit
+    if (! (@mysqli_commit($connection) ))
+      dbshowerror($connection, "die");
+
+    // Inform user
+    print "<br>&nbsp;&nbsp;&nbsp; ... stats loading complete.<br>\n";
+
+    return(TRUE);
+
+  } // end of else from REST query
+
+  return(TRUE);
+  
+} // end of function
+
+
+// function: tba_get_event_rankings()
+//   Returns - message string of what to print as a final message
+//
+// Gets event rankings based on $sys_event_id
+// Decode the event rankings based on display variable structures
+
+function tba_get_event_rankings()
+{
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  {
+
+    return(TRUE);
+
+  } // end of else from REST query
+
+  return(TRUE);
+  
+} // end of function
+
+
+
+// function: tba_get_team_history($teamnum)
+//   Returns - message string of what to print as a final message
+//
+// Gets event teams based on $sys_event_id
+
+function tba_get_team_history($teamnum)
+{
+  global $sys_event_id;
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  {
+  
+    return(TRUE);
+
+  } // end of else from REST query
+
+  return(TRUE);
+  
+} // end of function
+
+// function: tba_get_team_awards($teamnum)
+//   Returns - message string of what to print as a final message
+//
+// Gets event teams based on $sys_event_id
+
+function tba_get_team_awards($teamnum)
+{
+  global $sys_event_id;
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  {
+  
+    return(TRUE);
+
+  } // end of else from REST query
+
+  return(TRUE);
+  
+} // end of function
 
 
 

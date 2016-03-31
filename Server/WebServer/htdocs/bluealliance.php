@@ -47,7 +47,13 @@
 
       // inform user
       print "Processing event teams...<br>\n";
-      print "Updated team \n";
+      if (tba_get_event_teams())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>";
+      break;
+
 
       // get data
       if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams")))
@@ -112,6 +118,17 @@
     // ****
     // get match data
     case "matchdata":
+
+      // inform user
+      print "Processing event matches...<br>\n";
+      if (tba_get_matches())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>";
+      break;
+
+
       // inform user
       print "Processing match data...<br>\n";
       print "Updated match \n";
@@ -212,6 +229,16 @@
     // ****
     //
     case "stats":
+
+      // inform user
+      print "Retrieving event stats...<br>\n";
+      if (tba_get_event_stats())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>";
+      break;
+
 
       // inform user
       print "Retrieving stats data...<br>\n";

@@ -6,11 +6,20 @@
 // params.inc
 //
 // Contains all user and admin settable parameters needed by the competition system
+//  PLEASE READ through the entire paramaters file to ascertain what is already 
+//   parameter-driven.  You may find there is a parameter-based way to control the app
+//   to do what you want without needing to write/modify code.
 //
-// Notes:
-//  - General params are in first section
-//  
-//  - 
+// Additional Notes:
+// - Configuration of Blue Alliance data loading is generally configured in 
+//    bluealliance.inc.  Field mappings are defined there and should generally
+//    obviate the need to reprogram when fields change.
+//    - There are a couple of Blue Alliance mappings that are handled in this file
+//      instead of in bluealliance.inc.  These mappings change every year and involve
+//      also changing UI display tags, so there are covered in a different structure
+//      than the more simple tag mapping defined in bluealliance.inc.  Because they
+//      change the UI, they are defined here.
+// 
 
 // Timezone setting
 //  -- the string must come from a PHP list found here:
