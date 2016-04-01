@@ -138,8 +138,9 @@ create table teambot
   bot_name varchar(30),         # tBA robot name
   f_ranking int,                # tBA ranking from FIRST
   f_rank_score real,            # tBA seed points from FIRST
-  f_record varchar(8),          # tBA FIRST records, W-L-T
-  f_gamesplayed int,            # tBA FIRST games played
+  f_record varchar(8),          # tBA FIRST record, W-L-T
+  f_games_played int,            # tBA FIRST games played
+  f_rankparam0 real,            # tBA FIRST parameter 0 in game-specific rankings
   f_rankparam1 real,            # tBA FIRST parameter 1 in game-specific rankings
   f_rankparam2 real,            # tBA FIRST parameter 2 in game-specific rankings
   f_rankparam3 real,            # tBA FIRST parameter 3 in game-specific rankings
@@ -339,10 +340,55 @@ create table match_instance_alliance
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   updatedby varchar(200), 	# last updated by users
   score int,			# tBA score, final score
-  raw_points int, 		# raw points (prior to penalties)
-  penalty_points int,		# penalty points
-  other_points int,		# other points, might need in the future
-  seed_points int,		# seed points - seed points in system
+  raw_points int, 		# raw points (prior to penalties)  -- depricate
+  penalty_points int,		# penalty points -- depricate
+  other_points int,		# other points, might need in the future -- depricate
+  seed_points int,		# seed points - seed points in system -- depricate
+  f_score0 varchar(25),          # tBA custom score field
+  f_score1 varchar(25),          # tBA custom score field
+  f_score2 varchar(25),          # tBA custom score field
+  f_score3 varchar(25),          # tBA custom score field
+  f_score4 varchar(25),          # tBA custom score field
+  f_score5 varchar(25),          # tBA custom score field
+  f_score6 varchar(25),          # tBA custom score field
+  f_score7 varchar(25),          # tBA custom score field
+  f_score8 varchar(25),          # tBA custom score field
+  f_score9 varchar(25),          # tBA custom score field
+  f_score10 varchar(25),          # tBA custom score field
+  f_score11 varchar(25),          # tBA custom score field
+  f_score12 varchar(25),          # tBA custom score field
+  f_score13 varchar(25),          # tBA custom score field
+  f_score14 varchar(25),          # tBA custom score field
+  f_score15 varchar(25),          # tBA custom score field
+  f_score16 varchar(25),          # tBA custom score field
+  f_score17 varchar(25),          # tBA custom score field
+  f_score18 varchar(25),          # tBA custom score field
+  f_score19 varchar(25),          # tBA custom score field
+  f_score20 varchar(25),          # tBA custom score field
+  f_score21 varchar(25),          # tBA custom score field
+  f_score22 varchar(25),          # tBA custom score field
+  f_score23 varchar(25),          # tBA custom score field
+  f_score24 varchar(25),          # tBA custom score field
+  f_score25 varchar(25),          # tBA custom score field
+  f_score26 varchar(25),          # tBA custom score field
+  f_score27 varchar(25),          # tBA custom score field
+  f_score28 varchar(25),          # tBA custom score field
+  f_score29 varchar(25),          # tBA custom score field
+  f_score30 varchar(25),          # tBA custom score field
+  f_score31 varchar(25),          # tBA custom score field
+  f_score32 varchar(25),          # tBA custom score field
+  f_score33 varchar(25),          # tBA custom score field
+  f_score34 varchar(25),          # tBA custom score field
+  f_score35 varchar(25),          # tBA custom score field
+  f_score36 varchar(25),          # tBA custom score field
+  f_score37 varchar(25),          # tBA custom score field
+  f_score38 varchar(25),          # tBA custom score field
+  f_score39 varchar(25),          # tBA custom score field
+  f_score40 varchar(25),          # tBA custom score field
+  f_score41 varchar(25),          # tBA custom score field
+  f_score42 varchar(25),          # tBA custom score field
+  f_score43 varchar(25),          # tBA custom score field
+  f_score44 varchar(25),          # tBA custom score field 
   primary key (event_id, type, matchnum, color)
  );
 
