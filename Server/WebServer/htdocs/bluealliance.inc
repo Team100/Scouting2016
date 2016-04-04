@@ -279,7 +279,22 @@ function tba_get_matches()
   global $tba_error;
   global $connection;
   global $tba_match_to_match_instance, $tba_match_to_match_alliance, $tba_match_to_match_team;
+  global $ScoreFields;
   
+  // 
+  // create internal mapping table for score breakdown
+  //  use standard mapping of tag=>column
+  //
+  // a $scoredef array includes:
+  //  - tBAtag: tag used by tBA.  Used by our system in Blue Alliance Loader
+  //  - display: Text used to display field in application
+  //  - column: if needed, column used for database mapping.  For custom fields
+  //     column is derived from position in ScoreField array.
+  //
+  $tba_score_to_match_alliance = array();
+  foreach($ScoreFields as $element=>$scoredef)
+    $tba_score_to_match_alliance = array_merge($tba_score_to_match_alliance, array($scoredef['tBAtag']=>"f_score{$element}"));
+
   // get data
   if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches")))
     print "API returned " . $tba_error['message'] . "<br>\n";
@@ -289,16 +304,19 @@ function tba_get_matches()
     {
       // get match array from match
       $matcharray = tba_getmatcharray($matchobj);
-       // create match ID array and use and starting dbarray
+      
+      // create match ID array and use and starting dbarray
       $tba_dbarray = array_merge ( array ("event_id"=>$sys_event_id, ), $matcharray);
       $match_id_array = array ("event_id"=>$sys_event_id, "type"=>$matcharray['type'],
                           "matchnum"=>$matcharray['matchnum']);
+                          
       // map fields from response for match_instance table
       // $tba_dbarray = tba_mapfields($tba_match_to_match_instance, $matchobj, $tba_dbarray);
+      
       // update event data in event table
       tba_updatedb("match_instance", $match_id_array, $tba_dbarray);
 
-      // update match alliance table
+      // update match alliance table with non-scorebreakdown data
       // iterate match alliances
       foreach($matchobj->alliances as $colorkey=>$allianceobj)
       {
@@ -309,7 +327,7 @@ function tba_get_matches()
         $tba_dbarray = $match_alliance_array;
         
         // map fields from response for match_instance table
-        $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $allianceobj, $tba_dbarray);
+        $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $scoreeobj, $tba_dbarray);
 
         // update event data in event table
         tba_updatedb("match_instance_alliance", $match_alliance_array, $tba_dbarray);
@@ -334,11 +352,31 @@ function tba_get_matches()
 
           // update event data in event table
           tba_updatedb("match_team", $match_team_array, $tba_dbarray);
-          }
-        } // end of alliance
+        }
+      } // end of alliance
+
+
+      // update match alliance table with scorebreakdown data
+      // iterate score_breakdown
+ 
+      foreach($matchobj->score_breakdown as $colorkey=>$scoreobj)
+      {
+        if ($colorkey == "blue") $color='B'; else $color='R';
+
+        // set match alliance array
+        $match_alliance_array = array_merge ($match_id_array,array("color"=>$color));
+ 
+        // map fields from response for team table
+        $tba_dbarray=array();
+        $tba_dbarray = tba_mapfields($tba_score_to_match_alliance, $scoreobj, $tba_dbarray);
+
+        // update event data in event table
+        tba_updatedb("match_instance_alliance", $match_alliance_array, $tba_dbarray);
+
+      } 
 
       // inform user
-      print "{$tba_dbarray["type"]}{$tba_dbarray["matchnum"]}, ";
+      print "{$match_alliance_array["type"]}{$match_alliance_array["matchnum"]}, ";
 
     } // end of match
 
@@ -409,12 +447,96 @@ function tba_get_event_stats()
 //
 // Gets event rankings based on $sys_event_id
 // Decode the event rankings based on display variable structures
+//
+// NOTE:
+//  There are unique aspects to the way Blue Alliances does the ranking page
+//  and the code is customized (more than preferred) to accommodate:
+//   - the 0 element of the array shows the fields tags for subseqent array elements.
+//      Therefore the 0 element should not be processed as data.
+//   - $teamnum is buried as one of the elements in the array, possibly changing year-to-year
+//      The function below expects one of the fields to be labelled with column=>teamnum
 
 function tba_get_event_rankings()
 {
   global $tba_AppId;
   global $tba_error;
+  global $sys_event_id;
   global $connection;
+  global $RankFields;
+
+  // define simple array for mapper to use
+  // - if display is not defined, skip
+  // - if column is "teamnum", set $teamnum_element
+  $tba_ranking_to_teambot = array();
+  foreach($RankFields as $rankdef)
+  {
+    // check for teamnum
+    if ($rankdef['column'] == "teamnum") $teamnum_element = $rankdef['tBApos'];
+    
+    // add mapping if display not ""
+    // note: because we're using positional parameters, this is not set as key=>value
+    if ($rankdef['display'] != "" )
+      $tba_ranking_to_teambot[$rankdef['tBApos']] = $rankdef['column'];
+  }
+  
+  // get data
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/rankings")))
+    print "API returned " . $tba_error['message'] . "<br>\n";
+  else
+  {
+    foreach($tba_response->body as $element=>$rankobj)
+    {
+      // if not the first element, process
+      if ($element != 0)
+      {
+      // set teamnum
+        $teamnum = $rankobj[$teamnum_element];
+      
+        // map fields -- map manually as we are using positional arrays        
+        $tba_dbarray= array();
+        foreach($tba_ranking_to_teambot as $field => $value)
+          if ($rankobj[$field]) 
+            $tba_dbarray[$value] = $rankobj[$field];
+                
+        // update event data in event table
+        tba_updatedb("teambot", array("event_id"=>$sys_event_id, "teamnum"=>$teamnum), $tba_dbarray);
+
+        // inform user
+        print "{$teamnum}, ";
+      }
+      
+    } // end of $tba_response
+  
+    // commit
+    if (! (@mysqli_commit($connection) ))
+      dbshowerror($connection, "die");
+
+    // Inform user
+    print "<br>&nbsp;&nbsp;&nbsp; ... rankings loading complete.<br>\n";
+
+    return(TRUE);
+
+  } // end of else from REST query
+
+  return(TRUE);
+  
+} // end of function
+
+
+
+// function: tba_get_event_stats()
+//   Returns - message string of what to print as a final message
+//
+// Gets event stats based on $sys_event_id
+
+function tba_get_event_statss()
+{
+  global $sys_event_id;
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  global $tba_stats_to_teambot;
+
   {
 
     return(TRUE);
@@ -537,7 +659,7 @@ function tba_getdata($tba_url)
   $code1 = substr($code, 0, 1);
   
   // debug
-  if (debug()) print_r($tba_response);
+  //if (debug()) print_r($tba_response);
   
   switch ($code1)
   {
@@ -671,7 +793,7 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
    {
      $query = "update {$tablename} set " . fields_insert("update", $tba_dbarray, "")
             .  " where " . $where;
-     if (debug()) print "<br>DEBUG:tba_updatedb, insert :" . $query . "<br>\n";
+     if (debug()) print "<br>DEBUG:tba_updatedb, update :" . $query . "<br>\n";
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    } 
@@ -680,7 +802,7 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
      $query = "insert into {$tablename} (" . fields_insert("nameonly", $tba_dbarray, "")
              . ") values (" . fields_insert("insert", $tba_dbarray, "") . " )";
              
-     if (debug()) print "<br>DEBUG:tba_updatedb, update: " . $query . "<br>\n"; 
+     if (debug()) print "<br>DEBUG:tba_updatedb, insert: " . $query . "<br>\n"; 
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    }

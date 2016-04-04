@@ -207,8 +207,8 @@ function dblock($dblock, $op)
 			$row = mysqli_fetch_array($result);
 			$updatedby = $row["updatedby"];
 			
-			$date = date('d m/d h:i');
-			$updatedby = "{$user} {$date}- {$updatedby}";
+			$date = date('m/d.h:i');
+			$updatedby = "{$user} {$date};{$updatedby}";
 			$updatedby = substr ($updatedby, 0, $maxlengthchangeby);
 				
 		    	if (! (@mysqli_query ($connection, "update {$wlock["table"]} set updatedby = '{$updatedby}' where {$wlock["where"]}") ))

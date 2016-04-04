@@ -42,6 +42,7 @@
   //     - key: db column name
   //     - array:
   //       - display text
+  //       - heading - heading for column (usually shorter than display)
   //       - format mask to be used in printf
   //       - order: a for ascending sort, d for descending
   //
@@ -51,6 +52,7 @@
   //   Array of:
   //     - tag or column name
   //     - display text
+  //     - heading
   //     - format mask to be used in printf
   $rank_columns_always  = array (
      "rank_overall"=>array("heading"=>"Overall Rank", "order"=>"d"),
@@ -376,10 +378,5 @@
   if ($edit) print "\n</form>\n";
 
 
-
-
-?>
-
-<?php
    pfooter();
   ?>

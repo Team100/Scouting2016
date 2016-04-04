@@ -281,7 +281,7 @@ EOF_EOF
 
 		// public rap, if on a host_team row
 		if ($host_team_row === TRUE)
-			print " <a href=\"/matchrapsheet.php?&type={$row["type"]}&matchnum={$row["matchnum"]}&public=}\">P</a>";
+			print " <a href=\"/matchrapsheet.php?&type={$row["type"]}&matchnum={$row["matchnum"]}&public=0\">P</a>";
 
 		print "</td>";
 

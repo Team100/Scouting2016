@@ -12,7 +12,9 @@
 
 	// load paramters
 	$long=$_GET["long"];	     // indicates "long form with all match listing on teams
-	$public=$_GET["public"]; 	// sharable version for other teams in alliance
+
+	// determine which version - public is sharable to other teams in alliance
+	if ($_GET["public"] == "0") $public=0; else $public=1;
 
     // load variables
 	$matchidentifiers = fields_load("GET", array("type", "matchnum"));
@@ -168,6 +170,9 @@
 
 	// loop through Play Field data
 
+    // call custom function before field data
+    rap_custom_field_data();
+
     // format overall sheet and first table
     print "
     <!--- format over table --->
@@ -198,6 +203,9 @@
 	print "<hr>\n";
 	print "<h2>Competition Briefs</h2>\n";
 
+    // call custom function before competition briefs
+    rap_custom_competition();
+
     // loop through teams
     for($i=0; $i<3; $i++)
     {
@@ -222,6 +230,10 @@
 	{
 		print "<hr>\n";
 		print "<h2>Cooperation Briefs</h2>\n";
+
+        // call custom function before cooperation briefs
+        rap_custom_cooperation();
+
 
         // loop through other teams  (3 or teamcnt)
 		for($i=3; $i<$teamcnt; $i++)

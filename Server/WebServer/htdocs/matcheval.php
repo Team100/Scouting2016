@@ -218,8 +218,8 @@
     $fields = array("score"=>"Score");
 
     // loop through array
-    foreach($ScoreFields as $scorefield)
-      $fields = array_merge($fields, array("f_score" . $fcnt++ => $scorefield['display']));
+    foreach($ScoreFields as $element=>$scorefield)
+      $fields = array_merge($fields, array("f_score{$element}" => $scorefield['display']));
 
     // form query
     $query = "select " . fields_insert("nameonly", $fields, "") . " from match_instance_alliance where "
