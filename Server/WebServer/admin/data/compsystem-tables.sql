@@ -88,16 +88,16 @@ create table team
 #
 # team history
 #
-# team history of events, as loaded from Blue Alliance
+# team history of events, as loaded from Blue Alliance, team history object
 #
 # Foreign key from team table
 #
 create table team_history
  (
   teamnum  int, 		# FIRST team number - foreign key from team table
-  event_id varchar(8),          # tBA event_key.  Note: not a foreign key to event table
+  event_id varchar(8),          # tBA event_key in the history object.  Note: not a foreign key to event table
   year int,                     # tBA year
-  long_name varchar(35),        # tBA name
+  long_name varchar(40),        # tBA name of regional
   primary key (teamnum,event_id)
  );
  
@@ -106,16 +106,16 @@ create table team_history
 #
 # team history award
 #
-# team history of awards at each event, as loaded from Blue Alliance
+# team history of awards at each event, as loaded from Blue Alliance, team history award object
 #
 # Foreign key from team table
 #
 create table team_history_award
  (
   teamnum  int, 		# FIRST team number - foreign key from team table
-  event_id varchar(8),          # tBA event_key.  Note: not a foreign key to event table
-  award_type varchar(3),        # tBA award_type
-  award_name varchar(40),       # tBA name
+  event_id varchar(8),          # tBA event_key in the team history award object Note: not a foreign key to event table
+  award_type varchar(3),        # tBA award_type (integer)
+  award_name varchar(50),       # tBA name in team history object
   primary key (teamnum,event_id,award_type)
  );
 
