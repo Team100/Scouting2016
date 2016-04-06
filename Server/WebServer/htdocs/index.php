@@ -1,29 +1,40 @@
 <?php
-  // $Revision: 3.0 $
-  // $Date: 2016/03/14 22:56:41 $
-  //
-  // Competition System - Main Page
-  //
-  //
-  require "page.inc";
-  pheader("Competition Home - " . $host_team_name);
-  $connection = dbsetup();
-  ?>
+// $Revision: 3.0 $
+// $Date: 2016/03/14 22:56:41 $
+//
+// Competition System - Main Page
+//
+//
 
+require "page.inc";
+pheader("Competition Home - " . $host_team_name);
+$connection = dbsetup();
 
-<a href="/allteamslist.php">All Teams</a>
-<table valign="top">
-<tr valign="top">
+//
+// start display
+//
+print "
+<a href=\"/allteamslist.php\">All Teams</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+&nbsp;
+<a href=\"/allteamslist.php\">Show Needs Eval</a>
+"; // end of print
+
+print "
+<table valign=\"top\">
+<tr valign=\"top\">
 <td>
 
 <!--- Teams Section --->
-<table valign="top">
+<table valign=\"top\">
 
-<tr valign="top">
+<tr valign=\"top\">
 <td>
-<table border="2">
+<table border=\"2\">
+"; // end of print
 
-<?php
   // find total team count and set page break
   if (!($result = @ mysqli_query ($connection, "select count(teamnum) total from teambot where event_id = '{$sys_event_id}'")))
     dbshowerror($connection);
@@ -33,9 +44,11 @@
 
 
   // define result set
-  if (!($result = @ mysqli_query ($connection,
-  	"select team.teamnum teamnum, name, nickname from team, teambot where team.teamnum = teambot.teamnum and
-  	  teambot.event_id = '{$sys_event_id}' order by team.teamnum")))
+  $query = "select team.teamnum teamnum, name, nickname from team, teambot where team.teamnum = teambot.teamnum
+      and teambot.event_id = '{$sys_event_id}' order by team.teamnum";
+
+  if (debug()) print "<br>DEBUG-index: " . $query . "<br>\n";
+  if (!($result = @ mysqli_query ($connection, $query)))
     dbshowerror($connection);
 
   $rowcnt=1;
@@ -52,7 +65,9 @@
         // end last table, move next cell, start another table
         print "</table></td><td><table border=\"2\">\n";
    }
-?>
+
+// end table
+print "
 </table>
 </td>
 </tr>
@@ -66,21 +81,21 @@
 </td>
 
 <!--- Functions Section --->
-<td valign="top">
+<td valign=\"top\">
 <h3><center><u>Functions</u></center></h3>
 <ul>
-<li><a href="/matchlist.php">Match Listings</a></li>
-<li><a href="/matchlist.php">Evaluate a match</a></li>
-<li><a href="/matchnew.php?edit=1">Create new match</a></li>
+<li><a href=\"/matchlist.php\">Match Listings</a></li>
+<li><a href=\"/matchlist.php\">Evaluate a match</a></li>
+<li><a href=\"/matchnew.php?edit=1\">Create new match</a></li>
 <br>
-<li><a href="/rank.php">Rank Teams</a></li>
+<li><a href=\"/rank.php\">Rank Teams</a></li>
 <br>
-<li><a href="/finalselect.php">Finals Selection - In Stands</a></li>
-<li><a href="/finalselectfield.php">Finals Selection - On Field</a></li>
+<li><a href=\"/finalselect.php\">Finals Selection - In Stands</a></li>
+<li><a href=\"/finalselectfield.php\">Finals Selection - On Field</a></li>
 <br>
-<li><a href="/matchlist.php?filter=F">Evaluate a final match</a></li>
+<li><a href=\"/matchlist.php?filter=F\">Evaluate a final match</a></li>
 <br>
-<li><a href="/tabletsync.php">Sync with tablet servers</a></li>
+<li><a href=\"/tabletsync.php\">Sync with tablet servers</a></li>
 </ul>
 
 <!--- Documentation Section --->
@@ -88,15 +103,17 @@
 <h3><center><u>Documentation</u></center></h3>
 <ul>
 <li><a href=/doc/photos.php>Creating photos</a>
-  &nbsp;&nbsp;<a href="/doc/PhotoLog.pdf">Photo Log</a>
+  &nbsp;&nbsp;<a href=\"/doc/PhotoLog.pdf\">Photo Log</a>
   </li>
-<li><a href="/<?php print $schedule_xls ?>">Qualification Schedule (xls)</a></li>
-<li><a href="/documentationhome.php">Documentation</a></li>
+<li><a href=\"/<?php print $schedule_xls ?>\">Qualification Schedule (xls)</a></li>
+<li><a href=\"/documentationhome.php\">Documentation</a></li>
 </ul>
 
 
 <!--- Admin Section --->
-<?php
+
+"; // end of print
+
   // if administrator, show admin section.  Otherwise skip
   if ($admin)
   {
@@ -104,30 +121,13 @@
     print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}<br>\n";
   }
 
-  /*
-   print "
-   <br>
-   <h3><center><u>Admin</u></center></h3>
-   <ul>
-   <li><a href=\"/user.php\">User Maintenance</a></li>
-   <li><a href=\"/set-event.php\">Set system competition event code</a></li>
-   <li><a href=\"/bluealliance.php\">Get updates from Blue Alliance</a></li>
-   <li><a href=\"/fix-db-structure.php\">Test and fix database structure</a><br>&nbsp;(should be run at start of competition)</li>
-   <li><a href=\"/verify-params.php\">Verify custom parameters from config file.</li>
-   <li><a href=\"/scheduleimport.php\">Import Schedule</a></li>
-   <li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
-   <li><a href=\"/messagerecv.php\">Receive a Message From Field</a></li>
-   </ul>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}
-   ";
-*/
 
-?>
-
+print "
 </td>
 </tr>
 </table>
+"; // end of print
 
-<?php
+
    pfooter();
  ?>
