@@ -13,7 +13,7 @@ max_width = 1200
 tablets = ["Red1", "Red2", "Red3", "Blue1", "Blue2", "Blue3", "spare"]
 basePath = "C:\\TabletFiles\\"
 rawDataPath = os.path.join(basePath, "testfiles")
-pictureStoragePath = os.path.join(basePath, "PhotosForServer")
+pictureStoragePath = os.path.join(basePath, "teamimages")
 if not os.path.isdir(pictureStoragePath):
     os.mkdir(pictureStoragePath)
 
