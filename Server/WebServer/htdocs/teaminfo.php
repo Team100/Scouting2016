@@ -61,15 +61,11 @@
 	// define edit URL
 	$editURL = "/teaminfo.php?teamnum={$teamnum}";
 
-?>
-
-<!----- Top of page ----->
-
-
-<?php
   //
-  // create page
+  // begin display page
   //
+
+  print "\n<!----- Top of page ----->\n\n";
 
   // check teamnum
   if (! ($teamnum)) showerror("<h1>No Team Number Specified</h1>","die");
@@ -105,9 +101,20 @@
   // space before details
   print "<br>\n";
 
+  // add game-specific fields and stats columns
+  foreach($RankFields as $rankfield)
+    if ($rankfield['display'] != NULL ) $rankcolumns = $rankcolumns . $rankfield['column'] . ", ";
+
+  // add stats columns to rankcolumns
+  foreach($stats_columns as $statcolumn=>$statarray)
+    $rankcolumns = $rankcolumns . $statcolumn . ", ";
+
   // get team details define result set
-  if (!($result = @ mysqli_query ($connection,
-  	"select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}")))
+  $query = "select ". $rankcolumns . fields_insert("nameonly",NULL,$table_teambot)
+   . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
+
+  if (debug()) print "<br>DEBUG-teaminfo: " . $query . "<br>\n";
+  if (!($result = @ mysqli_query ($connection,$query)))
     dbshowerror($connection);
 
   // get row
@@ -138,6 +145,7 @@
   //
   // main info portion of page
   //
+
   require "teaminfofields.inc";
 
   // close the form if in edit mode

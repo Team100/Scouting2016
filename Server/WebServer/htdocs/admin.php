@@ -38,13 +38,16 @@
    &nbsp;&nbsp;&nbsp;&nbsp;<b>Data Loading and Retreival:</b>
    <ul>
    <li><a href=\"/set-event.php\">Set system competition event code</a></li>
+   <br>
    <li><a href=\"/bluealliance.php\">Get updates from Blue Alliance</a></li>
+   <br>
    <li><a href=\"/scheduleimport.php\">Import Schedule, usually used for practice matches</a></li>
    </ul>
 
    &nbsp;&nbsp;&nbsp;&nbsp;<b>Data Verification:</b>
    <ul>
    <li><a href=\"/fix-db-structure.php\">Test and fix database structure</a><br>&nbsp;(should be run at start of competition)</li>
+   <br>
    <li><a href=\"/verify-params.php\">Verify custom parameters from config file</a></li>
    </ul>
 
@@ -52,12 +55,14 @@
    &nbsp;&nbsp;&nbsp;&nbsp;<b>Messaging:</b>
    <ul>
    <li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
+   <br>
    <li><a href=\"/messagerecv.php\">Receive a Message From Field</a></li>
    </ul>
 
    &nbsp;&nbsp;&nbsp;&nbsp;<b>Documentation System:</b>
    <ul>
    <li><a href=\"/admin.php\">Create document</a></li>
+   <br>
    <li><a href=\"/admin.php\">Report on document</a></li>
    </ul>
 

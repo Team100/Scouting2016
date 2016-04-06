@@ -206,6 +206,47 @@
 	print "<table><tr valign=\"top\">";
 	$options["tr"] = 1;  // add tr tags
 
+
+    //
+    // show scores
+    //
+
+    // build display and query fields
+    //   Display fields are a key-value array with columnname=>displaytext
+    //
+    // start with standard fields
+    $fields = array("score"=>"Score");
+
+    // loop through array
+    foreach($ScoreFields as $element=>$scorefield)
+      $fields = array_merge($fields, array("f_score{$element}" => $scorefield['display']));
+
+    // form query
+    $query = "select " . fields_insert("nameonly", $fields, "") . " from match_instance_alliance where "
+              . $match_sql_identifier . " and color=";
+
+    // get each row from db
+	foreach(array('R', 'B') as $color_d)
+	{
+	  if (debug()) print "<br>DEBUG-matcheval: " . $query . "<br>\n";
+      if (!($result = @ mysqli_query ($connection, $query . "'{$color_d}'")))
+			dbshowerror($connection);
+
+      $srow[$color_d] = mysqli_fetch_array($result);
+    }
+
+    // format into table then loop through score variables
+
+    print "<td><table border=1>\n<tr><th>Red</th><th>Score Breakout</th><th>Blue</th></tr>\n";
+
+    // loop through params
+    foreach($fields as $column=>$display)
+      print "<tr><td>{$srow['R'][$column]}</td><td>$display</td><td>{$srow['B'][$column]}</td></tr>\n";
+
+    print "</table>\n";
+
+
+/*
 	//$data_tag = array(score=>"Score", raw_points=>"Raw Points", penalty_points=>"Penalty Points");
 	$data_tag = array(raw_points=>"Raw Points", penalty_points=>"Penalty Points", other_points=>"Other Points");
 
@@ -250,6 +291,8 @@
 			print "</table></td>";
 		}
 	}
+
+*/
 
 	print "</tr></table>";
 

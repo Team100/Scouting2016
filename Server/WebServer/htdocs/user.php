@@ -49,6 +49,7 @@
     $edit = 0;
   }
 
+//
 // format page
 print <<< EOF_EOF
 <!----- Top of page ----->
@@ -86,8 +87,10 @@ print "
 <br>
 <br>
 <a href=\"{$base}\">Return to Home</a>
-<br>
 ";
+
+  if ($admin) print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>\n";
+  print "<br>\n";
 
    pfooter();
   ?>

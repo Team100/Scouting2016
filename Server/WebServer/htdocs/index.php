@@ -101,7 +101,7 @@
   if ($admin)
   {
     print "<h4><center><a href=\"/admin.php\">Sys Admin Functions</a></center></h4>\n";
-    print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}\n";
+    print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}<br>\n";
   }
 
   /*
@@ -120,14 +120,13 @@
    </ul>
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software Version: {$release_version}
    ";
-/*
+*/
 
 ?>
 
 </td>
 </tr>
 </table>
-
 
 <?php
    pfooter();

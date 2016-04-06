@@ -1,0 +1,240 @@
+frc0100:compsystem:v02
+
+Httpful\Response Object
+(
+    [body] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [event_key] => 2009nv
+                    [award_type] => 14
+                    [name] => Highest Rookie Seed Award
+                    [recipient_list] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [team_number] => 3006
+                                    [awardee] => 
+                                )
+
+                        )
+
+                    [year] => 2009
+                )
+
+            [1] => stdClass Object
+                (
+                    [event_key] => 2009nv
+                    [award_type] => 15
+                    [name] => Rookie Inspiration Award
+                    [recipient_list] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [team_number] => 3006
+                                    [awardee] => 
+                                )
+
+                        )
+
+                    [year] => 2009
+                )
+
+            [2] => stdClass Object
+                (
+                    [event_key] => 2009nv
+                    [award_type] => 2
+                    [name] => Regional Finalist
+                    [recipient_list] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [team_number] => 3006
+                                    [awardee] => 
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [team_number] => 330
+                                    [awardee] => 
+                                )
+
+                            [2] => stdClass Object
+                                (
+                                    [team_number] => 1197
+                                    [awardee] => 
+                                )
+
+                        )
+
+                    [year] => 2009
+                )
+
+            [3] => stdClass Object
+                (
+                    [event_key] => 2010ut
+                    [award_type] => 9
+                    [name] => Engineering Inspiration
+                    [recipient_list] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [team_number] => 3006
+                                    [awardee] => 
+                                )
+
+                        )
+
+                    [year] => 2010
+                )
+
+            [4] => stdClass Object
+                (
+                    [event_key] => 2015utwv
+                    [award_type] => 4
+                    [name] => FIRST Dean's List Finalist Award
+                    [recipient_list] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [team_number] => 3006
+                                    [awardee] => Annie Yun
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [team_number] => 3245
+                                    [awardee] => Jacob Fishman
+                                )
+
+                        )
+
+                    [year] => 2015
+                )
+
+        )
+
+    [raw_body] => [{"event_key": "2009nv", "award_type": 14, "name": "Highest Rookie Seed Award", "recipient_list": [{"team_number": 3006, "awardee": null}], "year": 2009}, {"event_key": "2009nv", "award_type": 15, "name": "Rookie Inspiration Award", "recipient_list": [{"team_number": 3006, "awardee": null}], "year": 2009}, {"event_key": "2009nv", "award_type": 2, "name": "Regional Finalist", "recipient_list": [{"team_number": 3006, "awardee": null}, {"team_number": 330, "awardee": null}, {"team_number": 1197, "awardee": null}], "year": 2009}, {"event_key": "2010ut", "award_type": 9, "name": "Engineering Inspiration", "recipient_list": [{"team_number": 3006, "awardee": null}], "year": 2010}, {"event_key": "2015utwv", "award_type": 4, "name": "FIRST Dean's List Finalist Award", "recipient_list": [{"team_number": 3006, "awardee": "Annie Yun"}, {"team_number": 3245, "awardee": "Jacob Fishman"}], "year": 2015}]
+    [headers] => Httpful\Response\Headers Object
+        (
+            [headers:Httpful\Response\Headers:private] => Array
+                (
+                    [date] => Thu, 31 Mar 2016 22:37:12 GMT
+                    [content-type] => application/json; charset="utf-8"
+                    [content-length] => 902
+                    [connection] => keep-alive
+                    [set-cookie] => __cfduid=db889ba2989ea763a187fdb254d07027d1459463832; expires=Fri, 31-Mar-17 22:37:12 GMT; path=/; domain=.thebluealliance.com; HttpOnly
+                    [pragma] => Public
+                    [cache-control] => public, max-age=86400
+                    [access-control-allow-origin] => *
+                    [last-modified] => Thu, 31 Mar 2016 15:48:15 GMT
+                    [x-tba-version] => 2
+                    [vary] => Accept-Encoding
+                    [server] => cloudflare-nginx
+                    [cf-ray] => 28c748d788f4012c-SJC
+                )
+
+        )
+
+    [raw_headers] => HTTP/1.1 200 OK
+Date: Thu, 31 Mar 2016 22:37:12 GMT
+Content-Type: application/json; charset="utf-8"
+Content-Length: 902
+Connection: keep-alive
+Set-Cookie: __cfduid=db889ba2989ea763a187fdb254d07027d1459463832; expires=Fri, 31-Mar-17 22:37:12 GMT; path=/; domain=.thebluealliance.com; HttpOnly
+Pragma: Public
+Cache-Control: public, max-age=86400
+Access-Control-Allow-Origin: *
+Last-Modified: Thu, 31 Mar 2016 15:48:15 GMT
+X-TBA-Version: 2
+Vary: Accept-Encoding
+Server: cloudflare-nginx
+CF-RAY: 28c748d788f4012c-SJC
+    [request] => Httpful\Request Object
+        (
+            [uri] => www.thebluealliance.com/api/v2/team/frc3006/history/awards
+            [method] => GET
+            [headers] => Array
+                (
+                    [X-TBA-App-Id] => frc0100:compsystem:v02
+                    [Content-Length] => 0
+                )
+
+            [raw_headers] => GET www.thebluealliance.com/api/v2/team/frc3006/history/awards HTTP/1.1
+Host: localhost
+Expect:
+User-Agent: Httpful/0.2.19 (cURL/7.47.1 PHP/5.6.19 (WINNT))
+Content-Type: 
+Accept: */*; q=0.5, text/plain; q=0.8, text/html;level=3;
+X-TBA-App-Id: frc0100:compsystem:v02
+Content-Length: 0
+
+            [strict_ssl] => 
+            [content_type] => 
+            [expected_type] => 
+            [additional_curl_opts] => Array
+                (
+                )
+
+            [auto_parse] => 1
+            [serialize_payload_method] => 2
+            [username] => 
+            [password] => 
+            [serialized_payload] => 
+            [payload] => 
+            [parse_callback] => 
+            [error_callback] => 
+            [send_callback] => 
+            [follow_redirects] => 
+            [max_redirects] => 25
+            [payload_serializers] => Array
+                (
+                )
+
+            [_ch] => Resource id #25
+            [_debug] => 
+        )
+
+    [code] => 200
+    [content_type] => application/json
+    [parent_type] => application/json
+    [charset] => "utf-8"
+    [meta_data] => Array
+        (
+            [url] => http://www.thebluealliance.com/api/v2/team/frc3006/history/awards
+            [content_type] => application/json; charset="utf-8"
+            [http_code] => 200
+            [header_size] => 529
+            [request_size] => 260
+            [filetime] => -1
+            [ssl_verify_result] => 0
+            [redirect_count] => 0
+            [total_time] => 0.375
+            [namelookup_time] => 0.031
+            [connect_time] => 0.172
+            [pretransfer_time] => 0.172
+            [size_upload] => 0
+            [size_download] => 902
+            [speed_download] => 2405
+            [speed_upload] => 0
+            [download_content_length] => 902
+            [upload_content_length] => -1
+            [starttransfer_time] => 0.375
+            [redirect_time] => 0
+            [redirect_url] => 
+            [primary_ip] => 104.27.142.180
+            [certinfo] => Array
+                (
+                )
+
+            [primary_port] => 80
+            [local_ip] => 172.20.10.8
+            [local_port] => 53268
+        )
+
+    [is_mime_vendor_specific] => 
+    [is_mime_personal] => 
+    [parsers:Httpful\Response:private] => 
+)
+
+
