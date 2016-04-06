@@ -1,0 +1,277 @@
+frc0100:compsystem:v02Httpful\Response Object
+(
+    [body] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [comp_level] => f
+                    [match_number] => 1
+                    [videos] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [type] => youtube
+                                    [key] => xGFP2VN0NIg
+                                )
+
+                        )
+
+                    [time_string] => 
+                    [set_number] => 1
+                    [key] => 2016scmb_f1m1
+                    [time] => 1456607520
+                    [score_breakdown] => stdClass Object
+                        (
+                            [blue] => stdClass Object
+                                (
+                                    [teleopPoints] => 84
+                                    [robot3Auto] => None
+                                    [breachPoints] => 20
+                                    [autoPoints] => 30
+                                    [teleopScalePoints] => 0
+                                    [autoBouldersLow] => 0
+                                    [teleopTowerCaptured] => 
+                                    [teleopBouldersLow] => 2
+                                    [teleopCrossingPoints] => 30
+                                    [foulCount] => 1
+                                    [foulPoints] => 10
+                                    [towerFaceB] => Challenged
+                                    [towerFaceC] => Challenged
+                                    [towerFaceA] => Challenged
+                                    [techFoulCount] => 0
+                                    [totalPoints] => 124
+                                    [adjustPoints] => 0
+                                    [position3] => A_Portcullis
+                                    [robot1Auto] => Crossed
+                                    [position4] => NotSpecified
+                                    [position5] => NotSpecified
+                                    [autoBoulderPoints] => 10
+                                    [teleopBoulderPoints] => 19
+                                    [teleopBouldersHigh] => 3
+                                    [autoBouldersHigh] => 1
+                                    [robot2Auto] => Crossed
+                                    [position1crossings] => 2
+                                    [towerEndStrength] => 6
+                                    [position4crossings] => 0
+                                    [position2crossings] => 2
+                                    [position5crossings] => 2
+                                    [position3crossings] => 2
+                                    [teleopChallengePoints] => 15
+                                    [autoCrossingPoints] => 20
+                                    [teleopDefensesBreached] => 1
+                                    [autoReachPoints] => 0
+                                    [position2] => NotSpecified
+                                    [capturePoints] => 0
+                                )
+
+                            [red] => stdClass Object
+                                (
+                                    [teleopPoints] => 80
+                                    [robot3Auto] => None
+                                    [breachPoints] => 20
+                                    [autoPoints] => 30
+                                    [teleopScalePoints] => 15
+                                    [autoBouldersLow] => 0
+                                    [teleopTowerCaptured] => 
+                                    [teleopBouldersLow] => 0
+                                    [teleopCrossingPoints] => 30
+                                    [foulCount] => 2
+                                    [foulPoints] => 5
+                                    [towerFaceB] => Challenged
+                                    [towerFaceC] => Scaled
+                                    [towerFaceA] => Challenged
+                                    [techFoulCount] => 0
+                                    [totalPoints] => 115
+                                    [adjustPoints] => 0
+                                    [position3] => A_Portcullis
+                                    [robot1Auto] => Crossed
+                                    [position4] => NotSpecified
+                                    [position5] => NotSpecified
+                                    [autoBoulderPoints] => 10
+                                    [teleopBoulderPoints] => 5
+                                    [teleopBouldersHigh] => 1
+                                    [autoBouldersHigh] => 1
+                                    [robot2Auto] => Crossed
+                                    [position1crossings] => 2
+                                    [towerEndStrength] => 2
+                                    [position4crossings] => 2
+                                    [position2crossings] => 0
+                                    [position5crossings] => 2
+                                    [position3crossings] => 2
+                                    [teleopChallengePoints] => 10
+                                    [autoCrossingPoints] => 20
+                                    [teleopDefensesBreached] => 1
+                                    [autoReachPoints] => 0
+                                    [position2] => NotSpecified
+                                    [capturePoints] => 0
+                                )
+
+                        )
+
+                    [alliances] => stdClass Object
+                        (
+                            [blue] => stdClass Object
+                                (
+                                    [score] => 124
+                                    [teams] => Array
+                                        (
+                                            [0] => frc343
+                                            [1] => frc4547
+                                            [2] => frc2614
+                                        )
+
+                                )
+
+                            [red] => stdClass Object
+                                (
+                                    [score] => 115
+                                    [teams] => Array
+                                        (
+                                            [0] => frc4451
+                                            [1] => frc179
+                                            [2] => frc1369
+                                        )
+
+                                )
+
+                        )
+
+                    [event_key] => 2016scmb
+                )
+
+            [1] => stdClass Object
+                (
+                    [comp_level] => f
+                    [match_number] => 2
+                    [videos] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [type] => youtube
+                                    [key] => oCDN_aH1W9o
+                                )
+
+                        )
+
+                    [time_string] => 
+                    [set_number] => 1
+                    [key] => 2016scmb_f1m2
+                    [time] => 1456608300
+                    [score_breakdown] => stdClass Object
+                        (
+                            [blue] => stdClass Object
+                                (
+                                    [teleopPoints] => 44
+                                    [robot3Auto] => None
+                                    [breachPoints] => 0
+                                    [autoPoints] => 12
+                                    [teleopScalePoints] => 0
+                                    [autoBouldersLow] => 0
+                                    [teleopTowerCaptured] => 
+                                    [teleopBouldersLow] => 2
+                                    [teleopCrossingPoints] => 30
+                                    [foulCount] => 0
+                                    [foulPoints] => 5
+                                    [towerFaceB] => Challenged
+                                    [towerFaceC] => None
+                                    [towerFaceA] => Challenged
+                                    [techFoulCount] => 1
+                                    [totalPoints] => 61
+                                    [adjustPoints] => 0
+                                    [position3] => A_Portcullis
+                                    [robot1Auto] => Crossed
+                                    [position4] => NotSpecified
+                                    [position5] => NotSpecified
+                                    [autoBoulderPoints] => 0
+                                    [teleopBoulderPoints] => 4
+                                    [teleopBouldersHigh] => 0
+                                    [autoBouldersHigh] => 0
+                                    [robot2Auto] => Reached
+                                    [position1crossings] => 2
+                                    [towerEndStrength] => 6
+                                    [position4crossings] => 2
+                                    [position2crossings] => 2
+                                    [position5crossings] => 0
+                                    [position3crossings] => 1
+                                    [teleopChallengePoints] => 10
+                                    [autoCrossingPoints] => 10
+                                    [teleopDefensesBreached] => 
+                                    [autoReachPoints] => 2
+                                    [position2] => NotSpecified
+                                    [capturePoints] => 0
+                                )
+
+                            [red] => stdClass Object
+                                (
+                                    [teleopPoints] => 80
+                                    [robot3Auto] => None
+                                    [breachPoints] => 20
+                                    [autoPoints] => 20
+                                    [teleopScalePoints] => 15
+                                    [autoBouldersLow] => 0
+                                    [teleopTowerCaptured] => 
+                                    [teleopBouldersLow] => 0
+                                    [teleopCrossingPoints] => 30
+                                    [foulCount] => 0
+                                    [foulPoints] => 5
+                                    [towerFaceB] => None
+                                    [towerFaceC] => Scaled
+                                    [towerFaceA] => None
+                                    [techFoulCount] => 1
+                                    [totalPoints] => 105
+                                    [adjustPoints] => 0
+                                    [position3] => A_Portcullis
+                                    [robot1Auto] => Crossed
+                                    [position4] => NotSpecified
+                                    [position5] => NotSpecified
+                                    [autoBoulderPoints] => 0
+                                    [teleopBoulderPoints] => 15
+                                    [teleopBouldersHigh] => 3
+                                    [autoBouldersHigh] => 0
+                                    [robot2Auto] => Crossed
+                                    [position1crossings] => 2
+                                    [towerEndStrength] => 7
+                                    [position4crossings] => 2
+                                    [position2crossings] => 0
+                                    [position5crossings] => 2
+                                    [position3crossings] => 2
+                                    [teleopChallengePoints] => 0
+                                    [autoCrossingPoints] => 20
+                                    [teleopDefensesBreached] => 1
+                                    [autoReachPoints] => 0
+                                    [position2] => NotSpecified
+                                    [capturePoints] => 0
+                                )
+
+                        )
+
+                    [alliances] => stdClass Object
+                        (
+                            [blue] => stdClass Object
+                                (
+                                    [score] => 61
+                                    [teams] => Array
+                                        (
+                                            [0] => frc343
+                                            [1] => frc4547
+                                            [2] => frc2614
+                                        )
+
+                                )
+
+                            [red] => stdClass Object
+                                (
+                                    [score] => 105
+                                    [teams] => Array
+                                        (
+                                            [0] => frc4451
+                                            [1] => frc179
+                                            [2] => frc1369
+                                        )
+
+                                )
+
+                        )
+
+                    [event_key] => 2016scmb
+                )

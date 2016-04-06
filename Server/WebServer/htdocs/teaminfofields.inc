@@ -23,7 +23,8 @@
 
   <!--- table for display data --->
   <table border=\"1\" valign=\"top\">
-  <tr><th></th><th>Rating<br>(0 - 9)</th><th>Rank</th><tr>\n";
+  <tr><th></th><th>Rating<br>(0 - 9)</th><th>Rank</th><tr>
+  "; // end of print
 
   // two fields - rating and rank
   $options["notag"]=FALSE;
@@ -32,30 +33,72 @@
   print tabtextfield($edit,$options,$row, "rank_overall","Overall:&nbsp",4) . "</tr>\n";
 
   $options["notag"]=FALSE;
-  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall_off","Overall Offensive:&nbsp",3) . "</tr>\n";
-  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall_def","Overall Defensive:&nbsp",3) . "</tr>\n";
+  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall_off","Overall Offensive&nbsp",3) . "</tr>\n";
+  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall_def","Overall Defensive&nbsp",3) . "</tr>\n";
 
   // print only if working if fields positions matter
   if ($field_positions === TRUE)
   {
-	  // two fields - rating and rank
-	  $options["notag"]=FALSE;
-	  print "<tr>" . tabtextfield($edit,$options,$row, "rating_pos1","Position #1:&nbsp",3);
-	  $options["notag"]=TRUE;
-	  print tabtextfield($edit,$options,$row, "rank_pos1","Position #1:&nbsp",4) . "</tr>\n";
+    // two fields - rating and rank
+    $options["notag"]=FALSE;
+    print "<tr>" . tabtextfield($edit,$options,$row, "rating_pos1","Position #1:&nbsp",3);
+    $options["notag"]=TRUE;
+    print tabtextfield($edit,$options,$row, "rank_pos1","Position #1:&nbsp",4) . "</tr>\n";
 
-	  // two fields - rating and rank
-	  $options["notag"]=FALSE;
-	  print "<tr>" . tabtextfield($edit,$options,$row, "rating_pos2","Position #2:&nbsp",3);
-	  $options["notag"]=TRUE;
-	  print tabtextfield($edit,$options,$row, "rank_pos2","Position #2:&nbsp",4) . "</tr>\n";
+    // two fields - rating and rank
+    $options["notag"]=FALSE;
+    print "<tr>" . tabtextfield($edit,$options,$row, "rating_pos2","Position #2:&nbsp",3);
+    $options["notag"]=TRUE;
+    print tabtextfield($edit,$options,$row, "rank_pos2","Position #2:&nbsp",4) . "</tr>\n";
 
-	  // two fields - rating and rank
-	  $options["notag"]=FALSE;
-	  print "<tr>" . tabtextfield($edit,$options,$row, "rating_pos3","Position #3:&nbsp",3);
-	  $options["notag"]=TRUE;
-	  print tabtextfield($edit,$options,$row, "rank_pos3","Position #3:&nbsp",4) . "</tr>\n";
+    // two fields - rating and rank
+    $options["notag"]=FALSE;
+    print "<tr>" . tabtextfield($edit,$options,$row, "rating_pos3","Position #3:&nbsp",3);
+    $options["notag"]=TRUE;
+    print tabtextfield($edit,$options,$row, "rank_pos3","Position #3:&nbsp",4) . "</tr>\n";
   }
+
+
+  // end of ranking block of variables
+  print "</table>\n\n";
+  
+
+  // stats block
+  print "
+  <br>
+  
+  <!--- table for stats data --->
+  <table border=\"1\" valign=\"top\">
+  "; // end of print
+  
+  foreach($stats_columns as $column=>$col_def)
+  {
+    // check for format
+    if ($col_def['format'] != "") 
+      $show = sprintf($col_def['format'], $row[$column]);
+    else
+      $show = $row[$column];
+    print "<tr><td>{$col_def['display']}</td><td>{$show}</td></tr>\n";
+  }
+
+
+  // end of first block/column of variables
+  print "</table>\n</td><td>&nbsp;&nbsp;</td><td>\n";
+  
+  // 
+  // New block/colum of variables
+  //
+
+  print "
+  <!--- table for display data --->
+  <table border=\"1\" valign=\"top\">
+  "; // end of print
+  
+  
+  // add game-specific fields
+  foreach($RankFields as $rankfield)
+    if ($rankfield['display'] != NULL)
+      print "<tr><td>{$rankfield['display']}</td><td>{$row[$rankfield['column']]}</td><tr>\n";
 
   // end of first block of variables
   print "</table></td><td>&nbsp;&nbsp;</td><td>\n";

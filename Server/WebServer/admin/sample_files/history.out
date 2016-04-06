@@ -1,0 +1,1058 @@
+frc0100:compsystem:v02
+
+Httpful\Response Object
+(
+    [body] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [key] => 2009nv
+                    [website] => http://lvfirst.egr.unlv.edu
+                    [official] => 1
+                    [end_date] => 2009-03-28
+                    [name] => Las Vegas Regional
+                    [short_name] => Las Vegas
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Thomas & Mack Arena, UNLV
+4505 Maryland Parkway
+Las Vegas, NV 89154
+USA
+                    [event_district] => 0
+                    [location] => Las Vegas, NV, USA
+                    [event_code] => nv
+                    [year] => 2009
+                    [webcast] => Array
+                        (
+                        )
+
+                    [timezone] => America/Los_Angeles
+                    [alliances] => Array
+                        (
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2009-03-26
+                    [event_type] => 0
+                )
+
+            [1] => stdClass Object
+                (
+                    [key] => 2010gal
+                    [website] => http://www.usfirst.org
+                    [official] => 1
+                    [end_date] => 2010-04-17
+                    [name] => Galileo Division
+                    [short_name] => Galileo Division
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Georgia Dome
+Atlanta, GA
+                    [event_district] => 
+                    [location] => Atlanta, GA
+                    [event_code] => gal
+                    [year] => 2010
+                    [webcast] => Array
+                        (
+                        )
+
+                    [timezone] => 
+                    [alliances] => Array
+                        (
+                        )
+
+                    [event_type_string] => Championship Division
+                    [start_date] => 2010-04-15
+                    [event_type] => 3
+                )
+
+            [2] => stdClass Object
+                (
+                    [key] => 2010ut
+                    [website] => 
+                    [official] => 1
+                    [end_date] => 2010-03-20
+                    [name] => Utah Regional sponsored by NASA & Platt
+                    [short_name] => Utah
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Huntsman Center
+University of Utah
+Salt Lake City, UT
+USA
+                    [event_district] => 0
+                    [location] => Salt Lake City, UT, USA
+                    [event_code] => ut
+                    [year] => 2010
+                    [webcast] => Array
+                        (
+                        )
+
+                    [timezone] => America/Denver
+                    [alliances] => Array
+                        (
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2010-03-18
+                    [event_type] => 0
+                )
+
+            [3] => stdClass Object
+                (
+                    [key] => 2011ut
+                    [website] => http://www.utfrc.utah.edu
+                    [official] => 1
+                    [end_date] => 2011-04-09
+                    [name] => Utah Regional co-sponsored by NASA and Platt
+                    [short_name] => Utah
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Huntsman Center
+University of Utah
+Salt Lake City, UT
+USA
+                    [event_district] => 0
+                    [location] => Salt Lake City, UT, USA
+                    [event_code] => ut
+                    [year] => 2011
+                    [webcast] => Array
+                        (
+                        )
+
+                    [timezone] => America/Denver
+                    [alliances] => Array
+                        (
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2011-04-07
+                    [event_type] => 0
+                )
+
+            [4] => stdClass Object
+                (
+                    [key] => 2012ut
+                    [website] => http://www.utfrc.utah.edu
+                    [official] => 1
+                    [end_date] => 2012-03-17
+                    [name] => Utah Regional co-sponsored by NASA and Platt
+                    [short_name] => Utah
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Maverik Center
+3200 Southy Decker Lake Drive
+West Valley City, UT 84119
+USA
+                    [event_district] => 0
+                    [location] => West Valley City, UT, USA
+                    [event_code] => ut
+                    [year] => 2012
+                    [webcast] => Array
+                        (
+                        )
+
+                    [timezone] => America/Denver
+                    [alliances] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc399
+                                            [1] => frc2122
+                                            [2] => frc3006
+                                        )
+
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1158
+                                            [1] => frc1569
+                                            [2] => frc3241
+                                        )
+
+                                )
+
+                            [2] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2484
+                                            [1] => frc3483
+                                            [2] => frc4153
+                                        )
+
+                                )
+
+                            [3] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2789
+                                            [1] => frc2486
+                                            [2] => frc4183
+                                        )
+
+                                )
+
+                            [4] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2993
+                                            [1] => frc4106
+                                            [2] => frc1566
+                                        )
+
+                                )
+
+                            [5] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3239
+                                            [1] => frc473
+                                            [2] => frc1891
+                                        )
+
+                                )
+
+                            [6] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1332
+                                            [1] => frc3334
+                                            [2] => frc3456
+                                        )
+
+                                )
+
+                            [7] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2403
+                                            [1] => frc3230
+                                            [2] => frc3245
+                                        )
+
+                                )
+
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2012-03-15
+                    [event_type] => 0
+                )
+
+            [5] => stdClass Object
+                (
+                    [key] => 2013utwv
+                    [website] => http://www.utfrc.utah.edu
+                    [official] => 1
+                    [end_date] => 2013-03-23
+                    [name] => Utah Regional co-sponsored by the Larry H. Miller Group & Platt
+                    [short_name] => Utah
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Maverik Center
+3200 Southy Decker Lake Drive
+West Valley City, UT 84119
+USA
+                    [event_district] => 0
+                    [location] => West Valley City, UT, USA
+                    [event_code] => utwv
+                    [year] => 2013
+                    [webcast] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [type] => justin
+                                    [channel] => teamtators
+                                )
+
+                        )
+
+                    [timezone] => America/Denver
+                    [alliances] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc359
+                                            [1] => frc192
+                                            [2] => frc3239
+                                        )
+
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1569
+                                            [1] => frc1891
+                                            [2] => frc3251
+                                        )
+
+                                )
+
+                            [2] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3289
+                                            [1] => frc4106
+                                            [2] => frc3245
+                                        )
+
+                                )
+
+                            [3] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1332
+                                            [1] => frc2594
+                                            [2] => frc3562
+                                        )
+
+                                )
+
+                            [4] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2484
+                                            [1] => frc4153
+                                            [2] => frc4086
+                                        )
+
+                                )
+
+                            [5] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3288
+                                            [1] => frc3216
+                                            [2] => frc1566
+                                        )
+
+                                )
+
+                            [6] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3483
+                                            [1] => frc3009
+                                            [2] => frc2993
+                                        )
+
+                                )
+
+                            [7] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3374
+                                            [1] => frc3405
+                                            [2] => frc1410
+                                        )
+
+                                )
+
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2013-03-21
+                    [event_type] => 0
+                )
+
+            [6] => stdClass Object
+                (
+                    [key] => 2014utwv
+                    [website] => http://www.utfrc.utah.edu
+                    [official] => 1
+                    [end_date] => 2014-03-15
+                    [name] => Utah Regional
+                    [short_name] => Utah
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Maverik Center
+3200 Southy Decker Lake Drive
+West Valley City, UT 84119
+USA
+                    [event_district] => 0
+                    [location] => West Valley City, UT, USA
+                    [event_code] => utwv
+                    [year] => 2014
+                    [webcast] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [type] => justin
+                                    [channel] => utah_frc
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [type] => justin
+                                    [channel] => eaglescout2122
+                                )
+
+                        )
+
+                    [timezone] => America/Denver
+                    [alliances] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1619
+                                            [1] => frc399
+                                            [2] => frc2594
+                                        )
+
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2122
+                                            [1] => frc2996
+                                            [2] => frc3191
+                                        )
+
+                                )
+
+                            [2] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc662
+                                            [1] => frc2993
+                                            [2] => frc4944
+                                        )
+
+                                )
+
+                            [3] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3334
+                                            [1] => frc159
+                                            [2] => frc3374
+                                        )
+
+                                )
+
+                            [4] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3230
+                                            [1] => frc3245
+                                            [2] => frc3405
+                                        )
+
+                                )
+
+                            [5] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1569
+                                            [1] => frc3289
+                                            [2] => frc1566
+                                        )
+
+                                )
+
+                            [6] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3288
+                                            [1] => frc4334
+                                            [2] => frc1700
+                                        )
+
+                                )
+
+                            [7] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1410
+                                            [1] => frc1339
+                                            [2] => frc3669
+                                        )
+
+                                )
+
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2014-03-13
+                    [event_type] => 0
+                )
+
+            [7] => stdClass Object
+                (
+                    [key] => 2015utwv
+                    [website] => http://www.utfrc.utah.edu
+                    [official] => 1
+                    [end_date] => 2015-03-14
+                    [name] => Utah Regional
+                    [short_name] => Utah
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Maverik Center
+3200 South Decker Lake Drive
+West Valley City, UT 84119
+USA
+                    [event_district] => 0
+                    [location] => West Valley City, UT, USA
+                    [event_code] => utwv
+                    [year] => 2015
+                    [webcast] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [type] => youtube
+                                    [channel] => 1XZN2tqhGwA
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [type] => youtube
+                                    [channel] => XMj0CjvQIaY
+                                )
+
+                            [2] => stdClass Object
+                                (
+                                    [type] => youtube
+                                    [channel] => 8H052LMBn2c
+                                )
+
+                        )
+
+                    [timezone] => America/Denver
+                    [alliances] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc624
+                                            [1] => frc1619
+                                            [2] => frc4334
+                                        )
+
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2122
+                                            [1] => frc3230
+                                            [2] => frc3405
+                                        )
+
+                                )
+
+                            [2] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2996
+                                            [1] => frc1569
+                                            [2] => frc2813
+                                        )
+
+                                )
+
+                            [3] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc662
+                                            [1] => frc3245
+                                            [2] => frc4550
+                                        )
+
+                                )
+
+                            [4] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc192
+                                            [1] => frc1836
+                                            [2] => frc3006
+                                        )
+
+                                )
+
+                            [5] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3200
+                                            [1] => frc2437
+                                            [2] => frc2993
+                                        )
+
+                                )
+
+                            [6] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3374
+                                            [1] => frc2594
+                                            [2] => frc4158
+                                        )
+
+                                )
+
+                            [7] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3009
+                                            [1] => frc1339
+                                            [2] => frc3166
+                                        )
+
+                                )
+
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2015-03-11
+                    [event_type] => 0
+                )
+
+            [8] => stdClass Object
+                (
+                    [key] => 2016utwv
+                    [website] => http://www.utfrc.utah.edu
+                    [official] => 1
+                    [end_date] => 2016-03-19
+                    [name] => Utah Regional
+                    [short_name] => Utah
+                    [facebook_eid] => 
+                    [event_district_string] => 
+                    [venue_address] => Maverik Center
+3200 South Decker Lake Drive
+West Valley City, UT 84119
+USA
+                    [event_district] => 0
+                    [location] => West Valley City, UT, USA
+                    [event_code] => utwv
+                    [year] => 2016
+                    [webcast] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [type] => twitch
+                                    [channel] => utahfrc
+                                )
+
+                        )
+
+                    [timezone] => America/Denver
+                    [alliances] => Array
+                        (
+                            [0] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc2468
+                                            [1] => frc4334
+                                            [2] => frc3166
+                                        )
+
+                                )
+
+                            [1] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3021
+                                            [1] => frc329
+                                            [2] => frc4944
+                                        )
+
+                                )
+
+                            [2] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc287
+                                            [1] => frc3230
+                                            [2] => frc2478
+                                        )
+
+                                )
+
+                            [3] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3225
+                                            [1] => frc3241
+                                            [2] => frc115
+                                        )
+
+                                )
+
+                            [4] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3289
+                                            [1] => frc3245
+                                            [2] => frc1891
+                                        )
+
+                                )
+
+                            [5] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc1477
+                                            [1] => frc5933
+                                            [2] => frc3374
+                                        )
+
+                                )
+
+                            [6] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc5489
+                                            [1] => frc3239
+                                            [2] => frc5974
+                                        )
+
+                                )
+
+                            [7] => stdClass Object
+                                (
+                                    [declines] => Array
+                                        (
+                                        )
+
+                                    [picks] => Array
+                                        (
+                                            [0] => frc3243
+                                            [1] => frc4310
+                                            [2] => frc3288
+                                        )
+
+                                )
+
+                        )
+
+                    [event_type_string] => Regional
+                    [start_date] => 2016-03-16
+                    [event_type] => 0
+                )
+
+        )
+
+    [raw_body] => [{"key": "2009nv", "website": "http://lvfirst.egr.unlv.edu", "official": true, "end_date": "2009-03-28", "name": "Las Vegas Regional", "short_name": "Las Vegas", "facebook_eid": null, "event_district_string": null, "venue_address": "Thomas & Mack Arena, UNLV\n4505 Maryland Parkway\nLas Vegas, NV 89154\nUSA", "event_district": 0, "location": "Las Vegas, NV, USA", "event_code": "nv", "year": 2009, "webcast": [], "timezone": "America/Los_Angeles", "alliances": [], "event_type_string": "Regional", "start_date": "2009-03-26", "event_type": 0}, {"key": "2010gal", "website": "http://www.usfirst.org", "official": true, "end_date": "2010-04-17", "name": "Galileo Division", "short_name": "Galileo Division", "facebook_eid": null, "event_district_string": null, "venue_address": "Georgia Dome\nAtlanta, GA", "event_district": null, "location": "Atlanta, GA", "event_code": "gal", "year": 2010, "webcast": [], "timezone": null, "alliances": [], "event_type_string": "Championship Division", "start_date": "2010-04-15", "event_type": 3}, {"key": "2010ut", "website": "", "official": true, "end_date": "2010-03-20", "name": "Utah Regional sponsored by NASA & Platt", "short_name": "Utah", "facebook_eid": null, "event_district_string": null, "venue_address": "Huntsman Center\nUniversity of Utah\nSalt Lake City, UT\nUSA", "event_district": 0, "location": "Salt Lake City, UT, USA", "event_code": "ut", "year": 2010, "webcast": [], "timezone": "America/Denver", "alliances": [], "event_type_string": "Regional", "start_date": "2010-03-18", "event_type": 0}, {"key": "2011ut", "website": "http://www.utfrc.utah.edu", "official": true, "end_date": "2011-04-09", "name": "Utah Regional co-sponsored by NASA and Platt", "short_name": "Utah", "facebook_eid": null, "event_district_string": null, "venue_address": "Huntsman Center\nUniversity of Utah\nSalt Lake City, UT\nUSA", "event_district": 0, "location": "Salt Lake City, UT, USA", "event_code": "ut", "year": 2011, "webcast": [], "timezone": "America/Denver", "alliances": [], "event_type_string": "Regional", "start_date": "2011-04-07", "event_type": 0}, {"key": "2012ut", "website": "http://www.utfrc.utah.edu", "official": true, "end_date": "2012-03-17", "name": "Utah Regional co-sponsored by NASA and Platt", "short_name": "Utah", "facebook_eid": null, "event_district_string": null, "venue_address": "Maverik Center\n3200 Southy Decker Lake Drive\nWest Valley City, UT 84119\nUSA", "event_district": 0, "location": "West Valley City, UT, USA", "event_code": "ut", "year": 2012, "webcast": [], "timezone": "America/Denver", "alliances": [{"declines": [], "picks": ["frc399", "frc2122", "frc3006"]}, {"declines": [], "picks": ["frc1158", "frc1569", "frc3241"]}, {"declines": [], "picks": ["frc2484", "frc3483", "frc4153"]}, {"declines": [], "picks": ["frc2789", "frc2486", "frc4183"]}, {"declines": [], "picks": ["frc2993", "frc4106", "frc1566"]}, {"declines": [], "picks": ["frc3239", "frc473", "frc1891"]}, {"declines": [], "picks": ["frc1332", "frc3334", "frc3456"]}, {"declines": [], "picks": ["frc2403", "frc3230", "frc3245"]}], "event_type_string": "Regional", "start_date": "2012-03-15", "event_type": 0}, {"key": "2013utwv", "website": "http://www.utfrc.utah.edu", "official": true, "end_date": "2013-03-23", "name": "Utah Regional co-sponsored by the Larry H. Miller Group & Platt", "short_name": "Utah", "facebook_eid": null, "event_district_string": null, "venue_address": "Maverik Center\n3200 Southy Decker Lake Drive\nWest Valley City, UT 84119\nUSA", "event_district": 0, "location": "West Valley City, UT, USA", "event_code": "utwv", "year": 2013, "webcast": [{"type": "justin", "channel": "teamtators"}], "timezone": "America/Denver", "alliances": [{"declines": [], "picks": ["frc359", "frc192", "frc3239"]}, {"declines": [], "picks": ["frc1569", "frc1891", "frc3251"]}, {"declines": [], "picks": ["frc3289", "frc4106", "frc3245"]}, {"declines": [], "picks": ["frc1332", "frc2594", "frc3562"]}, {"declines": [], "picks": ["frc2484", "frc4153", "frc4086"]}, {"declines": [], "picks": ["frc3288", "frc3216", "frc1566"]}, {"declines": [], "picks": ["frc3483", "frc3009", "frc2993"]}, {"declines": [], "picks": ["frc3374", "frc3405", "frc1410"]}], "event_type_string": "Regional", "start_date": "2013-03-21", "event_type": 0}, {"key": "2014utwv", "website": "http://www.utfrc.utah.edu", "official": true, "end_date": "2014-03-15", "name": "Utah Regional", "short_name": "Utah", "facebook_eid": null, "event_district_string": null, "venue_address": "Maverik Center\n3200 Southy Decker Lake Drive\nWest Valley City, UT 84119\nUSA", "event_district": 0, "location": "West Valley City, UT, USA", "event_code": "utwv", "year": 2014, "webcast": [{"type": "justin", "channel": "utah_frc"}, {"type": "justin", "channel": "eaglescout2122"}], "timezone": "America/Denver", "alliances": [{"declines": [], "picks": ["frc1619", "frc399", "frc2594"]}, {"declines": [], "picks": ["frc2122", "frc2996", "frc3191"]}, {"declines": [], "picks": ["frc662", "frc2993", "frc4944"]}, {"declines": [], "picks": ["frc3334", "frc159", "frc3374"]}, {"declines": [], "picks": ["frc3230", "frc3245", "frc3405"]}, {"declines": [], "picks": ["frc1569", "frc3289", "frc1566"]}, {"declines": [], "picks": ["frc3288", "frc4334", "frc1700"]}, {"declines": [], "picks": ["frc1410", "frc1339", "frc3669"]}], "event_type_string": "Regional", "start_date": "2014-03-13", "event_type": 0}, {"key": "2015utwv", "website": "http://www.utfrc.utah.edu", "official": true, "end_date": "2015-03-14", "name": "Utah Regional", "short_name": "Utah", "facebook_eid": null, "event_district_string": null, "venue_address": "Maverik Center\n3200 South Decker Lake Drive\nWest Valley City, UT 84119\nUSA", "event_district": 0, "location": "West Valley City, UT, USA", "event_code": "utwv", "year": 2015, "webcast": [{"type": "youtube", "channel": "1XZN2tqhGwA"}, {"type": "youtube", "channel": "XMj0CjvQIaY"}, {"type": "youtube", "channel": "8H052LMBn2c"}], "timezone": "America/Denver", "alliances": [{"declines": [], "picks": ["frc624", "frc1619", "frc4334"]}, {"declines": [], "picks": ["frc2122", "frc3230", "frc3405"]}, {"declines": [], "picks": ["frc2996", "frc1569", "frc2813"]}, {"declines": [], "picks": ["frc662", "frc3245", "frc4550"]}, {"declines": [], "picks": ["frc192", "frc1836", "frc3006"]}, {"declines": [], "picks": ["frc3200", "frc2437", "frc2993"]}, {"declines": [], "picks": ["frc3374", "frc2594", "frc4158"]}, {"declines": [], "picks": ["frc3009", "frc1339", "frc3166"]}], "event_type_string": "Regional", "start_date": "2015-03-11", "event_type": 0}, {"key": "2016utwv", "website": "http://www.utfrc.utah.edu", "official": true, "end_date": "2016-03-19", "name": "Utah Regional", "short_name": "Utah", "facebook_eid": null, "event_district_string": null, "venue_address": "Maverik Center\n3200 South Decker Lake Drive\nWest Valley City, UT 84119\nUSA", "event_district": 0, "location": "West Valley City, UT, USA", "event_code": "utwv", "year": 2016, "webcast": [{"type": "twitch", "channel": "utahfrc"}], "timezone": "America/Denver", "alliances": [{"declines": [], "picks": ["frc2468", "frc4334", "frc3166"]}, {"declines": [], "picks": ["frc3021", "frc329", "frc4944"]}, {"declines": [], "picks": ["frc287", "frc3230", "frc2478"]}, {"declines": [], "picks": ["frc3225", "frc3241", "frc115"]}, {"declines": [], "picks": ["frc3289", "frc3245", "frc1891"]}, {"declines": [], "picks": ["frc1477", "frc5933", "frc3374"]}, {"declines": [], "picks": ["frc5489", "frc3239", "frc5974"]}, {"declines": [], "picks": ["frc3243", "frc4310", "frc3288"]}], "event_type_string": "Regional", "start_date": "2016-03-16", "event_type": 0}]
+    [headers] => Httpful\Response\Headers Object
+        (
+            [headers:Httpful\Response\Headers:private] => Array
+                (
+                    [date] => Thu, 31 Mar 2016 22:35:57 GMT
+                    [content-type] => application/json; charset="utf-8"
+                    [content-length] => 7655
+                    [connection] => keep-alive
+                    [set-cookie] => __cfduid=d7537b2230b9f4bd5a3def628c51221fd1459463756; expires=Fri, 31-Mar-17 22:35:56 GMT; path=/; domain=.thebluealliance.com; HttpOnly
+                    [access-control-allow-origin] => *
+                    [cache-control] => public, max-age=86400
+                    [pragma] => Public
+                    [x-tba-version] => 2
+                    [vary] => Accept-Encoding
+                    [server] => cloudflare-nginx
+                    [cf-ray] => 28c747007c6f0296-SJC
+                )
+
+        )
+
+    [raw_headers] => HTTP/1.1 200 OK
+Date: Thu, 31 Mar 2016 22:35:57 GMT
+Content-Type: application/json; charset="utf-8"
+Content-Length: 7655
+Connection: keep-alive
+Set-Cookie: __cfduid=d7537b2230b9f4bd5a3def628c51221fd1459463756; expires=Fri, 31-Mar-17 22:35:56 GMT; path=/; domain=.thebluealliance.com; HttpOnly
+Access-Control-Allow-Origin: *
+Cache-Control: public, max-age=86400
+Pragma: Public
+X-TBA-Version: 2
+Vary: Accept-Encoding
+Server: cloudflare-nginx
+CF-RAY: 28c747007c6f0296-SJC
+    [request] => Httpful\Request Object
+        (
+            [uri] => www.thebluealliance.com/api/v2/team/frc3006/history/events
+            [method] => GET
+            [headers] => Array
+                (
+                    [X-TBA-App-Id] => frc0100:compsystem:v02
+                    [Content-Length] => 0
+                )
+
+            [raw_headers] => GET www.thebluealliance.com/api/v2/team/frc3006/history/events HTTP/1.1
+Host: localhost
+Expect:
+User-Agent: Httpful/0.2.19 (cURL/7.47.1 PHP/5.6.19 (WINNT))
+Content-Type: 
+Accept: */*; q=0.5, text/plain; q=0.8, text/html;level=3;
+X-TBA-App-Id: frc0100:compsystem:v02
+Content-Length: 0
+
+            [strict_ssl] => 
+            [content_type] => 
+            [expected_type] => 
+            [additional_curl_opts] => Array
+                (
+                )
+
+            [auto_parse] => 1
+            [serialize_payload_method] => 2
+            [username] => 
+            [password] => 
+            [serialized_payload] => 
+            [payload] => 
+            [parse_callback] => 
+            [error_callback] => 
+            [send_callback] => 
+            [follow_redirects] => 
+            [max_redirects] => 25
+            [payload_serializers] => Array
+                (
+                )
+
+            [_ch] => Resource id #25
+            [_debug] => 
+        )
+
+    [code] => 200
+    [content_type] => application/json
+    [parent_type] => application/json
+    [charset] => "utf-8"
+    [meta_data] => Array
+        (
+            [url] => http://www.thebluealliance.com/api/v2/team/frc3006/history/events
+            [content_type] => application/json; charset="utf-8"
+            [http_code] => 200
+            [header_size] => 484
+            [request_size] => 260
+            [filetime] => -1
+            [ssl_verify_result] => 0
+            [redirect_count] => 0
+            [total_time] => 1.032
+            [namelookup_time] => 0.032
+            [connect_time] => 0.422
+            [pretransfer_time] => 0.422
+            [size_upload] => 0
+            [size_download] => 7655
+            [speed_download] => 7417
+            [speed_upload] => 0
+            [download_content_length] => 7655
+            [upload_content_length] => -1
+            [starttransfer_time] => 0.922
+            [redirect_time] => 0
+            [redirect_url] => 
+            [primary_ip] => 104.27.142.180
+            [certinfo] => Array
+                (
+                )
+
+            [primary_port] => 80
+            [local_ip] => 172.20.10.8
+            [local_port] => 53267
+        )
+
+    [is_mime_vendor_specific] => 
+    [is_mime_personal] => 
+    [parsers:Httpful\Response:private] => 
+)
+
+

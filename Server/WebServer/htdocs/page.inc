@@ -207,8 +207,8 @@ function dblock($dblock, $op)
 			$row = mysqli_fetch_array($result);
 			$updatedby = $row["updatedby"];
 			
-			$date = date('d m/d h:i');
-			$updatedby = "{$user} {$date}- {$updatedby}";
+			$date = date('m/d.h:i');
+			$updatedby = "{$user} {$date};{$updatedby}";
 			$updatedby = substr ($updatedby, 0, $maxlengthchangeby);
 				
 		    	if (! (@mysqli_query ($connection, "update {$wlock["table"]} set updatedby = '{$updatedby}' where {$wlock["where"]}") ))
@@ -559,7 +559,7 @@ function pfooter()
   	print "Logged in as {$user} ";
   	if ($admin) print " -- administrator";
   	print "\n&nbsp;&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  \n";
-        print "<a href=\"http://logout@{$site}{$base}/\">Logout</a>";
+        print "<a href=\"http://logout@{$site}/\">Logout</a>";
   	print "<br>\n";
   }
   
