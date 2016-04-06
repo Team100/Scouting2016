@@ -223,6 +223,8 @@ create table teambot
 # Ranking tag on game_specific rankings from first
 #  Functions as a lookup table only
 #
+# -- depricate -- storing in params.inc instead
+#
 create table ranking_tag
  (
   tag int,                      # tBA parameter number, corresponding to f_rankparamX
