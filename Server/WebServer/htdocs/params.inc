@@ -338,8 +338,8 @@ $rank_columns_custom  = array_merge(
   //
   // Schedule files and documentation
   //
-  $schedule_xls = "doc/qualification_schedule.xls";
-  $schedule_csv = "doc/qualification_schedule.csv";
+  $schedule_xls = "sysfiles/qualification_schedule.xls";
+  $schedule_csv = "sysfiles/qualification_schedule.csv";
   
   // 
   // log directory
