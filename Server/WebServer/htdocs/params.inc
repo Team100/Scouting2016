@@ -469,6 +469,7 @@ function rap_custom_field_data ()
   global $connection;
   
   print "\n<!--- Custom Insert before Field Data --->\n\n";
+  print "\n mckay \n";
 
   return;
 }

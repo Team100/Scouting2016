@@ -641,6 +641,8 @@ function tba_getdata($tba_url)
   // $last = "Tue, 29 Mar 2016 14:46:03 GMT";
   //$last = "";
   
+  $last = tba_getlastmod($tba_url);
+  
   try
   {
     $tba_response = \Httpful\Request::get($tba_url)
@@ -685,7 +687,7 @@ function tba_getdata($tba_url)
     return(FALSE);
 
 
-  // tba_setlastmod($tba_url, $response->headers['last-modified']);
+  tba_setlastmod($tba_url, $response->headers['last-modified']);
 
   
   return($tba_response);
@@ -699,6 +701,20 @@ function tba_getdata($tba_url)
 //
 // searchs database for last modified time returned from tBA for URL 
 //  and returns the string.
+
+function tba_getlastmod($tba_url) {
+  global $connection;
+
+  $query = "select last_mod from tba_last_modified where api_call = '{$tba_url}'";
+  if (debug()) print "<br>DEBUG:tba_getlastmod: " . $query . "<br>\n";
+  
+  if (!($result = @mysqli_query ($connection, $query)))
+    dbshowerror($connection);
+  $row = mysqli_fetch_array($result);
+   
+  return ($row['last_mod']);
+}
+	
 //
 
 //
@@ -709,6 +725,24 @@ function tba_getdata($tba_url)
 // stores last modified string for URL
 // returns nothing.
 //
+
+function tba_setlastmod($tba_url, $lastmod) {
+  global $connection;
+
+  $query = "select last_mod from tba_last_modified where api_call = '{$tba_url}'";
+  if (debug()) print "<br>DEBUG:tba_setlastmod: " . $query . "<br>\n";
+
+  
+  if(($result = @mysqli_query ($connection, $query)))
+    $query = "update tba_last_modified set (last_mod = '{$lastmod}') where api_call = '{$tba_url}'";
+  else 
+    $query = "insert into tba_last_modified (api_call, lastmod) values('{$tba_url}', '{$lastmod}')";
+  
+  if (debug()) print "<br>DEBUG:tba_setlastmod: " . $query . "<br>\n";
+  $result = @mysqli_query ($connection, $query);
+  
+  return;
+}
 
 
 
