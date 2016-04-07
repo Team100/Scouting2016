@@ -495,13 +495,15 @@ create table match_team
 #
 # championship listing table
 #
-create table championteam
- (
-  event_id varchar(8),          # FK to event table 
-  league_name varchar(25),	# long-form of league name
-  teamnum  int, 		# FIRST team number - primary key
-  primary key (event_id, teamnum)
-);
+# depricate?
+#
+#create table championteam
+#(
+#  event_id varchar(8),          # FK to event table 
+#  league_name varchar(25),	# long-form of league name
+#  teamnum  int, 		# FIRST team number - primary key
+#  primary key (event_id, teamnum)
+#);
 
 #
 # schedule import received from FRIST to be imported

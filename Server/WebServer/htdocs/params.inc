@@ -138,7 +138,7 @@ $dispfields["Match"][11] = array("used"=>TRUE, "tag"=>"driverrating", "display"=
 $dispfields["Match"][12] = array("used"=>TRUE, "tag"=>"pickuprating", "display"=>"pickuprating", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][13] = array("used"=>TRUE, "tag"=>"BreacherRating", "display"=>"BreacherRating", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][14] = array("used"=>TRUE, "tag"=>"Rock Wall", "display"=>"Rock Wall", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-//$dispfields["Match"][15] = array("used"=>TRUE, "tag"=>"Rock Wall Difficult?", "display"=>"Rock Wall Difficult?", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+$dispfields["Match"][15] = array("used"=>TRUE, "tag"=>"Rock Wall Difficult?", "display"=>"Rock Wall Difficult?", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][16] = array("used"=>TRUE, "tag"=>"Moat", "display"=>"Moat", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][17] = array("used"=>TRUE, "tag"=>"Moat Difficult?", "display"=>"Moat Difficult?", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][18] = array("used"=>TRUE, "tag"=>"Drawbridge", "display"=>"Drawbridge", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
@@ -157,7 +157,7 @@ $dispfields["Match"][30] = array("used"=>TRUE, "tag"=>"FinalPosit", "display"=>"
 $dispfields["Match"][31] = array("used"=>TRUE, "tag"=>"redcard", "display"=>"redcard", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][32] = array("used"=>TRUE, "tag"=>"Disabled", "display"=>"Disabled", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][33] = array("used"=>TRUE, "tag"=>"Broken", "display"=>"Broken", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-$dispfields["Match"][34] = array("used"=>TRUE, "tag"=>"Notes", "display"=>"Notes", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+// $dispfields["Match"][34] = array("used"=>TRUE, "tag"=>"Notes", "display"=>"Notes", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 // $dispfields["Match"][35] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][36] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][37] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
