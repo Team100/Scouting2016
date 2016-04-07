@@ -103,6 +103,7 @@
 
 			      $db_array = array_merge($db_array, array("MatchField_" . $tagmap[$jsontag]=>$truncstring));
 			    }
+			    // if not found, no action needed
 			  } // end of foreach
 
 			  // update database
