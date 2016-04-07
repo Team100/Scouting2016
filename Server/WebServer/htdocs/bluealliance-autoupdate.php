@@ -8,6 +8,8 @@
   // Runs in background periodically and updates data needed at tournament
   //
 
+  print date('Y-m-d-H:i:s') . ": checking to run autoupdate\n";
+
   require "page.inc";
   require "bluealliance.inc";
 
