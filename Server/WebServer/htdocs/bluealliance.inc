@@ -638,7 +638,7 @@ function tba_getdata($tba_url)
   
   // test - change with real functions
   // $last = "Tue, 29 Mar 2016 14:46:03 GMT";
-  $last = "";
+  // $last = "";
   
   $last = tba_getlastmod($tba_url);
   
@@ -678,15 +678,12 @@ function tba_getdata($tba_url)
       return(FALSE);
       break;
       
-    default:
-      return($tba_response);
-      break;
   }
   if ($code1 != "2")
     return(FALSE);
 
 
-  tba_setlastmod($tba_url, $response->headers['last-modified']);
+  tba_setlastmod($tba_url, $tba_response->headers['last-modified']);
 
   
   return($tba_response);
@@ -728,18 +725,23 @@ function tba_getlastmod($tba_url) {
 function tba_setlastmod($tba_url, $lastmod) {
   global $connection;
 
+
   $query = "select last_mod from tba_last_modified where api_call = '{$tba_url}'";
   if (debug()) print "<br>DEBUG:tba_setlastmod: " . $query . "<br>\n";
 
-  
-  if(($result = @mysqli_query ($connection, $query)))
-    $query = "update tba_last_modified set (last_mod = '{$lastmod}') where api_call = '{$tba_url}'";
+
+  if (!($result = @mysqli_query ($connection, $query)))
+    dbshowerror($connection);
+    
+  if ($row = mysqli_fetch_array($result))
+    $query = "update tba_last_modified set last_mod = '{$lastmod}' where api_call = '{$tba_url}'";
   else 
-    $query = "insert into tba_last_modified (api_call, lastmod) values('{$tba_url}', '{$lastmod}')";
+    $query = "insert into tba_last_modified (api_call, last_mod) values('{$tba_url}', '{$lastmod}')";
   
   if (debug()) print "<br>DEBUG:tba_setlastmod: " . $query . "<br>\n";
-  $result = @mysqli_query ($connection, $query);
-  
+  if (!($result = @mysqli_query ($connection, $query)))
+    dbshowerror($connection);
+    
   return;
 }
 
