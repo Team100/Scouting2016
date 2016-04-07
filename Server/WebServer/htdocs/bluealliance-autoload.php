@@ -14,19 +14,24 @@
   $connection = dbsetup();
 
   // check for server variable and abort if being run from a web server
-  if ($_SERVER['SERVER'] !== NULL)
+  if (isset($_SERVER['SERVER_NAME']))
   {
     print "ERROR: Cannot be run from a web page\n";
     print "Aborting.";
     exit;
   }
 
+
+  // check if state is on to run
+  if (! (tba_get_autoupdate())) exit;
+
+
   print "\nCompetition System Batch Run\n";
-  print "Starting " . date('Y-m-d-H:i:s');
+  print "Starting " . date('Y-m-d-H:i:s') . "\n";
 
 
       // inform user
-      print date('Y-m-d-H:i:s') . "Processing event matches...<br>\n";
+      print date('Y-m-d-H:i:s') . " Processing event matches...<br>\n";
       if (tba_get_matches())
         print "Blue Alliance operation successful.<br>\n";
       else
@@ -37,7 +42,7 @@
       // stats first
 
       // inform user
-      print date('Y-m-d-H:i:s') . "Retrieving event stats...<br>\n";
+      print date('Y-m-d-H:i:s') . " Retrieving event stats...<br>\n";
       if (tba_get_event_stats())
         print "Blue Alliance operation successful.<br>\n";
       else
@@ -46,7 +51,7 @@
 
       // rankings
       // inform user
-      print date('Y-m-d-H:i:s') . "Retrieving rankings...<br>\n";
+      print date('Y-m-d-H:i:s') . " Retrieving rankings...<br>\n";
       if (tba_get_event_rankings())
         print "Blue Alliance operation successful.<br>\n";
       else

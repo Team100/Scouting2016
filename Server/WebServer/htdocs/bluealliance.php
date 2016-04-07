@@ -111,14 +111,24 @@
       print "<br>";
       break;
 
+    // ****
+    //
+    case "autoupdate";
+      $toggle = $_GET['toggle'];
 
+      // set auto_update
+      if ($toggle == "on") $state=1; else $state=0;
+
+      if (! (tba_set_autoupdate($state)))
+        showerror("Cannot set autoupdate in {$auto_update_file}.");
 
     default:
 
   }
 
   // check on auto-update state
-  $auto_state="on";
+  $state = tba_get_autoupdate();
+  if ($state == 1) $auto_state = "off"; else $auto_state = "on";
 
 
   //
@@ -140,7 +150,7 @@
   <li><a href=\"/bluealliance.php?op=history\">Update history and award info for teams in our database</a></li>
   <br>
   <br>
-  <li><a href=\"/bluealliance.php?op=auto_{$auto_state}\">Turn <b>{$auto_state}</b> automatic updates until 6:30pm.</a></li>
+  <li><a href=\"/bluealliance.php?op=autoupdate&toggle={$auto_state}\">Turn <b>{$auto_state}</b> automatic updates until {$auto_update_stop}.</a></li>
   <br>
   <br>
   <li><a href=\"/bluealliance.php?op=allteams\">Update all FIRST teams (! be careful - lots of data)</a></li>

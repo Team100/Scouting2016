@@ -38,7 +38,7 @@
   $row = mysqli_fetch_array($result);
 
   // print team number, name and nickname as page header
-  print "<a href=\"/teaminfo.php?teamnum={$teamnum}\"><H2>Match Listings - {$teamnum}; - {$row["name"]}</a>";
+  print "<a href=\"/teaminfo.php?teamnum={$teamnum}\"><H2>Match Listings - {$teamnum} - {$row["name"]}</a>";
   if ($row["nickname"]) print "({$row["nickname"]})";
   print "</H2>\n";
 

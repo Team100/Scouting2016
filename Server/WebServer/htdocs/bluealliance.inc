@@ -219,7 +219,6 @@ function tba_get_event_teams()
   if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams")))
   {
     print "API returned " . $tba_error['message'] . "<br>\n";
-    return(FALSE);
   }
   else
   {
@@ -635,11 +634,7 @@ function tba_getdata($tba_url)
   global $tba_error;
   $tba_error = array("state"=>FALSE);
   
-  
-  // test - change with real functions
-  // $last = "Tue, 29 Mar 2016 14:46:03 GMT";
-  // $last = "";
-  
+  // get last-modified from database  
   $last = tba_getlastmod($tba_url);
   
   try
@@ -679,12 +674,13 @@ function tba_getdata($tba_url)
       break;
       
   }
+  
+  // if not a 2, default to an error
   if ($code1 != "2")
     return(FALSE);
 
-
+  // set last modified
   tba_setlastmod($tba_url, $tba_response->headers['last-modified']);
-
   
   return($tba_response);
 }
@@ -698,7 +694,8 @@ function tba_getdata($tba_url)
 // searchs database for last modified time returned from tBA for URL 
 //  and returns the string.
 
-function tba_getlastmod($tba_url) {
+function tba_getlastmod($tba_url) 
+{
   global $connection;
 
   $query = "select last_mod from tba_last_modified where api_call = '{$tba_url}'";
@@ -722,17 +719,18 @@ function tba_getlastmod($tba_url) {
 // returns nothing.
 //
 
-function tba_setlastmod($tba_url, $lastmod) {
+function tba_setlastmod($tba_url, $lastmod) 
+{
   global $connection;
 
-
+  // look for last_mod
   $query = "select last_mod from tba_last_modified where api_call = '{$tba_url}'";
   if (debug()) print "<br>DEBUG:tba_setlastmod: " . $query . "<br>\n";
-
 
   if (!($result = @mysqli_query ($connection, $query)))
     dbshowerror($connection);
     
+  // if something returns, update.  Otherwise insert.
   if ($row = mysqli_fetch_array($result))
     $query = "update tba_last_modified set last_mod = '{$lastmod}' where api_call = '{$tba_url}'";
   else 
@@ -848,6 +846,80 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 
 
 
+//
+// function: tba_set_autoupdate($state) - sets autoupdate
+//   $state - 0 for off, 1 for on
+//   returns true if successful, false if failed
+//
+// Sets file defined by $auto_update_file with $state
+//
+
+function tba_set_autoupdate ( $state )
+{
+  global $auto_update_file;
+  global $auto_update_stop;
+  
+  // setup up file
+  if ($fp = fopen($auto_update_file, 'w'))
+    if (! (fwrite($fp, $state)))
+      return(FALSE);
+  
+  fclose($fp);
+
+  return(TRUE);
+}
+
+
+//
+// function: tba_get_autoupdate() - sets autoupdate
+//   returns $state - 0 for off, 1 for on
+//
+// Gets state of setting for $auto_update_file 
+//  If time is past $auto_update_stop (set in params.inc), set state to zero
+//
+
+function tba_get_autoupdate ()
+{
+  global $auto_update_file;
+  global $auto_update_stop;
+  
+  // default state
+  $state=0;
+  
+  // get file
+  if ($fp = fopen($auto_update_file, 'r'))
+  {
+    $state = fgetc($fp);
+    fclose($fp);
+        
+    // if still set, check on time
+    
+    if ($state != 0 )
+    {
+      // set for time today.  Based on day and $auto_update_end_time
+      $today_str = date('Y-m-d');
+       
+      // set stop in unix time
+      $stop = strtotime( $today_str . " " . $auto_update_stop);
+      
+      // get current time
+      $time = time();
+      
+      // if we are later, change state
+      if ($time > $stop)
+      {
+        tba_set_autoupdate(0);
+        $state = 0;
+      }
+    }
+  }
+  
+  return($state);
+
+}
+
+
+
 
 //
 // function: tba() - 
@@ -856,12 +928,6 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 //
 
 
-//
-// function: tba() - 
-//   $
-//
-//
-
 
 
 //
@@ -869,9 +935,6 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 //   $
 //
 //
-
-
-
 
 
 //
