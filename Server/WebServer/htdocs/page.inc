@@ -637,6 +637,8 @@ function tabtextfield( $edit, $options, $data, $fieldname, $fieldtag, $size, $ma
 
     // set up href option
     // href
+    $beg_href="";
+    $end_href="";
     if ($options["href"])
     	{
     	  // strip off http start if there is one  
@@ -831,7 +833,7 @@ function fields_load ( $post, $fieldnames )
 
 function fields_insert ( $operation, $formfields, $fieldnames )
 {
-//   $insert="";
+   $insert="";
    
    // if field names, use the array that is passed, otherwise iterate over formfields
    if ($fieldnames)

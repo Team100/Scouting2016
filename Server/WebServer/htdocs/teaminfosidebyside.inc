@@ -12,19 +12,31 @@
   //
 
   //
-  // get side-by-side data, load into array so it can be printed
+  // get side-by-side data, load into $matches array so it can be printed
   //
   $query = "select * from match_team where event_id = '{$sys_event_id}' and teamnum = {$teamnum}
-            order by type, matchnum";
+            order by field(type,'F','Q','P'), matchnum DESC";
   
   if (debug()) print "<br>DEBUG-teamfinfosidebyside: " . $query . "<br>\n";
   if (! ($result = @ mysqli_query ($connection, $query)))
        dbshowerror($connection, "die");
 
-  $matches = array();
+  $cnt=0;
   while($row = mysqli_fetch_array($result))
-    $matches = array_merge($matches, $row);
+    $matches[$cnt++] = $row;
 
+  //
+  // build matches display array db_column=>display
+  //
+  $match_fields = array(
+    "rating_offense"=>"Offense Rating",
+    "rating_defense"=>"Defense Rating"
+    );
+    
+  // add Matchfields
+  foreach($dispfields['Match'] as $fieldnum=>$matcharray)
+    $match_fields = array_merge($match_fields, array("MatchField_" . $fieldnum => $matcharray['display']));
+ 
 
   //
   // field options
@@ -75,10 +87,31 @@
     print tabtextfield($edit,$options,$row, "rank_pos3","Position #3:&nbsp",4) . "</tr>\n";
   }
 
-
   // end of ranking block of variables
   print "</table>\n\n";
   
+  //
+  // Display Play variables
+  print "
+  <br>
+  <b>Play and Pit Evaluation</b>
+  <!--- Layout table --->
+  <table><tr valign=\"top\"><td>
+  <table border=\"1\" valign=\"top\">
+   ";
+
+  // get play variables
+  $options["tr"]=TRUE;
+  $options["notag"]=FALSE;
+//  $options["pagebreak"]=0;
+//  $options["pagebreakstring"]="\n</table>\n</td><td>\n<table border=\"1\">\n";
+  print tabparamfields($edit, $options, $row, "Play");
+
+
+
+  // end of blocks of data and two layouts
+  print "\n</table>\n</td></tr></table>\n";
+
 
   // stats block
   print "
@@ -101,9 +134,11 @@
 
   // end of first block/column of variables
 //  print "</table>\n</td><td>&nbsp;&nbsp;</td><td>\n";
-  
+  print "</table>\n<br>\n";
+ 
+ 
   // 
-  // New block/colum of variables
+  // New block of variables
   //
 
   print "
@@ -118,39 +153,42 @@
       print "<tr><td>{$rankfield['display']}</td><td>{$row[$rankfield['column']]}</td><tr>\n";
 
   // end of first block of variables
-  print "</table></td><td>&nbsp;&nbsp;</td><td>\n";
+  print "</table></td>\n";
 
-  // Play variables
+  
+  //
+  // display side-by-side listing
+  //
+  print "<td>&nbsp;&nbsp;&nbsp;</td><td>\n";
+  
   print "
-  <b>Play and Pit Evaluation</b>
+  <b>Match Evaluations</b>
   <!--- Layout table --->
-  <table><tr valign=\"top\"><td>
   <table border=\"1\" valign=\"top\">
    ";
-
-  // get play variables
-  $options["tr"]=TRUE;
-  $options["notag"]=FALSE;
-//  $options["pagebreak"]=0;
-//  $options["pagebreakstring"]="\n</table>\n</td><td>\n<table border=\"1\">\n";
-  print tabparamfields($edit, $options, $row, "Play");
-
-
-
-  // end of blocks of data and two layouts
-  print "\n</table>\n</td></tr></table>\n";
-
-
+   
+  // display column headings -- match ID
+  print "<tr><th></th>\n";
   
-  //
-  // side-by-side listing
-  //
-  print "</td><td>\n";
-  
-  print "NEXT TABLE HERE";
- 
-  
-  
+  foreach($matches as $matchdata)
+    print "<th>{$matchdata['type']}{$matchdata['matchnum']}</th>\n";
+
+  print "</tr>\n";
+
+  // add column per row of displayed data
+  foreach($match_fields as $column=>$display)
+    {
+      print "<tr><td>{$display}</td>";
+      
+      // iterate matches
+      foreach($matches as $matchdata)
+        print "<td>{$matchdata[$column]}</td>";
+      
+      print "</tr>\n";
+    }
+
+  // end of match evaluations table
+  print "</table>\n";
   // end of layout
   print "</td></tr></table>\n";
 
@@ -179,9 +217,23 @@
  
  
   // close table
-  print "</td></tr></table>";
+  print "</td></tr></table>\n";
 
   // end of team info data block
+
+  //
+  // add notes section:
+  //
+  
+  print "<br><b>Notes from Matches:</b><br>\n";
+  print "<table border=\"0\">\n";
+  
+  foreach($matches as $matchdata)
+    print "<tr><td>{$matchdata['type']}{$matchdata['matchnum']}:</td><td>{$matchdata['notes']}</td></tr>\n";
+
+  print "<table><br>\n";
+  
+  // end of notes section
 
     // add edit link or submit button
   print dblockshowedit($edit, $dblock, $editURL) . "\n";

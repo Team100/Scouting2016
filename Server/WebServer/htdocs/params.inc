@@ -123,8 +123,8 @@ $dispfields["Play"][20] = array("used"=>TRUE, "tag"=>"", "display"=>"Breach Rati
 // Match Fields -- analyzed in each match.  Data specific to that match
 //
 
-$dispfields["Match"][0] = array("used"=>TRUE, "tag"=>"autoscorebot", "display"=>"autoscorebot", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-$dispfields["Match"][1] = array("used"=>TRUE, "tag"=>"autoscoretop", "display"=>"autoscoretop", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+$dispfields["Match"][0] = array("used"=>TRUE, "tag"=>"autoscorebot", "display"=>"Auto Score Bot", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+$dispfields["Match"][1] = array("used"=>TRUE, "tag"=>"autoscoretop", "display"=>"Auto Score Top", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][2] = array("used"=>TRUE, "tag"=>"AutoRock Wall", "display"=>"AutoRock Wall", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][3] = array("used"=>TRUE, "tag"=>"AutoMoat", "display"=>"AutoMoat", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][4] = array("used"=>TRUE, "tag"=>"AutoDrawbridge", "display"=>"AutoDrawbridge", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");

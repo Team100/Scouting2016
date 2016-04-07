@@ -154,37 +154,37 @@ function tba_getmatcharray ($tba_response_array)
   switch ($tba_response_array->comp_level)
   {
     case "qm": 
-      $matcharray[type] = 'Q';
+      $matcharray['type'] = 'Q';
       break;
     case "ef":
-      $matcharray[type] = 'F';
-      $matcharray[final_type] = 'E';
+      $matcharray['type'] = 'F';
+      $matcharray['final_type'] = 'E';
       break;    
     case "qf":
       $offset=24;
-      $matcharray[final_type] = 'Q';
-      $matcharray[type] = 'F';
+      $matcharray['final_type'] = 'Q';
+      $matcharray['type'] = 'F';
       break;
     case "sf":
       $offset=36;
-      $matcharray[final_type] = 'S';      
-      $matcharray[type] = 'F';
+      $matcharray['final_type'] = 'S';      
+      $matcharray['type'] = 'F';
       break;
     case "f":
       $offset=42;
-      $matcharray[final_type] = 'F';
-      $matcharray[type] = 'F';
+      $matcharray['final_type'] = 'F';
+      $matcharray['type'] = 'F';
       break;
     default:
-      $matcharray[type] = 'P';
+      $matcharray['type'] = 'P';
    }   
    
   // set match number by type, if finals, need to calculate number
   //  calculation is based on set * match number
-  if ($matcharray[type] == 'F')
-    $matcharray[matchnum]=$offset + $tba_response_array->set_number * 3 + $tba_response_array->match_number;
+  if ($matcharray['type'] == 'F')
+    $matcharray['matchnum']=$offset + $tba_response_array->set_number * 3 + $tba_response_array->match_number;
   else
-    $matcharray[matchnum]=$tba_response_array->match_number;
+    $matcharray['matchnum']=$tba_response_array->match_number;
    
    return ($matcharray);
 }
@@ -327,7 +327,7 @@ function tba_get_matches()
         $tba_dbarray = $match_alliance_array;
         
         // map fields from response for match_instance table
-        $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $scoreeobj, $tba_dbarray);
+        $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $allianceobj, $tba_dbarray);
 
         // update event data in event table
         tba_updatedb("match_instance_alliance", $match_alliance_array, $tba_dbarray);
@@ -358,7 +358,6 @@ function tba_get_matches()
 
       // update match alliance table with scorebreakdown data
       // iterate score_breakdown
- 
       foreach($matchobj->score_breakdown as $colorkey=>$scoreobj)
       {
         if ($colorkey == "blue") $color='B'; else $color='R';
@@ -639,7 +638,7 @@ function tba_getdata($tba_url)
   
   // test - change with real functions
   // $last = "Tue, 29 Mar 2016 14:46:03 GMT";
-  //$last = "";
+  $last = "";
   
   $last = tba_getlastmod($tba_url);
   
@@ -781,9 +780,10 @@ function tba_mapfields ($tba_fieldmap, $tba_responsearray, $tba_dbarray)
 {
    // loop through fieldmap picking up any named fields from object
    // and storing them in dbarray
-   foreach($tba_fieldmap as $field => $value)
-     if ($tba_responsearray->$field) 
-       $tba_dbarray[$value] = $tba_responsearray->$field;
+   foreach($tba_fieldmap as $field =>$value)
+     if (isset($tba_responsearray->$field))
+       if ($tba_responsearray->$field)
+         $tba_dbarray[$value] = $tba_responsearray->$field;
 
    return($tba_dbarray);
 }
