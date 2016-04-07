@@ -216,7 +216,7 @@ function tba_get_event_teams()
   global $tba_team_to_team, $tba_team_to_teambot;
 
   // get data
-  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams")))
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams", FALSE)))
   {
     print "API returned " . $tba_error['message'] . "<br>\n";
   }
@@ -295,7 +295,7 @@ function tba_get_matches()
     $tba_score_to_match_alliance = array_merge($tba_score_to_match_alliance, array($scoredef['tBAtag']=>"f_score{$element}"));
 
   // get data
-  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches")))
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/matches", FALSE)))
     print "API returned " . $tba_error['message'] . "<br>\n";
   else
   {
@@ -407,7 +407,7 @@ function tba_get_event_stats()
   global $tba_stats_to_teambot;
 
   // get data
-  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats")))
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats", FALSE)))
     print "API returned " . $tba_error['message'] . "<br>\n";
   else
   {
@@ -478,7 +478,7 @@ function tba_get_event_rankings()
   }
   
   // get data
-  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/rankings")))
+  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/rankings", FALSE)))
     print "API returned " . $tba_error['message'] . "<br>\n";
   else
   {
@@ -615,8 +615,10 @@ function tba_get_team_awards($teamnum)
 
 
 //  
-// function: tba_getdata($tba_url) - 
+// function: tba_getdata($tba_url, $skiplastmod) - 
 //   $tba_url - URL to call
+//   $skiplastmod - Boolean value that determines if lastmod function is used
+//         True means skip, false means process lastmod
 //
 // Returns:
 //   $tba_response if success
@@ -628,14 +630,15 @@ function tba_get_team_awards($teamnum)
 // Prepares global $tba_error array if in error state.  See $tba_error doc
 //  for structure of the error array
 
-function tba_getdata($tba_url)
+function tba_getdata($tba_url, $skiplastmod)
 {
   global $tba_AppId;
   global $tba_error;
   $tba_error = array("state"=>FALSE);
   
   // get last-modified from database  
-  $last = tba_getlastmod($tba_url);
+  if(!($skiplastmod))
+    $last = tba_getlastmod($tba_url);
   
   try
   {
@@ -680,7 +683,8 @@ function tba_getdata($tba_url)
     return(FALSE);
 
   // set last modified
-  tba_setlastmod($tba_url, $tba_response->headers['last-modified']);
+  if(!($skiplastmod))
+    tba_setlastmod($tba_url, $tba_response->headers['last-modified']);
   
   return($tba_response);
 }

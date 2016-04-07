@@ -57,7 +57,7 @@
     if ($op == "Yes")
     {
       // verify event id
-      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}")))
+      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}", TRUE)))
         print "API returned " . $tba_error['message'] . "<br>\n";
       else
       {
@@ -123,7 +123,7 @@
     {
 
       // get data
-      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}")))
+      if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$new_sys_event_id}", TRUE)))
       {
         print "API returned " . $tba_error['message'] . "<br>\n";
         showerror("Event ID '{$new_sys_event_id}' probably does not exist or server is not connected.");
@@ -252,7 +252,7 @@
     print "<br><br>\n";
 
     // get data
-    if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/events/{$listyear}")))
+    if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/events/{$listyear}", TRUE)))
       print "API returned " . $tba_error['message'] . "<br>\n";
     else
     {
