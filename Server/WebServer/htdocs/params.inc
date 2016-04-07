@@ -353,7 +353,7 @@ $rank_columns_custom  = array_merge(
   $auto_update_file = "sysfiles/autoupdate.ctl";
   //
   // end time each day for auto-update to turn off.  Specify as H:MMpm.
-  $auto_update_stop = "11:30pm";
+  $auto_update_stop = "7:30pm";
   
   //
   // Tablet Server Home directory
