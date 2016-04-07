@@ -17,20 +17,6 @@
   $connection = dbsetup();
 
 
-$end="6:30pm";
-$today_str = date('Y-m-d');
-
-
-$stop = strtotime( $today_str . " " . $end);
-
-print $stop . "\n";
-
-print date( 'Y-m-d H:i', $stop);
-
-exit;
-
-
-
   $query = "select teambot.teamnum, name, nickname, location, org, students, rookie_year
         from teambot, team where teambot.teamnum = team.teamnum";
 
@@ -38,10 +24,9 @@ exit;
         dbshowerror($connection);
    while ($row = mysqli_fetch_array($result))
    {
-       $fp = fopen($tablet_templates . '/' . $row['teamnum'] . '.json', 'w');
-       fwrite($fp, json_encode($row));
-       fclose($fp);
-   }
+       print $row['teamnum'] . "\n";
+
+    }
 
 exit;
 

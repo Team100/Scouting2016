@@ -107,7 +107,7 @@
       . " and match_team.teamnum=teambot.teamnum and match_team.teamnum=team.teamnum"
       . " and match_team.teamnum != {$host_teamnum} and {$match_sql_identifier} order by match_team.color {$order}, match_team.teamnum";
 
-	if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
+	if (debug()) print "<br>DEBUG-matchrapsheet: " . $query . $where . "<br>\n";
 	if (! ($result = @ mysqli_query ($connection, $query)))
   		dbshowerror($connection, "die");
 
@@ -121,14 +121,16 @@
     // create default table header with teams
     $tablehead = "<th></th><th>{$against_color_long} {$team[0]["teamnum"]}</th>"
        . "<th>{$against_color_long} {$team[1]["teamnum"]}</th>"
-       . "<th>{$against_color_long} {$team[2]["teamnum"]}</th>";
+       . "<th>{$against_color_long} {$team[2]["teamnum"]}</th>\n";
 
        // if public, don't include our alliance data
        if (! ($public))
+       {
          $tablehead = $tablehead
-       . "<th>{$with_color_long} {$team[3]["teamnum"]}</th>"
-       . "<th>{$with_color_long} {$team[4]["teamnum"]}</th>";
-       if ($teamcnt == 6) $tablehead = $tablehead . "<th>{$with_color_long} {$team[5]["teamnum"]}</th>";
+         . "<th>{$with_color_long} {$team[3]["teamnum"]}</th>"
+         . "<th>{$with_color_long} {$team[4]["teamnum"]}</th>";
+         if ($teamcnt == 6) $tablehead = $tablehead . "<th>{$with_color_long} {$team[5]["teamnum"]}</th>";
+       }
 
 	// return home
 	print "<a href=\"{$base}\">Return to Home</a>\n";

@@ -28,7 +28,7 @@
   			and a.type=b.type and a.matchnum=b.matchnum and a.color=b.color and
   			a.teamnum={$host_teamnum} group by teamnum order by teamnum,  matchnum";
 
-  if (debug()) print "<br>matchlist: " . $query . "<br>\n";
+  if (debug()) print "<br>DEBUG-matchlist: " . $query . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $query)))
       dbshowerror($connection);
   while ($row = mysqli_fetch_array($result))

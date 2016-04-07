@@ -93,6 +93,7 @@
 
   // return and home buttons
   print "&nbsp;&nbsp;&nbsp;<a href=\"/teaminfo.php?teamnum={$teamnum}\">Return to Team Info</a>\n";
+  print "&nbsp;&nbsp;&nbsp;<a href=\"/teaminfocompile.php?teamnum={$teamnum}\">Compile Match Evals</a>\n";
   print "&nbsp;&nbsp;&nbsp;<a href=\"/allteamslist.php\">All Teams</a>\n";
   print "&nbsp;&nbsp;&nbsp;<a href=\"{$base}\">Return to Home</a>\n";
 

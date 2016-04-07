@@ -123,8 +123,8 @@ $dispfields["Play"][20] = array("used"=>TRUE, "tag"=>"", "display"=>"Breach Rati
 // Match Fields -- analyzed in each match.  Data specific to that match
 //
 
-$dispfields["Match"][0] = array("used"=>TRUE, "tag"=>"autoscorebot", "display"=>"autoscorebot", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-$dispfields["Match"][1] = array("used"=>TRUE, "tag"=>"autoscoretop", "display"=>"autoscoretop", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+$dispfields["Match"][0] = array("used"=>TRUE, "tag"=>"autoscorebot", "display"=>"Auto Score Bot", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+$dispfields["Match"][1] = array("used"=>TRUE, "tag"=>"autoscoretop", "display"=>"Auto Score Top", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][2] = array("used"=>TRUE, "tag"=>"AutoRock Wall", "display"=>"AutoRock Wall", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][3] = array("used"=>TRUE, "tag"=>"AutoMoat", "display"=>"AutoMoat", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][4] = array("used"=>TRUE, "tag"=>"AutoDrawbridge", "display"=>"AutoDrawbridge", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
@@ -170,7 +170,7 @@ $tablet_max_matchfield = 50;
 
 // map match tablet tags to standard columns
 //  Format: tag=>column
-$map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=>"rating_defense");
+$map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=>"rating_defense", "Notes"=>"notes");
 
 
 //
@@ -350,7 +350,10 @@ $rank_columns_custom  = array_merge(
   // auto-update file indicator
   //  If set to 1, turns on every 5 min updates from tBA
   //
-  $auto_update = "sysfiles/autoupdate.ctl";
+  $auto_update_file = "sysfiles/autoupdate.ctl";
+  //
+  // end time each day for auto-update to turn off.  Specify as H:MMpm.
+  $auto_update_stop = "11:30pm";
   
   //
   // Tablet Server Home directory
@@ -372,7 +375,6 @@ if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
 } 
 // end of Linux file location overrides
 
-
 //
 // Tablet Server File Locations, based on $tablet_server_home
 //
@@ -384,6 +386,7 @@ $tablet_ingest_complete = $tablet_server_home . "/ingest-complete";
 $tablet_ingest_error = $tablet_server_home . "/ingest-error";
 $tablet_teamimages = $tablet_server_home . "/teamimages";
 $tablet_export = $tablet_server_home . "/export";
+
 
 
 // default user password (filled in)
@@ -431,7 +434,8 @@ $lgreen = '#ccffcc';
 $lblue = '#ccccff';
 $lred = '#ffcccc';
 
-//length of the updated-by field.  Should not exceed db schema
+//length of the updated-by field.  Should not exceed db schema.  
+//  Data will be truncated to this value
 $maxlengthchangeby=200;
 
 
@@ -469,6 +473,7 @@ function rap_custom_field_data ()
   global $connection;
   
   print "\n<!--- Custom Insert before Field Data --->\n\n";
+  print "\n mckay \n";
 
   return;
 }

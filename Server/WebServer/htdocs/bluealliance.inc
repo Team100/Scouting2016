@@ -154,37 +154,37 @@ function tba_getmatcharray ($tba_response_array)
   switch ($tba_response_array->comp_level)
   {
     case "qm": 
-      $matcharray[type] = 'Q';
+      $matcharray['type'] = 'Q';
       break;
     case "ef":
-      $matcharray[type] = 'F';
-      $matcharray[final_type] = 'E';
+      $matcharray['type'] = 'F';
+      $matcharray['final_type'] = 'E';
       break;    
     case "qf":
       $offset=24;
-      $matcharray[final_type] = 'Q';
-      $matcharray[type] = 'F';
+      $matcharray['final_type'] = 'Q';
+      $matcharray['type'] = 'F';
       break;
     case "sf":
       $offset=36;
-      $matcharray[final_type] = 'S';      
-      $matcharray[type] = 'F';
+      $matcharray['final_type'] = 'S';      
+      $matcharray['type'] = 'F';
       break;
     case "f":
       $offset=42;
-      $matcharray[final_type] = 'F';
-      $matcharray[type] = 'F';
+      $matcharray['final_type'] = 'F';
+      $matcharray['type'] = 'F';
       break;
     default:
-      $matcharray[type] = 'P';
+      $matcharray['type'] = 'P';
    }   
    
   // set match number by type, if finals, need to calculate number
   //  calculation is based on set * match number
-  if ($matcharray[type] == 'F')
-    $matcharray[matchnum]=$offset + $tba_response_array->set_number * 3 + $tba_response_array->match_number;
+  if ($matcharray['type'] == 'F')
+    $matcharray['matchnum']=$offset + $tba_response_array->set_number * 3 + $tba_response_array->match_number;
   else
-    $matcharray[matchnum]=$tba_response_array->match_number;
+    $matcharray['matchnum']=$tba_response_array->match_number;
    
    return ($matcharray);
 }
@@ -219,7 +219,6 @@ function tba_get_event_teams()
   if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/teams")))
   {
     print "API returned " . $tba_error['message'] . "<br>\n";
-    return(FALSE);
   }
   else
   {
@@ -327,7 +326,7 @@ function tba_get_matches()
         $tba_dbarray = $match_alliance_array;
         
         // map fields from response for match_instance table
-        $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $scoreeobj, $tba_dbarray);
+        $tba_dbarray = tba_mapfields($tba_match_to_match_alliance, $allianceobj, $tba_dbarray);
 
         // update event data in event table
         tba_updatedb("match_instance_alliance", $match_alliance_array, $tba_dbarray);
@@ -358,7 +357,6 @@ function tba_get_matches()
 
       // update match alliance table with scorebreakdown data
       // iterate score_breakdown
- 
       foreach($matchobj->score_breakdown as $colorkey=>$scoreobj)
       {
         if ($colorkey == "blue") $color='B'; else $color='R';
@@ -636,10 +634,8 @@ function tba_getdata($tba_url)
   global $tba_error;
   $tba_error = array("state"=>FALSE);
   
-  
-  // test - change with real functions
-  // $last = "Tue, 29 Mar 2016 14:46:03 GMT";
-  //$last = "";
+  // get last-modified from database  
+  $last = tba_getlastmod($tba_url);
   
   try
   {
@@ -677,16 +673,14 @@ function tba_getdata($tba_url)
       return(FALSE);
       break;
       
-    default:
-      return($tba_response);
-      break;
   }
+  
+  // if not a 2, default to an error
   if ($code1 != "2")
     return(FALSE);
 
-
-  // tba_setlastmod($tba_url, $response->headers['last-modified']);
-
+  // set last modified
+  tba_setlastmod($tba_url, $tba_response->headers['last-modified']);
   
   return($tba_response);
 }
@@ -699,6 +693,21 @@ function tba_getdata($tba_url)
 //
 // searchs database for last modified time returned from tBA for URL 
 //  and returns the string.
+
+function tba_getlastmod($tba_url) 
+{
+  global $connection;
+
+  $query = "select last_mod from tba_last_modified where api_call = '{$tba_url}'";
+  if (debug()) print "<br>DEBUG:tba_getlastmod: " . $query . "<br>\n";
+  
+  if (!($result = @mysqli_query ($connection, $query)))
+    dbshowerror($connection);
+  $row = mysqli_fetch_array($result);
+   
+  return ($row['last_mod']);
+}
+	
 //
 
 //
@@ -709,6 +718,30 @@ function tba_getdata($tba_url)
 // stores last modified string for URL
 // returns nothing.
 //
+
+function tba_setlastmod($tba_url, $lastmod) 
+{
+  global $connection;
+
+  // look for last_mod
+  $query = "select last_mod from tba_last_modified where api_call = '{$tba_url}'";
+  if (debug()) print "<br>DEBUG:tba_setlastmod: " . $query . "<br>\n";
+
+  if (!($result = @mysqli_query ($connection, $query)))
+    dbshowerror($connection);
+    
+  // if something returns, update.  Otherwise insert.
+  if ($row = mysqli_fetch_array($result))
+    $query = "update tba_last_modified set last_mod = '{$lastmod}' where api_call = '{$tba_url}'";
+  else 
+    $query = "insert into tba_last_modified (api_call, last_mod) values('{$tba_url}', '{$lastmod}')";
+  
+  if (debug()) print "<br>DEBUG:tba_setlastmod: " . $query . "<br>\n";
+  if (!($result = @mysqli_query ($connection, $query)))
+    dbshowerror($connection);
+    
+  return;
+}
 
 
 
@@ -747,9 +780,10 @@ function tba_mapfields ($tba_fieldmap, $tba_responsearray, $tba_dbarray)
 {
    // loop through fieldmap picking up any named fields from object
    // and storing them in dbarray
-   foreach($tba_fieldmap as $field => $value)
-     if ($tba_responsearray->$field) 
-       $tba_dbarray[$value] = $tba_responsearray->$field;
+   foreach($tba_fieldmap as $field =>$value)
+     if (isset($tba_responsearray->$field))
+       if ($tba_responsearray->$field)
+         $tba_dbarray[$value] = $tba_responsearray->$field;
 
    return($tba_dbarray);
 }
@@ -812,6 +846,80 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 
 
 
+//
+// function: tba_set_autoupdate($state) - sets autoupdate
+//   $state - 0 for off, 1 for on
+//   returns true if successful, false if failed
+//
+// Sets file defined by $auto_update_file with $state
+//
+
+function tba_set_autoupdate ( $state )
+{
+  global $auto_update_file;
+  global $auto_update_stop;
+  
+  // setup up file
+  if ($fp = fopen($auto_update_file, 'w'))
+    if (! (fwrite($fp, $state)))
+      return(FALSE);
+  
+  fclose($fp);
+
+  return(TRUE);
+}
+
+
+//
+// function: tba_get_autoupdate() - sets autoupdate
+//   returns $state - 0 for off, 1 for on
+//
+// Gets state of setting for $auto_update_file 
+//  If time is past $auto_update_stop (set in params.inc), set state to zero
+//
+
+function tba_get_autoupdate ()
+{
+  global $auto_update_file;
+  global $auto_update_stop;
+  
+  // default state
+  $state=0;
+  
+  // get file
+  if ($fp = fopen($auto_update_file, 'r'))
+  {
+    $state = fgetc($fp);
+    fclose($fp);
+        
+    // if still set, check on time
+    
+    if ($state != 0 )
+    {
+      // set for time today.  Based on day and $auto_update_end_time
+      $today_str = date('Y-m-d');
+       
+      // set stop in unix time
+      $stop = strtotime( $today_str . " " . $auto_update_stop);
+      
+      // get current time
+      $time = time();
+      
+      // if we are later, change state
+      if ($time > $stop)
+      {
+        tba_set_autoupdate(0);
+        $state = 0;
+      }
+    }
+  }
+  
+  return($state);
+
+}
+
+
+
 
 //
 // function: tba() - 
@@ -820,12 +928,6 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 //
 
 
-//
-// function: tba() - 
-//   $
-//
-//
-
 
 
 //
@@ -833,9 +935,6 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 //   $
 //
 //
-
-
-
 
 
 //
