@@ -162,7 +162,7 @@ EOF_EOF
   //
   // define count and data query
   $cquery = "select count(*) tot from match_instance ";
-  $query = "select type, matchnum, final_type, scheduled_time, actual_time from match_instance ";
+  $query = "select type, matchnum, final_type, scheduled_utime, actual_utime from match_instance ";
   $where = "where event_id = '{$sys_event_id}'";
 
   // set where clause
@@ -210,7 +210,16 @@ EOF_EOF
 		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["type"]}</a></td>\n";
 		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["matchnum"]}</a></td>\n";
 		if ($final == 1) print "<td>{$row["final_type"]}</td>";   // show final type only if set
-		print "<td>" . substr($row["scheduled_time"],0,5) . "</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
+//		print "<td>" . substr($row["scheduled_time"],0,5) . "</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
+
+        // time presentation
+        $now = time();
+        $sched = $row['scheduled_utime'];
+
+        if ($sched != NULL) $display_sched = date('H:i',$sched); else $display_sched="";
+
+		print "<td>{$display_sched}</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
+
 
 		// get teams in red/blue order
 		$detail_query = "select type, matchnum, teamnum, color from match_team"
