@@ -11,22 +11,43 @@
   // Confirms event code with Blue Alliance data, Then sets in our database.
   //
 
-  require "page.inc";
-  // header and setup
+    global $sys_event_id;
+    global $tba_AppId;
+    global $tba_error;
+    global $connection;
+    global $tba_stats_to_teambot;
 
-  $connection = dbsetup();
+    // get data
+    if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/event/{$sys_event_id}/stats", FALSE)))
+      print "API returned " . $tba_error['message'] . "<br>\n";
+    else
+    {
+      // loop through each type of stat in map function
+      foreach($tba_stats_to_teambot as $tag=>$column)
+      {
+        print $tag . ":";
+        foreach($tba_response->body->$tag as $teamnum=>$value)
+        {
+          $id_array = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
+          tba_updatedb("teambot", $id_array, array($column=>$value));
+          print $teamnum . ", ";
+        }
+        print "<br>\n";
+      }
 
+      // commit
+      if (! (@mysqli_commit($connection) ))
+        dbshowerror($connection, "die");
 
-  $query = "select teambot.teamnum, name, nickname, location, org, students, rookie_year
-        from teambot, team where teambot.teamnum = team.teamnum";
+      // Inform user
+      print "&nbsp;&nbsp;&nbsp; ... stats loading complete.<br>\n";
 
-   if (!($result = @mysqli_query ($connection, $query)))
-        dbshowerror($connection);
-   while ($row = mysqli_fetch_array($result))
-   {
-       print $row['teamnum'] . "\n";
+      return(TRUE);
 
-    }
+    } // end of else from REST query
+
+    return(TRUE);
+
 
 exit;
 

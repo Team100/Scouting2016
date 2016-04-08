@@ -77,6 +77,9 @@ $tba_match_to_match_team = array ();
 // tBA stats to teambot
 $tba_stats_to_teambot = array ("oprs"=>"opr","dprs"=>"dpr","ccwms"=>"ccwm");
 
+// tBA history to history
+$tba_history_to_history = array ("key"=>"event_id","name"=>"long_name","year"=>"year");
+
 
 // tBA stats to match_instance_alliance
 $map_ranking_to_teambot = array (0=>"f_ranking", 1=>"teamnum");
@@ -636,6 +639,7 @@ function tba_getdata($tba_url, $skiplastmod)
   global $tba_error;
   $tba_error = array("state"=>FALSE);
   
+  $last = null;
   // get last-modified from database  
   if(!($skiplastmod))
     $last = tba_getlastmod($tba_url);
