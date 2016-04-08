@@ -130,6 +130,94 @@
     // ****
     //
     case "pit_eval":
+
+      // inform user of pending operation
+      print "Processing pit scouting data from tablets...<br>\n";
+
+      // map array of tags to field number for custom mapping
+      for ($i=0; null !== $dispfields["Play"][$i];  $i++)
+        $tagmap[$dispfields["Play"][$i]["tag"]] = $i;
+
+      // scan upload directory for files
+      if (! ($dir = scandir($pit_ingest)))
+        print "<br><br><b>!!! System error: pit ingest directory not found for scanning files.<br><br>\n";
+      else
+      {
+        foreach($dir as $file)
+          // check if json file
+          if (preg_match('/.*\.json$/',$file))
+
+          {
+            // read file
+            $json_file = file_get_contents($tablet_ingest . "/" . $file);
+
+            // fix anything that we need to in the file
+            $json_file = str_replace("NaN", "0", $json_file);
+            $json_file = str_replace("false", "0", $json_file);
+            $json_file = str_replace("true", "1", $json_file);
+
+
+            // decode json and process
+			if (! ($json_array = json_decode($json_file)))
+			{
+			  print "<br>!! JSON conversion failed for $file<br>\n";
+
+			  // move file to unprocessed/error recovery
+			  rename($tablet_ingest . "/" . $file, $tablet_ingest_error . "/" . $file);
+			  print "Moved {$file} to unprocessed error directory.<br>\n";
+			}
+			else
+			{
+			  // build update array using $map_match_tags
+
+			  // set up default match identifier
+			  // temporary (JLV) - assume type = Q
+			  $match_identifiers = array("event_id"=>$sys_event_id, "type"=>"Q");
+
+			  // initialize $db_array
+			  $db_array = [];
+
+			  foreach($json_array as $jsontag=>$jsonvalue)
+			  {
+			    // if a key tag, built tab_identifiers
+			    if ($jsontag == "teamnum")
+			      $match_identifiers = array_merge($match_identifiers, array ("teamnum"=>$jsonvalue));
+			    // check match number
+				elseif ($jsontag == "matchnum")
+			      $match_identifiers = array_merge($match_identifiers, array ("matchnum"=>$jsonvalue));
+			    // check default / system-defined parameters
+			    elseif ((isset($map_match_tags[$jsontag])) && ($jsonvalue != NULL))
+			      $db_array = array_merge($db_array, array($map_match_tags[$jsontag]=>$jsonvalue));
+			    // check custom parameters
+			    elseif ((isset($tagmap[$jsontag])) && ($jsontag != NULL))
+			    {
+			      // truncate string to match db
+			      $truncstring = substr($jsonvalue, 0, $tablet_max_matchfield);
+
+			      $db_array = array_merge($db_array, array("MatchField_" . $tagmap[$jsontag]=>$truncstring));
+			    }
+			    // if not found, no action needed
+			  } // end of foreach
+
+			  // update database
+			  db_update("match_team", $match_identifiers, $db_array);
+
+			  // commit
+			  if (! (@mysqli_commit($connection) ))
+                dbshowerror($connection, "die");
+
+              // move file to processed
+              rename($tablet_ingest . "/" . $file, $tablet_ingest_complete . "/" . $file);
+
+			  // inform user
+			  print "Completed {$file}.<br>\n";
+
+			} // end of json decode
+		  }
+        }
+      // inform of completed function
+      print "<br>Match evaluations loaded.<br><br>\n";
+
       break;
 
     // ****
