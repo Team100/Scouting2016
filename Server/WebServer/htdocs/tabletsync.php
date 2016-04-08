@@ -49,8 +49,8 @@
         $tagmap[$dispfields["Match"][$i]["tag"]] = $i;
 
       // scan upload directory for files
-      if (! ($dir = scandir($tablet_ingest)))
-        print "<br><br><b>!!! System error: ingest directory not found for scanning files.<br><br>\n";
+      if (! ($dir = scandir($table_ingest_match)))
+        print "<br><br><b>!!! System error: ingest directory '{$table_ingest_match}' not found for scanning files.<br><br>\n";
       else
       {
         foreach($dir as $file)
@@ -59,7 +59,7 @@
 
           {
             // read file
-            $json_file = file_get_contents($tablet_ingest . "/" . $file);
+            $json_file = file_get_contents($tablet_ingest_match . "/" . $file);
 
             // fix anything that we need to in the file
             $json_file = str_replace("NaN", "0", $json_file);
@@ -139,8 +139,8 @@
         $tagmap[$dispfields["Play"][$i]["tag"]] = $i;
 
       // scan upload directory for files
-      if (! ($dir = scandir($pit_ingest)))
-        print "<br><br><b>!!! System error: pit ingest directory not found for scanning files.<br><br>\n";
+      if (! ($dir = scandir($tablet_ingest_pit)))
+        print "<br><br><b>!!! System error: pit ingest directory '{$tablet_ingest_pit}' not found for scanning files.<br><br>\n";
       else
       {
         foreach($dir as $file)
@@ -149,13 +149,22 @@
 
           {
             // read file
-            $json_file = file_get_contents($tablet_ingest . "/" . $file);
+            $json_file = file_get_contents($tablet_ingest_pit . "/" . $file);
 
+            //
             // fix anything that we need to in the file
+            //
+
+            // Nan error
             $json_file = str_replace("NaN", "0", $json_file);
+
+            // replace true/false to numeric rating
             $json_file = str_replace("false", "0", $json_file);
             $json_file = str_replace("true", "1", $json_file);
 
+            // remove nesting
+            $json_file = str_replace('"defenses":{', "", $json_file);
+            $json_file = str_replace('},', ",", $json_file);
 
             // decode json and process
 			if (! ($json_array = json_decode($json_file)))
@@ -168,11 +177,12 @@
 			}
 			else
 			{
+
 			  // build update array using $map_match_tags
 
 			  // set up default match identifier
 			  // temporary (JLV) - assume type = Q
-			  $match_identifiers = array("event_id"=>$sys_event_id, "type"=>"Q");
+			  $teambot_Identifiers = array("event_id"=>$sys_event_id);
 
 			  // initialize $db_array
 			  $db_array = [];
@@ -181,33 +191,27 @@
 			  {
 			    // if a key tag, built tab_identifiers
 			    if ($jsontag == "teamnum")
-			      $match_identifiers = array_merge($match_identifiers, array ("teamnum"=>$jsonvalue));
-			    // check match number
-				elseif ($jsontag == "matchnum")
-			      $match_identifiers = array_merge($match_identifiers, array ("matchnum"=>$jsonvalue));
-			    // check default / system-defined parameters
-			    elseif ((isset($map_match_tags[$jsontag])) && ($jsonvalue != NULL))
-			      $db_array = array_merge($db_array, array($map_match_tags[$jsontag]=>$jsonvalue));
+			      $teambot_Identifiers = array_merge($teambot_Identifiers, array ("teamnum"=>$jsonvalue));
 			    // check custom parameters
 			    elseif ((isset($tagmap[$jsontag])) && ($jsontag != NULL))
 			    {
 			      // truncate string to match db
 			      $truncstring = substr($jsonvalue, 0, $tablet_max_matchfield);
 
-			      $db_array = array_merge($db_array, array("MatchField_" . $tagmap[$jsontag]=>$truncstring));
+			      $db_array = array_merge($db_array, array("PlayField_" . $tagmap[$jsontag]=>$truncstring));
 			    }
 			    // if not found, no action needed
 			  } // end of foreach
 
-			  // update database
-			  db_update("match_team", $match_identifiers, $db_array);
+			  // update database field at a time, only if field is null
+			  db_update_or_create_if_new("teambot", $teambot_Identifiers, $db_array);
 
 			  // commit
 			  if (! (@mysqli_commit($connection) ))
                 dbshowerror($connection, "die");
 
               // move file to processed
-              rename($tablet_ingest . "/" . $file, $tablet_ingest_complete . "/" . $file);
+              rename($tablet_ingest_pit . "/" . $file, $tablet_ingest_complete . "/" . $file);
 
 			  // inform user
 			  print "Completed {$file}.<br>\n";
@@ -318,7 +322,7 @@
   <br>
   <li><a href=\"/tabletsync.php?op=match_template\">Prepare match templates</a></li>
   <br>
-  <li><a href=\"/tabletsync.php?op=pit_template\">Preapre pit templates</a></li>
+  <li><a href=\"/tabletsync.php?op=pit_template\">Prepare pit templates</a></li>
   <br>
   <li><a href=\"/tabletsync.php?op=photo\">Upload and test photos</a></li>
   <br>

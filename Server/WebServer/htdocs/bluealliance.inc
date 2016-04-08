@@ -815,16 +815,11 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 {
    global $connection;
    
-   // set up dummy column for test
-   $dummycol="";
-   foreach($table_identifiers as $column=>$value)
-     if ($dummycol == "") $dummycol = $column;
-
    // set where clauase
    $where = fields_insert("where", $table_identifiers, "");
    
    // select to see if update or insert
-   $query = "select {$dummycol} from {$tablename} where " . $where;
+   $query = "select 'dummy' from {$tablename} where " . $where;
    if (debug()) print "<br>DEBUG:tba_updatedb, Select query: " . $query . "<br>\n";
    
    if (! ($result = @ mysqli_query ($connection, $query)))
@@ -852,6 +847,63 @@ function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
    return;
 }
 
+
+//
+// function: tba_updatedbifnew($tablename, $table_identifiers, $tba_dbarray)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $tba_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+//
+// Updates database with data
+//   Queries for row with data.  If found, updates only the columns which are 
+//     currently NULL.  If not found, inserts.
+//
+
+function tba_updatedbifnew($tablename, $table_identifiers, $tba_dbarray)
+{
+   global $connection;
+   
+   // set where clauase
+   $where = fields_insert("where", $table_identifiers, "");
+   
+   // select to see if update or insert
+   $query = "select * from {$tablename} where " . $where;
+   if (debug()) print "<br>DEBUG:tba_newupdatedb, Select query: " . $query . "<br>\n";
+   
+   if (! ($result = @ mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  	  
+   // if return, update, otherwise insert
+   if ($row = mysqli_fetch_array($result))
+   {
+     // walk through array and build array of values not set
+     $new_dbarray = array();
+     foreach($tba_dbarray as $col=>$val)
+       if ($row[$col] == NULL) $new_dbarray = array_merge($new_dbarray, array($col=>$val));
+       
+     // form query with subset of fields
+     $query = "update {$tablename} set " . fields_insert("update", $new_dbarray, "")
+            .  " where " . $where;
+     if (debug()) print "<br>DEBUG:tba_newupdatedb, update :" . $query . "<br>\n";
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   } 
+   else
+   {
+     $query = "insert into {$tablename} (" . fields_insert("nameonly", $tba_dbarray, "")
+             . ") values (" . fields_insert("insert", $tba_dbarray, "") . " )";
+             
+     if (debug()) print "<br>DEBUG:tba_newupdatedb, insert: " . $query . "<br>\n"; 
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   }
+   
+   return;
+}
 
 
 //
