@@ -22,8 +22,8 @@
        dbshowerror($connection, "die");
 
   $cnt=0;
-  while($row = mysqli_fetch_array($result))
-    $matches[$cnt++] = $row;
+  while($mrow = mysqli_fetch_array($result))
+    $matches[$cnt++] = $mrow;
 
   //
   // build matches display array db_column=>display

@@ -1,11 +1,19 @@
 //
-// $Revision: 2.7 $
-// $Date: 2011/04/11 03:56:48 $
+// $Revision: 3.0 $
+// $Date: 2016/03/14 22:56:41 $
 //
 // page.inc
 //
 // Functions to be used on every page.  Documentation shown above function (and available in compilation).
 //
+// software release version
+//
+// set time zone
+//
+//
+// function: debug
+//  returns true if $debug is true, otherwise returns false
+//$debug=TRUE;
 //
 // ****************************************************************************
 //
@@ -23,12 +31,13 @@
 //  Returns: $connection MySQL handle
 //
 //  Sets up single connection for database interaction.  $connection is returned.
+//  Also loads sys_event_id, as it is needed everywhere in system
 //
 //
 // function: dblock($dblock, $op) - controls locks on rows: locks, checks for lock or abandons lock
 //   $dblock array can be configured two ways:
 //      1) An associative array that consists of two values:
-//   	    table - table name in which to place lock
+//          table - table name in which to place lock
 //          where - where clause to identify correct row(s)
 //      2) An array of associative arrays that consist of the two values above.  In this case
 //           the routine performs dblock function for each table/where clause in the array
@@ -36,7 +45,7 @@
 //      "lock" - lock the row with the current $user
 //      "check" - check that the $user still holds a lock 
 //      "abandon" - abandon or release the lock
-//	"changedby" - update field 'updatedby' in the given table
+//      "changedby" - update field 'updatedby' in the given table
 //
 // Implements poor-man's row-locking.  This single function performs all operations, via the $op directive.
 //  Function looks for locked column and if locked column exists, 
@@ -52,7 +61,7 @@
 //   $edit - flag is non-zero if editing
 //   $dblock array can be configured two ways:
 //      1) An associative array that consists of two values:
-//   	    table - table name in which to place lock
+//          table - table name in which to place lock
 //          where - where clause to identify correct row(s)
 //      2) An array of associative arrays that consist of the two values above.  In this case
 //           the routine performs dblock function for each table/where clause in the array
@@ -67,8 +76,34 @@
 // function: showupdatedby($dblock)
 // 
 // if the user is an admin return a string of hwo has updated the table
-// 	defined by the dblock paramaters (look above)
+//      defined by the dblock paramaters (look above)
 // $dblock is an array with keys of "table" and "where" that define what table is being accessed
+//
+// *******
+// Database update and data creation functions
+//
+// function: db_update($tablename, $table_identifiers, $db_array)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $db_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+//
+// Updates database with data
+//   
+// function: db_update_or_create($tablename, $table_identifiers, $db_array)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $db_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+//
+// Updates database with data
+//   Queries for row with data.  If found, updates.  If not found, inserts.
 //
 //
 // ****************************************************************************
@@ -194,9 +229,12 @@
 //  $operation - name, value, where
 //        nameonly or fieldname - name of fields, comma separated
 //        insert - values used in SQL insert statement
-//        where - where-clear name=value, comma separated
-//  $formfields - array created in loadfields of each field
-//  $fieldnames - optional array of field names to be inserted
+//        where - where-clause name=value, and separate
+//        update - update clause
+//  $formfields - array created in fields_load of each field 
+//      (an ordered associative array of name=>value for each field)
+//  $fieldnames - optional array of field names to be inserted 
+//      (an ordered array of db column fieldnames)
 //
 //   Returns string for insertion into SQL statement.
 //
@@ -217,7 +255,7 @@
 // 
 // function: param_array ($paramgroup)
 //  creates array of needed form fields
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //   Retuns an array of valid fieldnames
 //
 //
@@ -230,7 +268,7 @@
 //         pagebreakstring = string inserted to cause pagebreak.  Works
 //           in tandem with pagebreak
 //   $data - data row with field params (similar to tabtextfield)
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //
 //   Displays param fields in a table form, similar to texttabfield.  Displays all param fields
 //    in a paramgroup
@@ -245,8 +283,9 @@
 //        nameonly or fieldname - name of fields, comma separated
 //        insert - values used in SQL insert statement
 //        where - where-clear name=value, comma separated
-//  $formfields - array created in loadfields of each field
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//  $formfields - array created in fields_load of each field 
+//      (an ordered associative array of name=>value for each field)
+//  $paramgroup - group name for paramters (Play, Match, etc.)
 //
 //   Adds SQL statement fields to SQL statements, similar to fields_insert.
 //   Creates strings for insertion into SQL statements.  Strings include column names (fieldname or nameonly),
@@ -256,14 +295,14 @@
 // function: param_load ($post, $paramgroup)
 //  loads paramterized fields names from post operation
 //   $post = text value for get or post
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //
 //  Loads parameter fields from $GET or $POST vars.
 //
 //
 // function:param_report ($data, $paramgroup, $public))
 //   $data - array or field=>value row arrays (multiple teams)
-//   $paramgroup - group name for paramters (Play, Pit, Match, etc.)
+//   $paramgroup - group name for paramters (Play, Match, etc.)
 //   $public - if set to 1 then only print competitive info
 //   $teamcnt - count of total teams in paramter report
 //

@@ -77,26 +77,26 @@ $field_positions = FALSE;
 // Play Fields -- analyzed from field play, pit, or other analysis of robot
 //
 
-$dispfields["Play"][0] = array("used"=>TRUE, "tag"=>"", "display"=>"Oper Status", "inputlen"=>4, "maxlen"=>4, "default_value"=>"");
-$dispfields["Play"][1] = array("used"=>TRUE, "tag"=>"", "display"=>"Drivetrain", "inputlen"=>10, "maxlen"=>20, "default_value"=>"");
-$dispfields["Play"][2] = array("used"=>TRUE, "tag"=>"", "display"=>"Shooter?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][3] = array("used"=>TRUE, "tag"=>"", "display"=>"High Shooter?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][4] = array("used"=>TRUE, "tag"=>"", "display"=>"Pickup?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][5] = array("used"=>TRUE, "tag"=>"", "display"=>"Scaling Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][6] = array("used"=>TRUE, "tag"=>"", "display"=>"Special Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
-$dispfields["Play"][7] = array("used"=>TRUE, "tag"=>"", "display"=>"Portcullis", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][8] = array("used"=>TRUE, "tag"=>"", "display"=>"Cheval-Door", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][9] = array("used"=>TRUE, "tag"=>"", "display"=>"Moat", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][10] = array("used"=>TRUE, "tag"=>"", "display"=>"Ramparts", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][11] = array("used"=>TRUE, "tag"=>"", "display"=>"Drawbridge", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][12] = array("used"=>TRUE, "tag"=>"", "display"=>"Sally Port", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][13] = array("used"=>TRUE, "tag"=>"", "display"=>"Rock Wall", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][14] = array("used"=>TRUE, "tag"=>"", "display"=>"Rough Terrain", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
-$dispfields["Play"][15] = array("used"=>TRUE, "tag"=>"", "display"=>"Low Bar", "inputlen"=>1, "maxlen"=>1, "default_value"=>"0");
+$dispfields["Play"][0] = array("used"=>TRUE, "tag"=>"opstatus", "display"=>"Oper Status", "inputlen"=>4, "maxlen"=>4, "default_value"=>"");
+$dispfields["Play"][1] = array("used"=>TRUE, "tag"=>"drivetrain", "display"=>"Drivetrain", "inputlen"=>10, "maxlen"=>20, "default_value"=>"");
+$dispfields["Play"][2] = array("used"=>TRUE, "tag"=>"shooter", "display"=>"Shooter?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][3] = array("used"=>TRUE, "tag"=>"highshooter", "display"=>"High Shooter?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][4] = array("used"=>TRUE, "tag"=>"pickup", "display"=>"Pickup?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][5] = array("used"=>TRUE, "tag"=>"scaling", "display"=>"Scaling Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][6] = array("used"=>TRUE, "tag"=>"specialmech", "display"=>"Special Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][7] = array("used"=>TRUE, "tag"=>"portcullis", "display"=>"Portcullis", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][8] = array("used"=>TRUE, "tag"=>"cheval", "display"=>"Cheval-Door", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][9] = array("used"=>TRUE, "tag"=>"moat", "display"=>"Moat", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][10] = array("used"=>TRUE, "tag"=>"ramparts", "display"=>"Ramparts", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][11] = array("used"=>TRUE, "tag"=>"drawbridge", "display"=>"Drawbridge", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][12] = array("used"=>TRUE, "tag"=>"sallyPort", "display"=>"Sally Port", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][13] = array("used"=>TRUE, "tag"=>"rockwall", "display"=>"Rock Wall", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][14] = array("used"=>TRUE, "tag"=>"roughterrain", "display"=>"Rough Terrain", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][15] = array("used"=>TRUE, "tag"=>"lowbar", "display"=>"Low Bar", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
 $dispfields["Play"][16] = array("used"=>TRUE, "tag"=>"", "display"=>"Speed Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
 $dispfields["Play"][17] = array("used"=>TRUE, "tag"=>"", "display"=>"Pickup Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
-$dispfields["Play"][18] = array("used"=>TRUE, "tag"=>"", "display"=>"Low Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
-$dispfields["Play"][19] = array("used"=>TRUE, "tag"=>"", "display"=>"High Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
+$dispfields["Play"][18] = array("used"=>TRUE, "tag"=>"", "display"=>"Low Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
+$dispfields["Play"][19] = array("used"=>TRUE, "tag"=>"", "display"=>"High Shoot Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 $dispfields["Play"][20] = array("used"=>TRUE, "tag"=>"", "display"=>"Breach Rating", "inputlen"=>1, "maxlen"=>1, "default_value"=>"5");
 // $dispfields["Play"][21] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Play"][22] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
@@ -157,7 +157,7 @@ $dispfields["Match"][30] = array("used"=>TRUE, "tag"=>"FinalPosit", "display"=>"
 $dispfields["Match"][31] = array("used"=>TRUE, "tag"=>"redcard", "display"=>"redcard", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][32] = array("used"=>TRUE, "tag"=>"Disabled", "display"=>"Disabled", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 $dispfields["Match"][33] = array("used"=>TRUE, "tag"=>"Broken", "display"=>"Broken", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
-$dispfields["Match"][34] = array("used"=>TRUE, "tag"=>"Notes", "display"=>"Notes", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
+// $dispfields["Match"][34] = array("used"=>TRUE, "tag"=>"Notes", "display"=>"Notes", "inputlen"=>3, "maxlen"=>3, "default_value"=>"");
 // $dispfields["Match"][35] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][36] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 // $dispfields["Match"][37] = array("used"=>TRUE, "tag"=>"", "display"=>"", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
@@ -291,7 +291,7 @@ $RankFields[8] = array("tBApos"=>"6", "column"=>"f_rankparam3", "display"=>"Defe
 $stats_columns  = array (
   "opr"=>array("display"=>"Offensive Power Rating", "heading"=>"Off Power", "format"=>"%.2f", "order"=>"a"),
   "dpr"=>array("display"=>"Defense Power Rating", "heading"=>"Def Power", "format"=>"%.2f", "order"=>"a"),
-  "ccwm"=>array("display"=>"Cont to Winning Margin", "heading"=>"CCW Marg", "format"=>"%.2d", "order"=>"a")
+  "ccwm"=>array("display"=>"Cont to Winning Margin", "heading"=>"CCW Marg", "format"=>"%.2f", "order"=>"a")
   );
 
 //
@@ -338,8 +338,8 @@ $rank_columns_custom  = array_merge(
   //
   // Schedule files and documentation
   //
-  $schedule_xls = "doc/qualification_schedule.xls";
-  $schedule_csv = "doc/qualification_schedule.csv";
+  $schedule_xls = "sysfiles/qualification_schedule.xls";
+  $schedule_csv = "sysfiles/qualification_schedule.csv";
   
   // 
   // log directory
@@ -457,6 +457,9 @@ $maxlengthchangeby=200;
 
 //
 // Custom Rap Sheet Functions
+//   $team array used in matchrapsheet
+//      First three teams are "against" teams
+//   $teamcnt - 5 or 6 depending if we are in alliance
 //
 // Custom Rap Sheet Allow insertion of analysis in three places in the Rap Sheet:
 //   1. Before the Field Data comparison section
@@ -468,21 +471,65 @@ $maxlengthchangeby=200;
 // Functions should simply print to the web page.
 
 // Inserted before Field Data
-function rap_custom_field_data ()
+function rap_custom_field_data ($team, $teamcnt)
 {
   global $connection;
+  global $dispfields;
   
   print "\n<!--- Custom Insert before Field Data --->\n\n";
-  print "\n mckay \n";
+  
+  // array to set PlayFields to use
+  $defenses = [7,8,9,10,11,12,13,14,15];
+    
+  // build fields list
+  $fields = "";
+  foreach($defenses as $playfield)
+  {
+    if ($fields != "") $fields = $fields . ", ";
+    $fields = $fields . "avg(PlayField_{$playfield}) PlayField_{$playfield} ";
+  }  
+  
+  // define and execute averages query
+  
+  $query = "select {$fields} from teambot where teamnum = {$team[0]['teamnum']}
+             or teamnum = {$team[1]['teamnum']} or teamnum = {$team[2]['teamnum']}";
+    
+  if (debug()) print "<br>DEBUG-teamfinfosidebyside: " . $query . "<br>\n";
+  if (! ($result = @ mysqli_query ($connection, $query)))
+       dbshowerror($connection, "die");
 
+  $row = mysqli_fetch_array($result);
+
+  // load sort array
+  $averages = array();
+  foreach($defenses as $playfield)
+    $averages = array_merge($averages, array(" {$playfield}" => $row["PlayField_{$playfield}"]));
+
+  // sort array
+  asort($averages);
+
+  // format data
+  print "<br><b>Defense Selection</b><br>\n";
+  print "<table border=\"1\">\n";
+  foreach ($averages as $stringfield=>$value)
+  {
+    $playfield = intval($stringfield);
+    $displayvalue = sprintf("%.2f", $value);
+    print "<tr><td>{$dispfields['Play'][$playfield]['display']}</td><td>{$displayvalue}</td></tr>\n";
+  }
+  
+  // end table 
+  print "</table><br>\n";
+    
   return;
 }
 
 
 // Inserted before Competition Briefs
-function rap_custom_competition ()
+function rap_custom_competition ($team, $teamcnt)
 {
   global $connection;
+  global $dispfields;
   
   print "\n<!--- Custom Insert before Competition Briefs --->\n\n";
 
@@ -491,9 +538,10 @@ function rap_custom_competition ()
 
 
 // Inserted before Cooperation Briefs
-function rap_custom_cooperation ()
+function rap_custom_cooperation ($team, $teamcnt)
 {
   global $connection;
+  global $dispfields;
   
   print "\n<!--- Custom Insert before Cooperation Briefs --->\n\n";
 

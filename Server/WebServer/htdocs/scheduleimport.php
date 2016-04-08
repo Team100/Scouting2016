@@ -2,7 +2,9 @@
   // $Revision: 3.0 $
   // $Date: 2016/03/14 22:56:41 $
   //
-  // Competition System - page
+  // Competition System
+  //
+  //
   //
 
   require "page.inc";
@@ -35,6 +37,13 @@ The steps for this process are:
 <ol>
 <li>Obtain the FIRST schedule. Often it is formatted as an Excel file. In this case, save the file
     as a CVS file, then edit the headers out of the file using an editor such as Notepad.
+<li>Make sure the file is well-formed including:
+ <ul>
+ <li>No extra lines at the end of file.
+ <li>Type of match should either be 'P', 'Q', or 'F'
+ <li>Time must be just a clock time (e.g. 11:53)
+ <li>No headers or anything but data
+ </ul>
 <li>Upload the schedule file in CSV format by browsing to the file
 <li>Check validity of field mapping.  Often the FIRST format can change.  If the field format needs
     modification, delete the upload file, edit the source file and upload it again.
@@ -44,6 +53,7 @@ The steps for this process are:
 <!--- Functions Section --->
 EOF_EOF
 ; // end of print
+
 
 
   // get file name without location info
@@ -162,8 +172,8 @@ EOF_EOF
 
 		// populate match_instance
 		print "<li>Adding match instance rows...";
-		$query = "insert into match_instance (type, matchnum, scheduled_time)
-					select type, matchnum, scheduled_time from schedule";
+		$query = "insert into match_instance (event_id, type, matchnum, scheduled_time)
+					select '{$sys_event_id}', type, matchnum, scheduled_time from schedule";
 
 		// print if in debug mode
 		if ($debug) print "<br>Query:" . $query;
@@ -176,14 +186,14 @@ EOF_EOF
 		// populate match_instance_detail
 		//   Note: once for each color
 		print "<li>Adding match instance detail rows for each alliance color...";
-		$query = "insert into match_instance_alliance (type, matchnum, color)
-					select type, matchnum, 'B' from schedule";
+		$query = "insert into match_instance_alliance (event_id, type, matchnum, color)
+					select '{$sys_event_id}', type, matchnum, 'B' from schedule";
   		if (! (@mysqli_query($connection, $query)))
   			dbshowerror($connection, "die");
 
   		// red details
-		$query = "insert into match_instance_alliance (type, matchnum, color)
-					select type, matchnum, 'R' from schedule";
+		$query = "insert into match_instance_alliance (event_id, type, matchnum, color)
+					select '{$sys_event_id}', type, matchnum, 'R' from schedule";
 
 		// print if in debug mode
 		if ($debug) print "<br>Query:" . $query;
@@ -206,8 +216,8 @@ EOF_EOF
 
 			for ($i=1; $i<4; $i++)
 				{
-					$query = "insert into match_team (type, matchnum, color, teamnum)
-						select type, matchnum, '{$color}', {$longcolor}{$i} from schedule";
+					$query = "insert into match_team (event_id, type, matchnum, color, teamnum)
+						select '{$sys_event_id}', type, matchnum, '{$color}', {$longcolor}{$i} from schedule";
 
 					// print if in debug mode
 					if ($debug) print "<br>Query:" . $query;

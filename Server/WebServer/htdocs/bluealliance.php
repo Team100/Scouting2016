@@ -126,7 +126,7 @@
 
   }
 
-  // check on auto-update state
+  // check on auto-update state whenever page runs
   $state = tba_get_autoupdate();
   if ($state == 1) $auto_state = "off"; else $auto_state = "on";
 

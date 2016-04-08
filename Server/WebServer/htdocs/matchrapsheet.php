@@ -51,6 +51,7 @@
 		robot_analysis=>"Overall Robot Analysis",
 		driver_analysis=>"Driver Analysis"
 		);
+
     // if fields positions matter, add positions
 	if ($field_positions === TRUE)
       $eval_with_fields = array_merge ( $eval_with_fields,
@@ -111,7 +112,7 @@
 	if (! ($result = @ mysqli_query ($connection, $query)))
   		dbshowerror($connection, "die");
 
-	// load teams
+	// load teams and set team count for 5 or 6 teams
   	$cnt=0;
   	while($row = mysqli_fetch_array($result))
 		$team[$cnt++]=$row;
@@ -173,7 +174,7 @@
 	// loop through Play Field data
 
     // call custom function before field data
-    rap_custom_field_data();
+    rap_custom_field_data($team, $teamcnt);
 
     // format overall sheet and first table
     print "
@@ -206,7 +207,7 @@
 	print "<h2>Competition Briefs</h2>\n";
 
     // call custom function before competition briefs
-    rap_custom_competition();
+    rap_custom_competition($team, $teamcnt);
 
     // loop through teams
     for($i=0; $i<3; $i++)
@@ -234,7 +235,7 @@
 		print "<h2>Cooperation Briefs</h2>\n";
 
         // call custom function before cooperation briefs
-        rap_custom_cooperation();
+        rap_custom_cooperation($team, $teamcnt);
 
 
         // loop through other teams  (3 or teamcnt)

@@ -33,6 +33,8 @@ function debug()
     if ( $debug === TRUE ) return(TRUE); else return(FALSE);
 }
 
+
+
 //
 // ****************************************************************************
 //
@@ -421,15 +423,15 @@ function db_update_or_create($tablename, $table_identifiers, $db_array)
    global $connection;
    
    // set up dummy column for test
-   $dummycol="";
-   foreach($table_identifiers as $column=>$value)
+//   $dummycol="";
+//   foreach($table_identifiers as $column=>$value)
      if ($dummycol == "") $dummycol = $column;
 
    // set where clauase
    $where = fields_insert("where", $table_identifiers, "");
    
    // select to see if update or insert
-   $query = "select {$dummycol} from {$tablename} where " . $where;
+   $query = "select 'dummy' from {$tablename} where " . $where;
    if (debug()) print "<br>DEBUG:page,db_update_or_create, Select query: " . $query . "<br>\n";
    
    if (! ($result = @ mysqli_query ($connection, $query)))
@@ -440,7 +442,7 @@ function db_update_or_create($tablename, $table_identifiers, $db_array)
    {
      $query = "update {$tablename} set " . fields_insert("update", $db_array, "")
             .  " where " . $where;
-     if (debug()) print "<br>DEBUG:page,db_update_or_create, insert :" . $query . "<br>\n";
+     if (debug()) print "<br>DEBUG:page,db_update_or_create,update:" . $query . "<br>\n";
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    } 
@@ -449,7 +451,7 @@ function db_update_or_create($tablename, $table_identifiers, $db_array)
      $query = "insert into {$tablename} (" . fields_insert("nameonly", $db_array, "")
              . ") values (" . fields_insert("insert", $db_array, "") . " )";
              
-     if (debug()) print "<br>DEBUG:page,db_update_or_create, update: " . $query . "<br>\n"; 
+     if (debug()) print "<br>DEBUG:page,db_update_or_create,insert: " . $query . "<br>\n"; 
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    }
@@ -459,6 +461,61 @@ function db_update_or_create($tablename, $table_identifiers, $db_array)
 
 
 
+//
+// function: db_update_or_create_if_new($tablename, $table_identifiers, $db_array)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $tba_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+// Updates database with data
+//   Queries for row with data.  If found, updates only the columns which are 
+//     currently NULL.  If not found, inserts.
+//
+
+function db_update_or_create_if_new($tablename, $table_identifiers, $db_array)
+{
+   global $connection;
+   
+   // set where clauase
+   $where = fields_insert("where", $table_identifiers, "");
+   
+   // select to see if update or insert
+   $query = "select * from {$tablename} where " . $where;
+   if (debug()) print "<br>DEBUG:page,db_update_or_create_if_new, Select query: " . $query . "<br>\n";
+   
+   if (! ($result = @ mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  	  
+   // if return, update, otherwise insert
+   if ($row = mysqli_fetch_array($result))
+   {
+     // walk through array and build array of values not set
+     $new_dbarray = array();
+     foreach($db_array as $col=>$val)
+       if ($row[$col] == NULL) $new_dbarray = array_merge($new_dbarray, array($col=>$val));
+       
+     // form query with subset of fields
+     $query = "update {$tablename} set " . fields_insert("update", $new_dbarray, "")
+            .  " where " . $where;
+     if (debug()) print "<br>DEBUG:page,db_update_or_create_if_new, update :" . $query . "<br>\n";
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   } 
+   else
+   {
+     $query = "insert into {$tablename} (" . fields_insert("nameonly", $db_array, "")
+             . ") values (" . fields_insert("insert", $db_array, "") . " )";
+             
+     if (debug()) print "<br>DEBUG:page,db_update_or_create_if_new, insert: " . $query . "<br>\n"; 
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   }
+   
+   return;
+}
 
 
 //
@@ -1140,6 +1197,76 @@ function param_report ($data, $paramgroup, $public, $teamcnt)
 }
 
 
+//
+// ****************************************************************************
+//
+// system functions
+//
+
+// function get_sys_value($name)
+//  $name - name of sytem key (value in db)
+//
+// returns value or NULL if not set
+//
+// gets system key->value from database system_value table
+
+function get_sys_value($name)
+{
+   global $connection;
+   
+   // select to see if update or insert
+   $query = "select value from system_value where skey = '{$name}'";
+   if (debug()) print "<br>DEBUG:page,get_sys_value: " . $query . "<br>\n";
+   
+   if (! ($result = @ mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  	  
+   // if return, update, otherwise insert
+   if ($row = mysqli_fetch_array($result))
+     return($row[$name]);
+   else
+     return(NULL);
+}
+
+
+// function set_sys_value($name)
+//  $name - name of sytem key (value in db)
+//  $value - value to set
+//
+// returns TRUE if able to set
+//
+// gets system key->value from database system_value table
+
+function set_sys_value($name, $value)
+{
+   global $connection;
+   
+   // select to see if update or insert
+   $query = "select value from system_value where skey = '{$name}'";
+   if (debug()) print "<br>DEBUG:page,set_sys_value, Select: " . $query . "<br>\n";
+   
+   if (! ($result = @ mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  	  
+   // if return, update, otherwise insert
+   if ($row = mysqli_fetch_array($result))
+   {
+     $query = "update system_value set value = '{$value}' where skey = '{$name}'";
+     if (debug()) print "<br>DEBUG:page,set_sys_value,update:" . $query . "<br>\n";
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   } 
+   else
+   {
+     $query = "insert into system_value (skey, value) values ('{$name}', '{$value}')";
+             
+     if (debug()) print "<br>DEBUG:page,set_sys_value,insert:" . $query . "<br>\n"; 
+     if (! (@mysqli_query ($connection, $query) ))
+       dbshowerror($connection, "die");
+   }
+   
+   return(TRUE);
+}
 
 
 //

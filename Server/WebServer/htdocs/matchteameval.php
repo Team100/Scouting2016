@@ -320,9 +320,20 @@ EOF_EOF
   // include team info form
   //
 
+  //
+  // get team details
+
+  // add game-specific fields and stats columns
+  foreach($RankFields as $rankfield)
+    if ($rankfield['display'] != NULL ) $rankcolumns = $rankcolumns . $rankfield['column'] . ", ";
+
+  // add stats columns to rankcolumns
+  foreach($stats_columns as $statcolumn=>$statarray)
+    $rankcolumns = $rankcolumns . $statcolumn . ", ";
+
   // get row info
     // get team details define result set
-    $query="select ". fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
+    $query="select ". $rankcolumns . fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
     if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 
     if (!($result = @ mysqli_query ($connection,$query)))

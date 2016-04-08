@@ -12,19 +12,75 @@
   //
 
   require "page.inc";
+  require "bluealliance.inc";
+
+  global $sys_event_id;
+  global $tba_AppId;
+  global $tba_error;
+  global $connection;
+  global $tba_history_to_history;
+
+
+  $connection = dbsetup();
+
+
+  $query = "select teamnum from teambot";
+
+   if (!($result = @mysqli_query ($connection, $query)))
+        dbshowerror($connection, "die");
+   while ($row = mysqli_fetch_array($result))
+   {
+	  // get data
+	  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/events", TRUE)))
+		print "API returned " . $tba_error['message'] . "<br>\n";
+	  else
+	  {
+		// loop through each type of stat in map function
+		foreach($tba_history_to_history as $tag=>$column)
+		{
+		  print $tag . ":";
+		  foreach($tba_response->body as $event)
+		  {
+			//$id_array = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
+			//tba_updatedb("teambot", $id_array, array($column=>$value));
+			print_r($event);
+		  }
+		  print "<br>\n";
+		}
+
+		// commit
+		if (! (@mysqli_commit($connection) ))
+		  dbshowerror($connection, "die");
+
+		// Inform user
+		print "&nbsp;&nbsp;&nbsp; ... stats loading complete.<br>\n";
+
+		return(TRUE);
+
+	  } // end of else from REST query
+
+  }
+
+  return(TRUE);
+
+
+?>
+
+  require "page.inc";
   // header and setup
 
   $connection = dbsetup();
 
 
-  $query = "select teamnum from teambot where teamnum = {971, 1072, 1678}";
+  $query = "select teamnum from teambot";
 
    if (!($result = @mysqli_query ($connection, $query)))
-        dbshowerror($connection);
+        dbshowerror($connection, "die");
    while ($row = mysqli_fetch_array($result))
    {
        print $row['teamnum'] . "\n";
 
-    }h
+    }
 
-exit;
+
+?>
