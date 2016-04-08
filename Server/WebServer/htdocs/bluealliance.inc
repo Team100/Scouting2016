@@ -313,7 +313,7 @@ function tba_get_matches()
                           "matchnum"=>$matcharray['matchnum']);
                           
       // map fields from response for match_instance table
-      // $tba_dbarray = tba_mapfields($tba_match_to_match_instance, $matchobj, $tba_dbarray);
+      $tba_dbarray = tba_mapfields($tba_match_to_match_instance, $matchobj, $tba_dbarray);
       
       // update event data in event table
       tba_updatedb("match_instance", $match_id_array, $tba_dbarray);
