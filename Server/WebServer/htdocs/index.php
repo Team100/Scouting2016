@@ -107,7 +107,7 @@ print "
 <li><a href=\"/finalselect.php\">Finals Selection - In Stands</a></li>
 <li><a href=\"/finalselectfield.php\">Finals Selection - On Field</a></li>
 <br>
-<li><a href=\"/matchlist.php?filter=F\">Evaluate a final match</a></li>
+<li><a href=\"/matchlist.php?filter=F\">Evaluate a finals match</a></li>
 <br>
 <li><a href=\"/tabletsync.php\">Sync with tablet servers</a></li>
 </ul>

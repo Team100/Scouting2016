@@ -385,7 +385,7 @@
   print "<br>\n";
   print dblockshowedit($edit, $dblock, $url_root . $sort . "&lsort=" . $lsort) . "\n";
 
-  print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+  print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
   // show needs eval feature on/off link
   print "<a href=\"{$url_root}rank_overall&lsort={$lsort}&needseval=";
   if ($needseval == 1) print "0\">Hide"; else print "1\">Show";

@@ -524,7 +524,7 @@ function rap_custom_field_data ($team, $teamcnt)
   asort($averages);
 
   // format data
-  print "<br><b>Defense Selection</b><br>\n";
+  print "<br><b>Defense Selection</b> (lowest is most difficult for alliance)<br>\n";
   print "<table border=\"1\">\n";
   foreach ($averages as $stringfield=>$value)
   {

@@ -28,7 +28,7 @@
 
   // two fields - rating and rank
   $options["notag"]=FALSE;
-  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall","Overall:&nbsp",4);
+  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall","Overall&nbsp",4);
   $options["notag"]=TRUE;
   print tabtextfield($edit,$options,$row, "rank_overall","Overall:&nbsp",4) . "</tr>\n";
 
