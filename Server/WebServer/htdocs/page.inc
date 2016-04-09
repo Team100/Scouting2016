@@ -1426,6 +1426,7 @@ function team_needs_eval ($teamnum)
 {
   global $connection;
   global $needs_eval_columns;
+  global $sys_event_id;
   
   // create where clause array
   $colwhere = "";
@@ -1436,7 +1437,7 @@ function team_needs_eval ($teamnum)
   }
 
   // query db
-  $query = "select teamnum from teambot where teamnum = '{$teamnum}' and ({$colwhere})";
+  $query = "select teamnum from teambot where event_id = '{$sys_event_id}' and teamnum = '{$teamnum}' and ({$colwhere})";
 
    if (debug()) print "<br>DEBUG:page,team_needs_eval: " . $query . "<br>\n";
    
@@ -1477,6 +1478,7 @@ function allteams_need_eval ()
 {
   global $connection;
   global $needs_eval_columns;
+  global $sys_event_id;
   
   // create where clause array
   $colwhere = "";
@@ -1487,7 +1489,7 @@ function allteams_need_eval ()
   }
 
   // query db
-  $query = "select teamnum from teambot where {$colwhere}";
+  $query = "select teamnum from teambot where event_id = '{$sys_event_id}' and {$colwhere}";
   
    if (debug()) print "<br>DEBUG:page,allteams_need_eval: " . $query . "<br>\n";
   
