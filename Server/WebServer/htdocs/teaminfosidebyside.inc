@@ -23,7 +23,18 @@
 
   $cnt=0;
   while($mrow = mysqli_fetch_array($result))
-    $matches[$cnt++] = $mrow;
+  {
+    // check for all null data in array, otherwise add to matches
+    $allnull=TRUE;
+    foreach($mrow as $col=>$val)
+      if ($val != NULL )
+      {
+        $allnull = FALSE;
+        break;
+      }
+    
+    if ($allnull === FALSE) $matches[$cnt++] = $mrow;
+  }
 
   //
   // build matches display array db_column=>display

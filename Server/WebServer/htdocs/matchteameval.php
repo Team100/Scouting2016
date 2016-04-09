@@ -20,14 +20,14 @@
   $teamnum=$_GET["teamnum"];
 
   // header and setup
-  pheader("Evaluate Team in Match {$type}-{$matchnum} Team: $teamnum", "titleonly");
+  pheader("{$teamnum} Match {$type}-{$matchnum} - Evaluate Team in Match", "titleonly");
   $connection = dbsetup();
 
 
   // if no teamnum, then select first team num for match
   if (! ($teamnum))
   {
-    $query = "select teamnum from match_team where event_id = '{$event_id}' and type = '{$type}'
+    $query = "select teamnum from match_team where event_id = '{$sys_event_id}' and type = '{$type}'
           and matchnum = {$matchnum} order by teamnum";
 
     if (debug()) print "<br>DEBUG-matchteameval, no teameval: " . $query . "<br>\n";
@@ -115,7 +115,7 @@
 	// lock tables if in edit mode
 	if ($edit) dblock($dblock,"lock");  // lock row with current user id
 	// define edit URL
-	$editURL = "/matchteameval.php?teamnum={$teamnum}&event_id={$event_id}&type={$type}&matchnum={$matchnum}";
+	$editURL = "/matchteameval.php?teamnum={$teamnum}&type={$type}&matchnum={$matchnum}";
 
 
 
@@ -152,7 +152,7 @@
 
   // get row
   if ($row = mysqli_fetch_array($result))
- 	print "<a href=\"/matchteameval.php?event_id={$event_id}&type={$type}&matchnum={$matchnum_text}\">&lt Prev</a> &nbsp;&nbsp;&nbsp;";
+ 	print "<a href=\"/matchteameval.php?type={$type}&matchnum={$matchnum_text}\">&lt Prev</a> &nbsp;&nbsp;&nbsp;";
 
   // see if next match exists and display
   $matchnum_text = $matchnum + 1;
@@ -163,13 +163,13 @@
 
   // get row
   if ($row = mysqli_fetch_array($result))
- 	print "<a href=\"/matchteameval.php?event_id={$event_id}&type={$type}&matchnum={$matchnum_text}\">Next &gt</a> &nbsp;&nbsp;";
+ 	print "<a href=\"/matchteameval.php?type={$type}&matchnum={$matchnum_text}\">Next &gt</a> &nbsp;&nbsp;";
 	print "<br>";
 
 
   // view match details
-  print "<a href=\"/matcheval.php?final={$final}&event_id={$matchidentifiers["event_id"]}&
-		type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">View Match Details</a><br>";
+  print "<a href=\"/matcheval.php?final={$final}&type={$matchidentifiers["type"]}"
+         . "&matchnum={$matchidentifiers["matchnum"]}\">View Match Details</a><br>";
 
   // view
   print "<a href=\"/matchlist.php?final={$final}\">Match List</a><br>";
@@ -178,8 +178,8 @@
   if ($edit)
 	{
 		// if in edit mode, signal save with edit=2
-		print "<form method=\"POST\" action=\"/matchteameval.php?edit=2&teamnum={$teamnum}&event_id={$matchidentifiers["event_id"]}
-			&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">\n";
+		print "<form method=\"POST\" action=\"/matchteameval.php?edit=2&teamnum={$teamnum}"
+			. "&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">\n";
 	}
 
 	// show edit block

@@ -49,8 +49,8 @@
         $tagmap[$dispfields["Match"][$i]["tag"]] = $i;
 
       // scan upload directory for files
-      if (! ($dir = scandir($table_ingest_match)))
-        print "<br><br><b>!!! System error: ingest directory '{$table_ingest_match}' not found for scanning files.<br><br>\n";
+      if (! ($dir = scandir($tablet_ingest_match)))
+        print "<br><br><b>!!! System error: ingest directory '{$tablet_ingest_match}' not found for scanning files.<br><br>\n";
       else
       {
         foreach($dir as $file)
@@ -114,7 +114,7 @@
                 dbshowerror($connection, "die");
 
               // move file to processed
-              rename($tablet_ingest . "/" . $file, $tablet_ingest_complete . "/" . $file);
+              rename($tablet_ingest_match . "/" . $file, $tablet_ingest_complete . "/" . $file);
 
 			  // inform user
 			  print "Completed {$file}.<br>\n";
