@@ -13,9 +13,13 @@
 
   // header and setup  -- use connection first so we can get "needs eval"
   $connection = dbsetup();
+  
+  pheader("{$teamnum} - Team Robot Info", "titleonly");
 
-  pheader("Team Robot Info - " . $teamnum, "titleonly");
-//  $connection = dbsetup();
+  // check parameter and update if needed
+  if (isset($_GET['needseval'])) set_user_prop("needeval", $_GET['needseval']);
+  // check value
+  $needseval = test_user_prop("needeval");
 
   // define lock array, fields arrays
   $dblock = array(table=>"teambot",where=>"event_id = '{$sys_event_id}' and teamnum = {$teamnum}");
@@ -82,7 +86,7 @@
   $row = mysqli_fetch_array($result);
 
   // print team number, name and nickname as header
-  print "<H2>Team Robot Info - {$teamnum} - {$row["name"]}";
+  print "<H2>Team Robot Info - ". team_needs_eval_str($teamnum) . " - {$row["name"]}";
   if ($row["nickname"]) print " ({$row["nickname"]})";
   print "</H2>\n";
 
@@ -139,7 +143,11 @@
   print "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
   print "<td>";
   print "<a href=\"/teamdetails.php?teamnum={$teamnum}\">Team Details &amp; Photos<a><br>\n";
-  print "<a href=\"/teammatches.php?teamnum={$teamnum}\">Show Needs Eval<a><br>\n";
+
+  // show needs eval feature on/off link
+  print "<a href=\"{$pagename}?teamnum={$teamnum}&needseval=";
+  if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
+  print " Needs Eval</a>\n";
 
   // end links and place picture
   print "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";

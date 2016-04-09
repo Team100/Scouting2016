@@ -8,7 +8,7 @@
   require "page.inc";
   // get variables
 
-  pheader($host_team_name . " - Finals on Field", "titleonly", array ("openhead"=>1) );
+  pheader("Finals on Field - " . $host_team_name, "titleonly", array ("openhead"=>1) );
   $connection = dbsetup();
 
   // add retrieve header

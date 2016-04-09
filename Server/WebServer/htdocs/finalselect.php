@@ -14,7 +14,7 @@
 	if ($sort == "") $sort="overall";
 
 	// header and setup
-	pheader($host_team_name . " - Finals Alliance Selection");
+	pheader("Finals Alliance Selection - " . $host_team_name);
 	$connection = dbsetup();
 
 	// define lock array, fields arrays

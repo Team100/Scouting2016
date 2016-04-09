@@ -5,7 +5,7 @@
   // Competition System - Evaluate Match
   //
 
-	require "page.inc";
+    require "page.inc";
 	pheader("Evaluate Match");
 	$connection = dbsetup();
 
@@ -22,6 +22,10 @@
 	$dblock = array(table=>"match_instance",where=>$match_sql_identifier);
 
 	$color_names = array(R=>"Red", B=>"Blue");
+
+    // set up for needs eval flag
+    if (test_user_prop("needeval")) $teams_need_eval = allteams_need_eval();
+
 
 	// handle update if returning from edit mode
 	if ($edit == 2)
@@ -231,7 +235,10 @@
 				print " style=\"background-color: {$lred}\" ";
 
 		print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$teamnum}"
-			        . "&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$teamnum}{$editor}</a></td>\n";
+			        . "&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$teamnum}";
+        // print needs eval bullet
+        if (in_array($teamnum, $teams_need_eval)) print "&bull;";
+        print "{$editor}</a></td>\n";
 
 		$counter++;
 		if($counter==3)

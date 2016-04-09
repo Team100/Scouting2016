@@ -1270,6 +1270,64 @@ function set_sys_value($name, $value)
 
 
 //
+// user profile / use preferences test and set
+//
+
+// function test_user_prop ($property)
+//  $property - property name, corresponding to column in user_profile
+//
+// returns 1, 0 otherwise
+//
+
+function test_user_prop ($property)
+{
+  global $connection;
+  global $user;
+
+  // query db
+  $query = "select {$property} from user_profile where user = '{$user}'";
+
+  if (debug()) print "<br>DEBUG:page,test_user_prop: " . $query . "<br>\n";
+   
+  if (! ($result = @mysqli_query ($connection, $query)))
+ 	  dbshowerror($connection, "die");
+  	  
+  // if return, update, otherwise insert
+  if ($row = mysqli_fetch_array($result))
+    if ($row[$property] == 1) return (1);
+   
+  // default return
+  return(0);
+}
+
+
+// function set_user_prop ($property, $value)
+//  $property - property name, corresponding to column in user_profile
+//  $value - boolean 1/0 value to set
+//
+// returns TRUE if able to set
+//
+
+function set_user_prop ($property, $value)
+{
+  global $connection;
+  global $user;
+
+  // query db
+  $query = "insert into user_profile (user, {$property}) values ('{$user}', {$value}) "
+           . "on duplicate key update user = '{$user}', {$property} = {$value}";
+  
+  if (debug()) print "<br>DEBUG:page,set_user_prop: " . $query . "<br>\n";
+   
+  if (! ($result = @mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  
+  return;
+}
+
+
+
+//
 // ****************************************************************************
 //
 // teams functions
@@ -1319,11 +1377,11 @@ function teams_validate ( $teams )
      foreach ( $alliance as $team )
      {
        // query db
-       if (! ($results =  @ mysqli_query ( $connection, "select teamnum from teambot where event_id = '{$sys_event_id}' and teamnum = {$team}")))
+       if (! ($results =  @mysqli_query ( $connection, "select teamnum from teambot where event_id = '{$sys_event_id}' and teamnum = {$team}")))
           dbshowerror("die");
        
        // if no result, team does not exist.
-       if (! ($row = @ mysqli_fetch_array($results)))
+       if (! ($row = @mysqli_fetch_array($results)))
           {
             showerror("Team {$team} not found in teambot database for current event '{$sys_event_id}'");
             $error=1;
@@ -1332,6 +1390,117 @@ function teams_validate ( $teams )
     }
    if ($error) return(FALSE); else return(TRUE);
 }
+
+
+
+//
+// teams need evaluation functions
+//
+//
+// Basic use pattern:
+
+
+// For one-shot team number display:
+//  To display teamnum (with or without &bull)
+//   team_needs_eval_str($teamnum) where teamnum is displayed
+// 
+// For lots of teams displayed on page:
+//  At top of page, to get array:
+//    $needseval = test_user_prop("needeval");
+//    if ($needseval == 1) $teams_need_eval = allteams_need_eval();
+//
+//  Inline in page where bullet would go:
+//    if (in_array($row["teamnum"], $teams_need_eval)) print "&bull;";
+
+// 
+// function: team_needs_eval ( $teamnum )
+//  $teamnum of team
+//
+//  Returns: TRUE if $teamnum needs evaluation, FALSE if not
+//
+//  Evaluation columns are defined in system global $needs_eval_columns
+//  Needs eval means at least one of these columns is null
+//
+
+function team_needs_eval ($teamnum)
+{
+  global $connection;
+  global $needs_eval_columns;
+  
+  // create where clause array
+  $colwhere = "";
+  foreach($needs_eval_columns as $column)
+  {
+    if ($colwhere != "") $colwhere .= " or ";
+    $colwhere .= $column . " is null ";
+  }
+
+  // query db
+  $query = "select teamnum from teambot where teamnum = '{$teamnum}' and ({$colwhere})";
+
+   if (debug()) print "<br>DEBUG:page,team_needs_eval: " . $query . "<br>\n";
+   
+   if (! ($result = @mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  	  
+   // if return, update, otherwise insert
+   if ($row = mysqli_fetch_array($result)) return(TRUE); else return(FALSE);
+}
+
+
+// function: team_needs_eval_str ( $teamnum )
+//  $teamnum of team
+//
+//  Returns: string with teamnum if not needing eval and teamnum with a bullet if
+//   needing eval
+//
+//  Evaluation columns are defined in system global $needs_eval_columns
+//  Needs eval means at least one of these columns is null
+//
+
+function team_needs_eval_str ($teamnum)
+{
+  if ((team_needs_eval($teamnum)) && (test_user_prop("needeval")))
+    return($teamnum . "&bull;"); 
+  else return($teamnum);
+}
+
+// function: allteams_need_eval ()
+//
+//  Returns: array of teamnums which need evaluation
+//
+//  Evaluation columns are defined in system global $needs_eval_not_null_cols.
+//  Needs eval means at least one of these columns is null
+//
+
+function allteams_need_eval ()
+{
+  global $connection;
+  global $needs_eval_columns;
+  
+  // create where clause array
+  $colwhere = "";
+  foreach($needs_eval_columns as $column)
+  {
+    if ($colwhere != "") $colwhere .= " or ";
+    $colwhere .= $column . " is null ";
+  }
+
+  // query db
+  $query = "select teamnum from teambot where {$colwhere}";
+  
+   if (debug()) print "<br>DEBUG:page,allteams_need_eval: " . $query . "<br>\n";
+  
+   if (! ($result = @mysqli_query ($connection, $query)))
+  	  dbshowerror($connection, "die");
+  	  
+   // if return, update, otherwise insert
+   while ($row = mysqli_fetch_array($result))
+     $teamnums[] = $row['teamnum'];
+     
+  return($teamnums);
+}
+
 
 
 //

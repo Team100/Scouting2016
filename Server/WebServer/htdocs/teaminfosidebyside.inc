@@ -14,20 +14,12 @@
   //
   // get side-by-side data, load into $matches array so it can be printed
   //
-  $query = "select * from match_team where event_id = '{$sys_event_id}' and teamnum = {$teamnum}
-            order by field(type,'F','Q','P'), matchnum DESC";
   
-  if (debug()) print "<br>DEBUG-teamfinfosidebyside: " . $query . "<br>\n";
-  if (! ($result = @ mysqli_query ($connection, $query)))
-       dbshowerror($connection, "die");
-
-  $cnt=0;
-  while($mrow = mysqli_fetch_array($result))
-    $matches[$cnt++] = $mrow;
-
   //
   // build matches display array db_column=>display
   //
+  
+  // start with standard fields
   $match_fields = array(
     "rating_offense"=>"Offense Rating",
     "rating_defense"=>"Defense Rating"
@@ -37,6 +29,56 @@
   foreach($dispfields['Match'] as $fieldnum=>$matcharray)
     $match_fields = array_merge($match_fields, array("MatchField_" . $fieldnum => $matcharray['display']));
  
+ 
+  // create first column as averages column 
+  $cnt=0;
+  $columns="";
+  // fields string
+  foreach($match_fields as $column=>$display)
+  {
+    if ($columns != "") $columns = $columns . ", ";
+    $columns = $columns . "format(avg({$column}),2) {$column} ";
+  } 
+
+  // form averages query
+  $query = "select {$columns} from match_team where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
+  if (debug()) print "<br>DEBUG-teamfinfosidebyside,average: " . $query . "<br>\n";
+  if (! ($result = @ mysqli_query ($connection, $query)))
+       dbshowerror($connection, "die");
+
+  $mrow = mysqli_fetch_array($result);
+  // add averages heading
+  $matches[$cnt++] = array_merge($mrow, array("type"=>"Avg"));
+ 
+  //
+  // get real data and place in array
+  //
+  // form query
+  $query = "select * from match_team where event_id = '{$sys_event_id}' and teamnum = {$teamnum}
+            order by field(type,'F','Q','P'), matchnum DESC";
+  
+  if (debug()) print "<br>DEBUG-teamfinfosidebyside: " . $query . "<br>\n";
+  if (! ($result = @ mysqli_query ($connection, $query)))
+       dbshowerror($connection, "die");
+
+
+  while($mrow = mysqli_fetch_array($result))
+  {
+    // check for all null data in fields that are match fields, otherwise add to matches
+    $allnull=TRUE;
+    foreach($match_fields as $field=>$display)
+      if ($mrow[$field] != NULL )
+      {
+        $allnull = FALSE;
+        break;
+      }
+    if ($allnull === FALSE) $matches[$cnt++] = $mrow;
+  }
+
+
+  //
+  // display data
+  //
 
   //
   // field options

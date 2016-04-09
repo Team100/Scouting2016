@@ -1,19 +1,33 @@
 <?php
-  // $Revision: 3.0 $
-  // $Date: 2016/03/14 22:56:41 $
-  //
-  // Competition System - List Matches
-  //
-  require "page.inc";
-  pheader("Competition System Match Listings");
-  $connection = dbsetup();
+// $Revision: 3.0 $
+// $Date: 2016/03/14 22:56:41 $
+//
+// Competition System - List Matches
+//
 
-  // get final flag
-  $final=$_GET["final"];
-  if(isset($_POST["highlight"]))
-  	$highlight=$_POST["highlight"];
-  else
-  	$highlight=$_GET["highlight"];
+require "page.inc";
+pheader("Match Listings - Competition System");
+$connection = dbsetup();
+
+// get final flag
+$final=$_GET["final"];
+if(isset($_POST["highlight"]))
+	$highlight=$_POST["highlight"];
+else
+	$highlight=$_GET["highlight"];
+
+//
+// setup for needs eval functions
+//
+// check parameter and update if needed
+if (isset($_GET['needseval'])) set_user_prop("needeval", $_GET['needseval']);
+// check value
+$needseval = test_user_prop("needeval");
+
+// set up for needs eval
+// if $needeval, then get array for bullets
+if ($needseval == 1) $teams_need_eval = allteams_need_eval();
+
 
   //
   // data preparation -- set up the variables
@@ -169,7 +183,7 @@ EOF_EOF
   if ($filter != "A") $where = $where . " and type = '{$filter}' ";
 
   // finish query
-  $query = $query . $where . " order by event_id, type, matchnum";
+  $query = $query . $where . " order by field(type,'F','Q','P'), matchnum";
 
   // get row count first for pagebreak
   if (debug()) print "<br>matchlist: " . $cquery . $where . "<br>\n";
@@ -265,7 +279,9 @@ EOF_EOF
 			print ">";
 			if($detailrow["teamnum"]==$highlight)
 				print "<b>";
-			print "<a href=\"/matchteameval.php?final={$final}&teamnum={$detailrow["teamnum"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$detailrow["teamnum"]}</a></td>\n";
+			print "<a href=\"/matchteameval.php?final={$final}&teamnum={$detailrow["teamnum"]}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$detailrow["teamnum"]}";
+            if (in_array($detailrow["teamnum"], $teams_need_eval)) print "&bull;";
+			print "</a></td>\n";
 
 
 			$counter++;
@@ -302,14 +318,19 @@ EOF_EOF
         // end last table, move next cell, start another table
         print "</table></td><td><table border=\"2\">\n". $table_head;
     }
-?>
 
+print "
 </table>
 </tr>
 </table>
+"; // end of print
 
+// show needs eval feature on/off link
+print "&nbsp;&nbsp;<a href=\"/matchlist.php?&highlight={$highlight}&needseval=";
+if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
+print "Needs Eval</a>\n";
 
+print "<br>\n";
 
-<?php
    pfooter();
  ?>

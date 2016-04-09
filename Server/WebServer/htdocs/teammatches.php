@@ -12,7 +12,7 @@
   $edit=$_GET["edit"];
 
   // header and setup
-  pheader("Team Matches Listing - " . $teamnum, "titleonly");
+  pheader($teamnum . " - Team Matches Listing", "titleonly");
   $connection = dbsetup();
 
 

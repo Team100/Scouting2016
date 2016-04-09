@@ -11,7 +11,7 @@
   $edit=$_GET["edit"];
 
   // header and setup
-  pheader("Team Details - " . $teamnum, "titleonly");
+  pheader($teamnum . " - Team Details", "titleonly");
   $connection = dbsetup();
 
   // define lock array, fields arrays

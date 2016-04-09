@@ -7,8 +7,17 @@
 //
 
 require "page.inc";
-pheader("Competition Home - " . $host_team_name);
+pheader("Home -  " . $host_team_name . " - Competition System");
 $connection = dbsetup();
+
+// check parameter and update if needed
+if (isset($_GET['needseval'])) set_user_prop("needeval", $_GET['needseval']);
+// check value
+$needseval = test_user_prop("needeval");
+
+// set up for needs eval
+// if $needeval, then get array for bullets
+if ($needseval == 1) $teams_need_eval = allteams_need_eval();
 
 //
 // start display
@@ -17,10 +26,13 @@ print "
 <a href=\"/allteamslist.php\">All Teams</a>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 &nbsp;
-<a href=\"/allteamslist.php\">Show Needs Eval</a>
 "; // end of print
+
+// show needs eval feature on/off link
+print "<a href=\"/?needseval=";
+if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
+print "Needs Eval</a>\n";
 
 print "
 <table valign=\"top\">
@@ -55,7 +67,9 @@ print "
   while ($row = mysqli_fetch_array($result))
    {
     // print each row with href
-    print "<tr><td>" . teamhref($row["teamnum"]) . "{$row["teamnum"]} - {$row["name"]} ";
+    print "<tr><td>" . teamhref($row["teamnum"]) . "{$row["teamnum"]}";
+    if (in_array($row["teamnum"], $teams_need_eval)) print "&bull;";
+    print " - {$row["name"]} ";
      // add nickname if it exists
      if ($row["nickname"]) print " ({$row["nickname"]})";
      print "</a></td></tr>\n";
