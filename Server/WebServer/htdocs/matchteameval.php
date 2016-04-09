@@ -38,6 +38,9 @@
   	$teamnum = $row["teamnum"];
   }
 
+  // set up for needs eval flag
+  if (test_user_prop("needeval")) $teams_need_eval = allteams_need_eval();
+
 
 	$matchidentifiers = fields_load("GET", array("event_id", "type", "matchnum", "teamnum"));
 
@@ -257,11 +260,14 @@
 			else if ($detailrow['matchnum'] < $upcoming[$teamnumT]['against_matchnum'])
 				print " style=\"background-color: {$lred}\" ";
 
+        // set display of teamnum with or without bullet
+        if (in_array($teamnumT, $teams_need_eval)) $dispteamnum = $teamnumT . "&bull;"; else $dispteamnum = $teamnumT;
+
 		if($teamnum == $teamnumT)
 			print "> <b>{$row["color"]}{$teamnumT}{$editor}</td>";
 		else
-			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$teamnumT}&event_id={$matchidentifiers["event_id"]}&
-					type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$teamnumT}{$editor}</a></td>";
+			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$dispteamnum}&event_id={$matchidentifiers["event_id"]}&
+					type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$dispteamnum}{$editor}</a></td>";
 
 		$counter++;
 		if($counter==3)
@@ -334,7 +340,7 @@ EOF_EOF
   // get row info
     // get team details define result set
     $query="select ". $rankcolumns . fields_insert("nameonly",NULL,$table_teambot) . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
-    if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
+    if (debug()) print "<br>DEBUG-matchteameval,teamdata: " . $query . "<br>\n";
 
     if (!($result = @ mysqli_query ($connection,$query)))
       dbshowerror($connection);

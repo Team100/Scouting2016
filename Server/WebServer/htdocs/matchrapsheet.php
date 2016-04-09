@@ -22,19 +22,34 @@
 		and matchnum = {$matchidentifiers["matchnum"]}";
 
 	// determine header
-	$header = $host_team_name . " - Match Rap Sheet ";
-	if (! ($public)) $header = $header . "(Private)";
-	$header = $header .  " {$matchidentifiers["type"]}-{$matchidentifiers["matchnum"]}";
+	$header = "{$matchidentifiers["type"]}-{$matchidentifiers["matchnum"]} - Match Rap Sheet";
+	if (! ($public)) $header = $header . " (Private)";
+	$header = $header . " - {$host_team_name}";
 	pheader($header);
 
 
   // table data
+  //
+
+  // determine FIRST data columns
+  // add game-specific fields and stats columns
+  foreach($RankFields as $rankfield)
+    if ($rankfield['display'] != NULL ) $firstcols[] = $rankfield['column'];
+
+  // add stats columns to rankcolumns
+  foreach($stats_columns as $statcolumn=>$statarray)
+    $firstcols[] = $statcolumn;
+
+  //  define columns for query
   $table_teambot = array_merge ( array("rank_overall","rating_overall","rating_overall_off","rating_overall_def",
   	"rank_pos1","rating_pos1","rank_pos2","rating_pos2","rank_pos3","rating_pos3","offense_analysis",
   	"defense_analysis","pos1_analysis","pos2_analysis","pos3_analysis","robot_analysis","driver_analysis",
   	"with_recommendation","against_recommendation"),
-  	param_array("Play"));
+  	param_array("Play"),
+  	$firstcols
+  	);
 
+  // define rank fields
 	$team_rank_fields = array(rank_overall=>"Overall Rank", rating_overall=>"Overall Rating (0-9)",
 		rating_overall_off=>"Offensive Rating (0-9)", rating_overall_def=>"Defensive Rating (0-9)");
 	// if fields positions matter, add positions
@@ -119,6 +134,7 @@
 	// set teamcnt so that arrays can work with 5 or 6 teams
 	$teamcnt = $cnt;
 
+
     // create default table header with teams
     $tablehead = "<th></th><th>{$against_color_long} {$team[0]["teamnum"]}</th>"
        . "<th>{$against_color_long} {$team[1]["teamnum"]}</th>"
@@ -178,7 +194,8 @@
 
     // format overall sheet and first table
     print "
-    <!--- format over table --->
+
+    <!--- format over table - field data --->
     <b>Field Data</b>
     <table valign=\"top\"><tr><td>\n
 
@@ -187,19 +204,67 @@
     <tr>{$tablehead}</tr>
     ";
 
+    //
+    // parameters side-by-side
+    //
     print param_report ($team, "Play", $public, $teamcnt);
 
-	print "</table></td></tr><tr><td>\n";
+    // rank and stats side by side
+    print "<tr></tr>\n";
+    print "<tr></tr>\n";
+    print "<tr></tr>\n";
 
+    // set number of columns
+    if ($public) $colcnt=3; else $colcnt = $teamcnt;
+
+    foreach($RankFields as $rankfield)
+      if ($rankfield['display'] != NULL)
+      {
+        print "<tr><td>{$rankfield['display']}</td>\n";
+        // data in each
+        for($i=0; $i<$colcnt; $i++)
+          print "<td>{$team[$i][$rankfield['column']]}</td>";
+        print "</tr>\n";
+      }
+
+    // stats
+    foreach($stats_columns as $column=>$col_def)
+    {
+      print "<tr><td>{$col_def['display']}</td>";
+      // data in each
+      for($i=0; $i<$colcnt; $i++)
+      {
+        // check for format
+        if ($col_def['format'] != "")
+          $show = sprintf($col_def['format'], $team[$i][$column]);
+        else
+          $show = $team[$i][$column];
+        print "<td>{$show}</td>";
+      }
+      print "</tr>\n";
+    }
+
+    // end of display table
+	print "</table>\n";
+
+	// end of format table
+	print "</td></tr></table>\n";
+
+	// end of another format table
+    print "</tr></table>\n";
+
+
+/*
+	</td></tr>\n<tr><td>\n";
 
 	print "</td></tr>\n";
     // end data grids
-    print "</table></tr></table>\n";
+    print "</table>\n</tr></table>\n";
 
-
+*/
 
     //
-    // print comparatives
+    // print narrative comparatives
     //
 
 	// for competition first

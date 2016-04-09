@@ -25,7 +25,7 @@
   $order=$_GET["order"];
 
   // header and setup
-  pheader($host_team_name . " - Ranking");
+  pheader("Ranking - " . $host_team_name);
   $connection = dbsetup();
 
   // define lock array, fields arrays

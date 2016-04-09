@@ -316,6 +316,14 @@ $rank_columns_custom  = array_merge(
   $stats_columns
   );
 
+//
+// needs evaluation columns 
+//  if any of these columns are null, team is marked with a "needs eval" when queried
+//
+// Note: needs 1 column at a minimum
+$needs_eval_columns = ["rating_overall", "rating_overall_off", "offense_analysis"];
+
+
 
 // ***************************
 //
@@ -437,6 +445,13 @@ $lred = '#ffcccc';
 //length of the updated-by field.  Should not exceed db schema.  
 //  Data will be truncated to this value
 $maxlengthchangeby=200;
+
+//
+// time window (in seconds) for setting match start
+//   if current time exceed $schedule_set_match_window, user will
+//   not be presented with "start now" option
+//
+$schedule_set_match_window = 3600;  // no more than an hour
 
 
 // ***************************
