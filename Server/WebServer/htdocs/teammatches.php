@@ -11,10 +11,11 @@
   $teamnum=$_GET["teamnum"];
   $edit=$_GET["edit"];
 
-  // header and setup
-  pheader($teamnum . " - Team Matches Listing", "titleonly");
+  // setup
   $connection = dbsetup();
 
+  // header and setup
+  pheader($teamnum . " - Team Matches Listing", "titleonly");
 
   // check team number
   if (! ($teamnum)) showerror("<h1>No Team Number Specified</h1>","die");
@@ -28,7 +29,6 @@
   //
   // print top of page
   //
-  if (! ($teamnum)) showerror("<h1>No Team Number Specified</h1>","die");
 
   // get basic teaminfo details define result set
   if (!($result = @ mysqli_query ($connection,
@@ -38,7 +38,8 @@
   $row = mysqli_fetch_array($result);
 
   // print team number, name and nickname as page header
-  print "<a href=\"/teaminfo.php?teamnum={$teamnum}\"><H2>Match Listings - {$teamnum} - {$row["name"]}</a>";
+  print "<a href=\"/teaminfo.php?teamnum={$teamnum}\"><H2>Match Listings - " . team_needs_eval_str($teamnum)
+         . " - {$row["name"]}</a>";
   if ($row["nickname"]) print "({$row["nickname"]})";
   print "</H2>\n";
 
