@@ -10,6 +10,10 @@
 
   require "page.inc";
 
+  // header and setup
+  pheader("Ranking - " . $host_team_name);
+  $connection = dbsetup();
+
   // get variables
   $edit=$_GET["edit"];
   $sort=$_GET["sort"];		// field to be sorted
@@ -24,9 +28,15 @@
   // order
   $order=$_GET["order"];
 
-  // header and setup
-  pheader("Ranking - " . $host_team_name);
-  $connection = dbsetup();
+  // check parameter and update if needed
+  if (isset($_GET['needseval'])) set_user_prop("needeval", $_GET['needseval']);
+  // check value
+  $needseval = test_user_prop("needeval");
+
+  // set up for needs eval
+  // if $needeval, then get array for bullets
+  if ($needseval == 1) $teams_need_eval = allteams_need_eval();
+
 
   // define lock array, fields arrays
   $dblock = array(table=>"process_lock",where=>"lock_id = 'ranking'");
@@ -312,8 +322,10 @@
   	// display values
   	print "<tr>\n";
 
-  	// print team num, name
-    print "<td>" . teamhref($teamnum) . "{$teamnum} - {$team[$teamnum]["name"]}";
+  	// print teamnum, name
+    print "<td>" . teamhref($teamnum) . "{$teamnum}";
+    if (in_array($teamnum, $teams_need_eval)) print "&bull;";
+    print " - {$team[$teamnum]["name"]}";
     // if nickname, print too
     if ($team[$teamnum]["nickname"]) print " ({$team[$teamnum]["nickname"]})";
     print "</a></td>\n";
@@ -372,6 +384,13 @@
   // show edit at bottom
   print "<br>\n";
   print dblockshowedit($edit, $dblock, $url_root . $sort . "&lsort=" . $lsort) . "\n";
+
+  print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+  // show needs eval feature on/off link
+  print "<a href=\"{$url_root}rank_overall&lsort={$lsort}&needseval=";
+  if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
+  print "Needs Eval</a>\n";
+
 
 
   // close the form if in edit mode

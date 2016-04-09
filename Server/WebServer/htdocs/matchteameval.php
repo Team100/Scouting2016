@@ -137,7 +137,9 @@
 
   // print team number, name and nickname as header
   print "<H2>Match Team Evaluation {$type}-{$matchnum} &nbsp;&nbsp; ";
-  print teamhref($teamnum) . "{$teamnum} - {$teamname}</a>";
+  print teamhref($teamnum) . "{$teamnum}";
+  if (in_array($teamnum, $teams_need_eval)) print "&bull;";
+  print " - {$teamname}</a>";
   if ($teamnickname) print "({$teamnickname})";
   print "</H2>\n";
 
@@ -264,9 +266,9 @@
         if (in_array($teamnumT, $teams_need_eval)) $dispteamnum = $teamnumT . "&bull;"; else $dispteamnum = $teamnumT;
 
 		if($teamnum == $teamnumT)
-			print "> <b>{$row["color"]}{$teamnumT}{$editor}</td>";
+			print "> <b>{$row["color"]}{$dispteamnum}{$editor}</td>";
 		else
-			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$dispteamnum}&event_id={$matchidentifiers["event_id"]}&
+			print ">{$row["color"]} <a href=\"/matchteameval.php?teamnum={$teamnumT}&event_id={$matchidentifiers["event_id"]}&
 					type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$dispteamnum}{$editor}</a></td>";
 
 		$counter++;
@@ -302,7 +304,7 @@
 		$pointsB = mysqli_fetch_array($resultB);
 
 		//print match data
-		print "<tr><td>League</td><td>Type</td><td>Match</td><td>Sched Time</td><td>Actual Time</td><td>Red Points</td><td>Blue Points</td></tr>";
+		print "<tr><td>Event</td><td>Type</td><td>Match</td><td>Sched Time</td><td>Actual Time</td><td>Red Points</td><td>Blue Points</td></tr>";
 		print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>"
 			.substr($row["scheduled_time"],0,5)."</td><td>".substr($row["actual_time"],0,5)
 			."</td><td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>";
