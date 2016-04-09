@@ -1489,7 +1489,7 @@ function allteams_need_eval ()
   }
 
   // query db
-  $query = "select teamnum from teambot where event_id = '{$sys_event_id}' and {$colwhere}";
+  $query = "select teamnum from teambot where event_id = '{$sys_event_id}' and ({$colwhere})";
   
    if (debug()) print "<br>DEBUG:page,allteams_need_eval: " . $query . "<br>\n";
   
