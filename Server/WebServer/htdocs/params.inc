@@ -170,7 +170,7 @@ $tablet_max_matchfield = 50;
 
 // map match tablet tags to standard columns
 //  Format: tag=>column
-$map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=>"rating_defense", "Notes"=>"notes");
+$map_match_tags = array ("offensiverating"=>"rating_offense", "defensiverating"=>"rating_defense", "Notes"=>"match_notes");
 
 
 //
