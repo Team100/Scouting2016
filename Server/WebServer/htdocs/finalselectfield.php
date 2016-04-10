@@ -21,23 +21,22 @@
   // show top 2 ranked teams
   //
 
-  	$query = "select teamnum from teambot where event_id = '${sys_event_id}' and
-  		         teamnum not in (select teamnum from alliance_unavailable) order by rank_overall";
+  	$query = "select teamnum, rank_overall from teambot where event_id = '${sys_event_id}' and
+  		         teamnum not in (select teamnum from alliance_unavailable)
+  		         order by isnull(rank_overall), rank_overall";
       if (!($result = @ mysqli_query ($connection, $query)))
   	    dbshowerror($connection);
 
   	  // first ranked team
     	if (! ($row = mysqli_fetch_array($result)))
     		showerror("Match info not found.  Please try again.","die");
-    	$teamnum = $row["teamnum"];
-    	print "<p style=\"font-size:60px;\">1st Team: $teamnum</p>";
+    	print "<p style=\"font-size:60px;\">1st Team: {$row['teamnum']} ({$row['rank_overall']})</p>";
 
 
   	  // second ranked team
     	if (! ($row = mysqli_fetch_array($result)))
     		showerror("Match info not found.  Please try again.","die");
-    	$teamnum = $row["teamnum"];
-    	print "<p style=\"font-size:40px;\">2nd Team: $teamnum</p>";
+    	print "<p style=\"font-size:40px;\">2nd Team: {$row['teamnum']} ({$row['rank_overall']})</p>";
 
 
 

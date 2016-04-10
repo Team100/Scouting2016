@@ -449,7 +449,7 @@
 
 	unset( $teamsrank);  // unsetting rank arry
 
-	if ($sort) $orderby = " order by rank_{$sort} ";
+	if ($sort) $orderby = " order by isnull(rank_{$sort}), rank_{$sort} ";
 	$query = "select teambot.teamnum teamnum, name, nickname, rank_overall, rating_overall,
 		rating_overall_off, rating_overall_def, rank_pos1, rating_pos1, rank_pos2, rating_pos2,
 		rank_pos3, rating_pos3
@@ -775,9 +775,10 @@
 		print "<tr>\n";
 
 		// print team num, name
-		print "<td><a href=\"/teaminfo.php?teamnum={$teamnum}\">{$teamnum} - {$team[$teamnum]["name"]}";
+		print "<td><a href=\"/teaminfo.php?teamnum={$teamnum}\">{$teamnum} - ";
+		print substr($team[$teamnum]["name"], 0, $team_name_display_max-6);
 		// if nickname, print too
-		if ($team[$teamnum]["nickname"]) print " ({$team[$teamnum]["nickname"]})";
+		if ($team[$teamnum]["nickname"]) print " " . substr($team[$teamnum]["nickname"], 0, 12);
 		print "</a></td>\n";
 
 		// overall rank
@@ -807,8 +808,5 @@
 	print "</table>";
 
 
-?>
-
-<?php
 	pfooter();
 ?>

@@ -446,6 +446,9 @@ $lred = '#ffcccc';
 //  Data will be truncated to this value
 $maxlengthchangeby=200;
 
+// display length of team name/number when it matters (index.php, rank, etc.)
+$team_name_display_max = 40;
+
 //
 // time window (in seconds) for setting match start
 //   if current time exceed $schedule_set_match_window, user will
