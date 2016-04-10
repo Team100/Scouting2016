@@ -156,9 +156,13 @@
     print "<td><table border=\"1\">\n<tr><th>Year</th><th>Event</th><th>Awards</th></tr>\n";
 
     // show history
-/*
+
     // query history rows
-    $query = "select ";
+    $query = "select year, long_name, award_name
+    from team_history a, team_history_award b
+    where a.teamnum = {$teamnum}
+    and a.teamnum = b.teamnum
+    and a.event_id = b.event_id";
 
     if (debug()) print "<br>DEBUG-teaminfo: " . $query . "<br>\n";
     if (!($result = @mysqli_query ($connection, $query)))
@@ -166,12 +170,8 @@
 
     while ($row = mysqli_fetch_array($result))
     {
-    print "hi";
-}
-*/
-
-    // sample row
-    print "<tr><td>1999</td><td>Stanford Hospital</td><td>McKay is Born!!!</td></tr>\n";
+      print "<tr><td>{$row['year']}</td><td>{$row['long_name']}</td><td>{$row['award_name']}</td></tr>\n";
+    }
 
     // end history table
     print "</table></td></tr>\n";
