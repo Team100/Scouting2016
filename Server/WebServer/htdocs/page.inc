@@ -1503,6 +1503,55 @@ function allteams_need_eval ()
   return($teamnums);
 }
 
+//
+// ********************
+//
+// match functions
+//
+//
+
+//
+// match time functions
+//
+
+// function: match_get_act_est_time ($actual_time)
+//
+//  Returns: estimated time array ($est_time) of key/value pairs, with the following keys:
+//    ['heading_tag']
+//    ['display_time']
+//    ['actual_time']
+//    ['estimated_time']
+//    ['seconds_delay']
+//    ['set_ok']
+//    ['est_flag']
+
+/*
+if no actual
+  flag est/actual
+  estimated time (formatted)
+
+can display
+*/
+
+//
+//  Evaluation columns are defined in system global $needs_eval_not_null_cols.
+//  Needs eval means at least one of these columns is null
+//
+
+// function: match_get_estimated_time ($type, $matchnum)
+
+
+// function: match_set_time ($type, $matchnum)
+//
+//  Returns: TRUE if set time, FALSE if match time was not set
+//
+//  Will directly print errors when time could not be set.  Sets match time and updates
+//   system variable
+//
+
+
+
+
 
 
 //

@@ -32,7 +32,7 @@ print "
 // show needs eval feature on/off link
 print "<a href=\"/?needseval=";
 if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
-print "Needs Eval</a>\n";
+print " Needs Eval</a>\n";
 
 print "
 <table valign=\"top\">
@@ -110,10 +110,13 @@ print "
 <li><a href=\"/matchlist.php?filter=F\">Evaluate a finals match</a></li>
 <br>
 <li><a href=\"/tabletsync.php\">Sync with tablet servers</a></li>
+
+<br>
+<li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
+<li><a href=\"/messagerecv.php\">Receive a Message in Field</a></li>
 </ul>
 
 <!--- Documentation Section --->
-<br>
 <h3><center><u>Documentation</u></center></h3>
 <ul>
 <li><a href=/doc/photos.php>Creating photos</a>

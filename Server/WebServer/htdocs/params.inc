@@ -85,7 +85,7 @@ $dispfields["Play"][4] = array("used"=>TRUE, "tag"=>"pickup", "display"=>"Pickup
 $dispfields["Play"][5] = array("used"=>TRUE, "tag"=>"scaling", "display"=>"Scaling Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 $dispfields["Play"][6] = array("used"=>TRUE, "tag"=>"specialmech", "display"=>"Special Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 $dispfields["Play"][7] = array("used"=>TRUE, "tag"=>"portcullis", "display"=>"Portcullis", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
-$dispfields["Play"][8] = array("used"=>TRUE, "tag"=>"cheval", "display"=>"Cheval-Door", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][8] = array("used"=>TRUE, "tag"=>"cheval", "display"=>"Cheval", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
 $dispfields["Play"][9] = array("used"=>TRUE, "tag"=>"moat", "display"=>"Moat", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
 $dispfields["Play"][10] = array("used"=>TRUE, "tag"=>"ramparts", "display"=>"Ramparts", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
 $dispfields["Play"][11] = array("used"=>TRUE, "tag"=>"drawbridge", "display"=>"Drawbridge", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");

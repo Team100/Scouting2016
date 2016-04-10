@@ -328,7 +328,7 @@ print "
 // show needs eval feature on/off link
 print "&nbsp;&nbsp;<a href=\"/matchlist.php?&highlight={$highlight}&needseval=";
 if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
-print "Needs Eval</a>\n";
+print " Needs Eval</a>\n";
 
 print "<br>\n";
 

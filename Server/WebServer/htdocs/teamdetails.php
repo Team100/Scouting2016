@@ -143,8 +143,23 @@
   . tabtextfield($edit,$options,$row, "sponsors","Sponsors: ",40,300);
 
   // show history
-  print "\n<tr valign=\"top\"><td>History: </td><td>{$row["history"]}</td></tr>\n";
+  print "\n<tr valign=\"top\"><td>History: </td>\n";
+
+
+  //print "\n<tr valign=\"top\"><td>History: </td><td>{$row["history"]}</td></tr>\n";
 	//  . tabtextfield($edit,$options,$row, "history","History: ",40,300);
+    //
+    // show table of history events: year, regional name, award
+    //   sort by year, event_id, award_type
+    //
+    print "<td><table border=\"1\">\n<tr><th>Year</th><th>Event</th><th>Awards</th></tr>\n";
+
+
+    // sample row
+    print "<tr><td>1999</td><td>Stanford Hospital</td><td>McKay is Born!!!</td></tr>\n";
+
+    // end history table
+    print "</table></td></tr>\n";
 
   print "</table>
   <!--- end of cell in main table --->

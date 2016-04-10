@@ -187,9 +187,6 @@
 			. "&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">\n";
 	}
 
-	// show edit block
-    print dblockshowedit($edit, $dblock,$editURL);
-
   //
   // close first cell and space between next layout
   print "\n</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>\n";
@@ -288,7 +285,7 @@
 	<table valign=\"top\" border=1>
 	";  // end of print
 
-		$query = "select event_id, type, matchnum, scheduled_time, actual_time
+		$query = "select event_id, type, matchnum, scheduled_utime, actual_utime
 			from match_instance where ".$match_sql_identifier;
 		if (debug()) print "<br>DEBUG-matchteameval: " . $query . "<br>\n";
 
@@ -305,9 +302,17 @@
 
 		//print match data
 		print "<tr><td>Event</td><td>Type</td><td>Match</td><td>Sched Time</td><td>Actual Time</td><td>Red Points</td><td>Blue Points</td></tr>";
-		print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>"
-			.substr($row["scheduled_time"],0,5)."</td><td>".substr($row["actual_time"],0,5)
-			."</td><td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>";
+		print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td>\n";
+
+        // time presentation
+       $now = time();
+       $sched = $row['scheduled_utime'];
+
+       if ($sched != NULL) $display_sched = date('H:i',$sched); else $display_sched="";
+
+       print "<td>{$display_sched}</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
+
+       print "<td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>";
 
 print <<< EOF_EOF
 
@@ -321,15 +326,21 @@ EOF_EOF
 ; // end of print
 
 
+// show edit block
+print dblockshowedit($edit, $dblock,$editURL);
+
+ // Return navigation
+print "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"{$base}\">Return to Home</a>\n";
+
 
 
  // **********************************************************************************
-  //
-  // include team info form
-  //
+ //
+ // include team info form
+ //
 
-  //
-  // get team details
+ //
+ // get team details
 
   // add game-specific fields and stats columns
   foreach($RankFields as $rankfield)
@@ -456,8 +467,6 @@ EOF_EOF
 
   // show edit block again
       print dblockshowedit($edit, $dblock, $editURL);
-
-
 
 
   // close the form if in edit mode

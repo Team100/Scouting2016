@@ -51,13 +51,6 @@
    <li><a href=\"/verify-params.php\">Verify custom parameters from config file</a></li>
    </ul>
 
-   </ul>
-   &nbsp;&nbsp;&nbsp;&nbsp;<b>Messaging:</b>
-   <ul>
-   <li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
-   <br>
-   <li><a href=\"/messagerecv.php\">Receive a Message From Field</a></li>
-   </ul>
 
    &nbsp;&nbsp;&nbsp;&nbsp;<b>Documentation System:</b>
    <ul>

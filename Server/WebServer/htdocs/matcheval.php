@@ -132,17 +132,47 @@
 	// first table with match info
 	print "<table valign=\"top\" border=1>\n";
 
+	// time calculations to set up display
+	// format scheduled time
+    if ($row['scheduled_utime'] != NULL) $scheduled_display = date('H:i',$row['scheduled_utime']); else $row['scheduled_utime'];
+    // if actual
+
+
+
+
+	print "<td>{$display_sched}</td>";
+
+if no actual
+  flag est/actual
+  estimated time (formatted)
+
+can display
+
+
+set time
+
+
+
+
 	//print match data
 	print "<tr><td>Type</td><td>Match Number</td><td>Sched Time</td><td>Actual Time</td></tr>";
 	print "<tr><td>".$row["type"]."</td><td>".$row["matchnum"]."</td>\n";
 
     // time presentation
-    $now = time();
     $sched = $row['scheduled_utime'];
-
     if ($sched != NULL) $display_sched = date('H:i',$sched); else $display_sched="";
+	print "<td>{$display_sched}</td>";
 
-	print "<td>{$display_sched}</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
+	// Estimated/Actual
+
+    $now = time();
+print "
+<form method=\"POST\" action=\"/matcheval.php?/matcheval.php?edit=2&final={$final}&type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">
+  	  <td>(10:32) <input type=\"submit\" name=\"op\" value=\"Set Match Time\"></td>
+  	  </form>
+";
+
+//	<td>" . substr($row["actual_time"],0,5) . "</td>\n";
 
 	// end match display table
 	print "</tr></table>\n";

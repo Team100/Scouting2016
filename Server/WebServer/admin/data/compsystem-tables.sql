@@ -53,7 +53,7 @@ create table event
   event_type_id int,            # tBA event_type, with a number code
   year int,                     # tBA year
   location varchar(40),         # tBA location
-  website varchar(100),          # tBA website, event webssite	
+  website varchar(100),         # tBA website, event webssite	
   primary key (event_id)
  );
 
@@ -79,7 +79,7 @@ create table team
   website varchar(80),		# tBA website, team web site
   sponsors varchar(1000),	# tBA name, team sponsors
   rookie_year int, 		# tBA rookie_year
-  history varchar(10000),	# history of events from FIRST site
+  history varchar(10000),	# history of events from FIRST site -- DEPRICATE
   notes varchar(5000),		# notes on our interaciton with the team
   primary key (teamnum)
  );
