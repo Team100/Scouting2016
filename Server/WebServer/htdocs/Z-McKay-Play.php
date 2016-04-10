@@ -41,9 +41,10 @@
 		  print $tag . ":";
 		  foreach($tba_response->body as $event)
 		  {
-			//$id_array = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
-			//tba_updatedb("teambot", $id_array, array($column=>$value));
-			print_r($event);
+			$tba_dbarray = array("teamnum"=>$row["teamnum"]);
+			$tba_dbarray = tba_mapfields($tba_history_to_history, $event, $tba_dbarray);
+			$stuff = array("teamnum"=>$row["teamnum"], "event_id"=>$tba_dbarray["event_id"]);
+			tba_updatedb("team_history", $stuff, $tba_dbarray);
 		  }
 		  print "<br>\n";
 		}
