@@ -78,7 +78,10 @@ $tba_match_to_match_team = array ();
 $tba_stats_to_teambot = array ("oprs"=>"opr","dprs"=>"dpr","ccwms"=>"ccwm");
 
 // tBA history to history
-$tba_history_to_history = array ("key"=>"event_id","name"=>"long_name","year"=>"year");
+$tba_history_to_history = array ("key"=>"event_id","short_name"=>"long_name","year"=>"year");
+
+// tBA award to award
+$tba_award_to_award = array ("event_key"=>"event_id", "award_type"=>"award_type", "name"=>"award_name");
 
 
 // tBA stats to match_instance_alliance
@@ -562,13 +565,43 @@ function tba_get_team_history($teamnum)
   global $tba_error;
   global $connection;
   global $tba_history_to_history;
-  {
-  
-    return(TRUE);
 
-  } // end of else from REST query
+
+  $connection = dbsetup();
+
+
+  $query = "select teamnum from team";
+
+   if (!($result = @mysqli_query ($connection, $query)))
+        dbshowerror($connection, "die");
+   while ($row = mysqli_fetch_array($result))
+   {
+	  // get data
+	  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/events", TRUE)))
+		print "API returned " . $tba_error['message'] . "<br>\n";
+	  else
+	  {
+
+		  foreach($tba_response->body as $event)
+		  {
+			$tba_dbarray = array("teamnum"=>$row["teamnum"]);
+			$tba_dbarray = tba_mapfields($tba_history_to_history, $event, $tba_dbarray);
+			$stuff = array("teamnum"=>$row["teamnum"], "event_id"=>$tba_dbarray["event_id"]);
+			tba_updatedb("team_history", $stuff, $tba_dbarray);
+		  }
+
+		// commit
+		if (! (@mysqli_commit($connection) ))
+		  dbshowerror($connection, "die");
+
+	  } // end of else from REST query
+
+    print $row["teamnum"] . ", ";
+  }
 
   return(TRUE);
+
+
   
 } // end of function
 
@@ -583,12 +616,46 @@ function tba_get_team_awards($teamnum)
   global $tba_AppId;
   global $tba_error;
   global $connection;
-  {
   
-    return(TRUE);
-
-  } // end of else from REST query
-
+  
+    $connection = dbsetup();
+  
+  
+    $query = "select teamnum from team";
+  
+     if (!($result = @mysqli_query ($connection, $query)))
+          dbshowerror($connection, "die");
+     while ($row = mysqli_fetch_array($result))
+     {
+  	  // get data
+  	  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/awards", TRUE)))
+  		print "API returned " . $tba_error['message'] . "<br>\n";
+  	  else
+  	  {
+  	  	print "Im here";
+  		// loop through each type of stat in map function
+  		  print "McKay";
+  		  foreach($tba_response->body as $event)
+  		  {
+  			$tba_dbarray = array("teamnum"=>$row["teamnum"]);
+  			$tba_dbarray = tba_mapfields($tba_award_to_award, $event, $tba_dbarray);
+  			print_r($event);
+  			print "array <br>";
+  			$stuff = array("teamnum"=>$row["teamnum"], "event_id"=>$tba_dbarray["event_id"]);
+  			tba_updatedb("team_history_award", $stuff, $tba_dbarray);
+  		  }
+  		  print "<br>\n";
+  		
+  
+  		// commit
+  		if (! (@mysqli_commit($connection) ))
+  		  dbshowerror($connection, "die");
+  
+  	  } // end of else from REST query
+    
+      print $row["teamnum"] . ", ";
+    }
+  
   return(TRUE);
   
 } // end of function

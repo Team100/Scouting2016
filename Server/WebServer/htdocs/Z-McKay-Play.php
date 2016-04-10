@@ -31,19 +31,20 @@
    while ($row = mysqli_fetch_array($result))
    {
 	  // get data
-	  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/events", TRUE)))
+	  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/awards", TRUE)))
 		print "API returned " . $tba_error['message'] . "<br>\n";
 	  else
 	  {
 		// loop through each type of stat in map function
-		foreach($tba_history_to_history as $tag=>$column)
+		foreach($tba_award_to_award as $tag=>$column)
 		{
 		  print $tag . ":";
 		  foreach($tba_response->body as $event)
 		  {
-			//$id_array = array("event_id"=>$sys_event_id, "teamnum"=>$teamnum);
-			//tba_updatedb("teambot", $id_array, array($column=>$value));
-			print_r($event);
+			$tba_dbarray = array("teamnum"=>$row["teamnum"]);
+			$tba_dbarray = tba_mapfields($tba_award_to_award, $event, $tba_dbarray);
+			$stuff = array("teamnum"=>$row["teamnum"], "event_id"=>$tba_dbarray["event_id"]);
+			tba_updatedb("team_history_award", $stuff, $tba_dbarray);
 		  }
 		  print "<br>\n";
 		}

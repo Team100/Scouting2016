@@ -97,7 +97,22 @@
     // Load team history and team awards in two tables
     case "history":
 
-      print "<br>Not yet implemented.<br><br>\n";
+	  // inform user
+      print "Retrieving team history...<br>\n";
+      if (tba_get_team_history())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>\n";
+
+      // rankings
+      // inform user
+      print "Retrieving awards...<br>\n";
+      if (tba_get_team_awards())
+        print "Blue Alliance operation successful.<br>\n";
+      else
+        print "Blue Alliance operation failed.  Please check errors.<br>\n";
+      print "<br>";
 
 
       break;
