@@ -60,7 +60,7 @@ print "
       and teambot.event_id = '{$sys_event_id}' order by team.teamnum";
 
   if (debug()) print "<br>DEBUG-index: " . $query . "<br>\n";
-  if (!($result = @ mysqli_query ($connection, $query)))
+  if (!($result = @mysqli_query ($connection, $query)))
     dbshowerror($connection);
 
   $rowcnt=1;

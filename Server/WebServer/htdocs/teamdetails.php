@@ -142,7 +142,8 @@
   <table valign=\"top\">"
   . tabtextfield($edit,$options,$row, "sponsors","Sponsors: ",40,300);
 
-  // show history
+
+  // display history
   print "\n<tr valign=\"top\"><td>History: </td>\n";
 
 
@@ -154,6 +155,20 @@
     //
     print "<td><table border=\"1\">\n<tr><th>Year</th><th>Event</th><th>Awards</th></tr>\n";
 
+    // show history
+/*
+    // query history rows
+    $query = "select ";
+
+    if (debug()) print "<br>DEBUG-teaminfo: " . $query . "<br>\n";
+    if (!($result = @mysqli_query ($connection, $query)))
+      dbshowerror($connection);
+
+    while ($row = mysqli_fetch_array($result))
+    {
+    print "hi";
+}
+*/
 
     // sample row
     print "<tr><td>1999</td><td>Stanford Hospital</td><td>McKay is Born!!!</td></tr>\n";
