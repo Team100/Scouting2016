@@ -95,7 +95,7 @@ create table team
 create table team_history
  (
   teamnum  int, 		# FIRST team number - foreign key from team table
-  event_id varchar(8),          # tBA event_key ("key") in the history object.  Note: not a foreign key to event table
+  event_id varchar(10),          # tBA event_key ("key") in the history object.  Note: not a foreign key to event table
   year int,                     # tBA year
   long_name varchar(60),        # tBA name of regional
   primary key (teamnum,event_id)
@@ -113,9 +113,9 @@ create table team_history
 create table team_history_award
  (
   teamnum  int, 		# FIRST team number - foreign key from team table
-  event_id varchar(8),          # tBA event_key ("key") in the team history award object Note: not a foreign key to event table
+  event_id varchar(10),          # tBA event_key ("key") in the team history award object Note: not a foreign key to event table
   award_type varchar(3),        # tBA award_type (integer)
-  award_name varchar(50),       # tBA name in team history object
+  award_name varchar(70),       # tBA name in team history object
   primary key (teamnum,event_id,award_type)
  );
 
