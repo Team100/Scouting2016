@@ -69,9 +69,9 @@ print "
     // print each row with href
     print "<tr><td>" . teamhref($row["teamnum"]) . "{$row["teamnum"]}";
     if (in_array($row["teamnum"], $teams_need_eval)) print "&bull;";
-    print " - {$row["name"]} ";
+    print " - " . substr($row["name"], 0, $team_name_display_max-6);
      // add nickname if it exists
-     if ($row["nickname"]) print " ({$row["nickname"]})";
+     if ($row["nickname"]) print " " . substr($row["nickname"], 0, 12);
      print "</a></td></tr>\n";
 
     // if more than pagebreak rows, pagenate
