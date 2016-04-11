@@ -122,7 +122,6 @@ print "
 <li><a href=/doc/photos.php>Creating photos</a>
   &nbsp;&nbsp;<a href=\"/doc/PhotoLog.pdf\">Photo Log</a>
   </li>
-<li><a href=\"/<?php print $schedule_xls ?>\">Qualification Schedule (xls)</a></li>
 <li><a href=\"/documentationhome.php\">Documentation</a></li>
 </ul>
 

@@ -149,9 +149,31 @@
          if ($teamcnt == 6) $tablehead = $tablehead . "<th>{$with_color_long} {$team[5]["teamnum"]}</th>";
        }
 
+
 	// return home
 	print "<a href=\"{$base}\">Return to Home</a>\n";
 	print "&nbsp;&nbsp;&nbsp; <a href=\"/matchlist.php?final={$final}\">Match List</a>\n";
+
+    //
+	// time calculations to set up display
+	//  - includes formatting scheduled time
+	//  - feeding actual_utime to determine estimated time
+	//  - if estimated and we can set, include a set button
+	//      - processing for this case happens in the top of the page
+	//
+	// format scheduled time
+    $query = "select scheduled_utime, actual_utime from match_instance where ".$match_sql_identifier;
+    if (debug()) print "<br>matchrapsheet,time: " . $query . "<br>\n";
+    if (! ($result = @ mysqli_query ($connection, $query) ))
+      dbshowerror($connection, "die");
+    $row = mysqli_fetch_array($result);
+
+    if ($row['scheduled_utime'] != NULL) $scheduled_display = date('H:i',$row['scheduled_utime']); else $row['scheduled_utime'];
+    // get publishing info on actual time / estimated time
+    $time_array = match_get_act_est_time($matchidentifiers['type'], $matchidentifiers['matchnum'],$row['actual_utime'], $row['scheduled_utime']);
+
+    print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+	print "Scheduled: {$scheduled_display} &nbsp;&nbsp;&nbsp; {$time_array['heading_tag']} Time: {$time_array['display_time']}<br>\n";
 	print "<br>";
 
 
@@ -432,55 +454,61 @@ for($i=0; $i<$tot; $i++)
 
   // event_id
 
-		$query = "select type, matchnum, scheduled_time, actual_time
-			from match_instance where ".$match_sql_identifier;
+  $query = "select type, matchnum, scheduled_utime, actual_utime
+	from match_instance where ".$match_sql_identifier;
 
-		if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
-		if (! ($result = @ mysqli_query ($connection, $query) ))
-			dbshowerror($connection, "die");
-		if (! ($resultR = @ mysqli_query ($connection, "select score from match_instance_alliance where {$match_sql_identifier} and color='R'") ))
-			dbshowerror($connection, "die");
-		if (! ($resultB = @ mysqli_query ($connection, "select score from match_instance_alliance where {$match_sql_identifier} and color='B'") ))
-			dbshowerror($connection, "die");
+   if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
+   if (! ($result = @ mysqli_query ($connection, $query) ))
+     dbshowerror($connection, "die");
+   if (! ($resultR = @ mysqli_query ($connection, "select score from match_instance_alliance where {$match_sql_identifier} and color='R'") ))
+     dbshowerror($connection, "die");
+   if (! ($resultB = @ mysqli_query ($connection, "select score from match_instance_alliance where {$match_sql_identifier} and color='B'") ))
+     dbshowerror($connection, "die");
 
-		$row = mysqli_fetch_array($result);
-		$pointsR = mysqli_fetch_array($resultR);
-		$pointsB = mysqli_fetch_array($resultB);
+   $row = mysqli_fetch_array($result);
+   $pointsR = mysqli_fetch_array($resultR);
+   $pointsB = mysqli_fetch_array($resultB);
 
-		//print match data
-		print "<tr><th>Type</th><th>Match</th><th>Sched</th><th>Actual</th><th>Red</th><th>Blue</th></tr>";
-		print "<tr><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>".
-			$row["scheduled_time"]."</td><td>".$row["actual_time"]."</td><td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>";
+   //print match data
+   print "<tr><th>Type</th><th>Match</th><th>Sched</th><th>Actual</th><th>Red</th><th>Blue</th></tr>";
+   print "<tr><td>".$row["type"]."</td><td>".$row["matchnum"]."</td>";
 
+   // format scheduled time
+   if ($row['scheduled_utime'] != NULL) $scheduled_display = date('H:i',$row['scheduled_utime']);
+     else $scheduled_display = $row['scheduled_utime'];
+   if ($row['actual_utime'] != NULL) $actual_display = date('H:i',$row['actual_utime']);
+     else $actual_display = $row['actual_utime'];
 
-		//print teams
-		$color_names = array(R=>"Red", B=>"Blue");
-		print "<table border=1><tr><b>Teams:</b></tr><tr>";//<td>Red</td>;
+   print "<td>{$scheduled_display}</td><td>{$actual_display}</td><td>{$pointsR['score']}</td><td>{$pointsB['score']}</td></tr>\n";
 
-		foreach(array('R', 'B') as $color_initial)
-		{
-			print "<td>{$color_names[$color_initial]}</td>";
-			if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
-			if (! ($result = @ mysqli_query ($connection, "select teamnum from match_team where ".$match_sql_identifier." and color='{$color_initial}'") ))
-				dbshowerror($connection, "die");
-			while($row = mysqli_fetch_array($result))
-			{
-				if($row["teamnum"]==$teamnum)
-					print "<td>{$row["color"]} {$row["teamnum"]}</td>";
-				else
-					print "<td>{$row["color"]} <a href=\"/matchteameval.php?teamnum={$row["teamnum"]}&
-						type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$row["teamnum"]}</a></td>";
-			}
-			print"</tr><tr>";
-		}
-		print "</tr></table>";
+   //print teams
+   $color_names = array(R=>"Red", B=>"Blue");
+   print "<table border=1><tr><b>Teams:</b></tr><tr>";//<td>Red</td>;
 
-	print "
-	<!---Individual Team Evaluation--->
-	";
+   foreach(array('R', 'B') as $color_initial)
+   {
+     print "<td>{$color_names[$color_initial]}</td>";
+     if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
+     if (! ($result = @ mysqli_query ($connection, "select teamnum from match_team where ".$match_sql_identifier." and color='{$color_initial}'") ))
+         dbshowerror($connection, "die");
+     while($row = mysqli_fetch_array($result))
+     {
+       if($row["teamnum"]==$teamnum)
+         print "<td>{$row["color"]} {$row["teamnum"]}</td>";
+       else
+         print "<td>{$row["color"]} <a href=\"/matchteameval.php?teamnum={$row["teamnum"]}&"
+     		. "type={$matchidentifiers["type"]}&matchnum={$matchidentifiers["matchnum"]}\">{$row["teamnum"]}</a></td>";
+	 }
+     print"</tr><tr>";
+   }
+   print "</tr></table>";
 
-  	$query = "select ". fields_insert("nameonly",NULL,$field_array)
-  		. " from match_team where {$match_sql_identifier} and {$team_sql_identifier}";
+   print "
+   <!---Individual Team Evaluation--->
+   ";
+
+   $query = "select ". fields_insert("nameonly",NULL,$field_array)
+ 	. " from match_team where {$match_sql_identifier} and {$team_sql_identifier}";
 
 	if (debug()) print "<br>matchrapsheet: " . $query . $where . "<br>\n";
 	if (! ($result = @ mysqli_query ($connection, $query)))

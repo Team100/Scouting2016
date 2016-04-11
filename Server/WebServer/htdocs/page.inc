@@ -927,17 +927,17 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
       	  	// $formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
       	  	
       	    	// add comma
-      	        if ( $insert ) $insert = $insert . ", ";
+      	        if ( $insert ) $insert .= ", ";
       	  	
       		// add insert value
-      		if ( $formfields[$fieldname] == "" ) 
-        		$insert = $insert . "NULL";
+      		if ( $formfields[$fieldname] === "" ) 
+        		$insert .= "NULL";
       		else
       		{
       			// clean sql inputs before submitting
       			$formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
       			
-        		$insert = $insert . "'$formfields[$fieldname]'";
+        		$insert .= "'$formfields[$fieldname]'";
         	}
         	break;
         	
@@ -946,13 +946,13 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
       	  	$formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
 
       	    	// add comma
-      	        if ( $insert ) $insert = $insert . ", ";
+      	        if ( $insert ) $insert .= ", ";
       	        
       	  	// add insert value
-      		if ( $formfields[$fieldname] == "" ) 
-        		$insert = $insert . "$fieldname = NULL";
+      		if ( $formfields[$fieldname] === "" ) 
+        		$insert .= "$fieldname = NULL";
       		else
-        		$insert = $insert . "$fieldname = '$formfields[$fieldname]'"; 
+        		$insert .= "$fieldname = '$formfields[$fieldname]'"; 
         	break;
         	
           case "where":
@@ -960,13 +960,13 @@ function fields_insert_add ( $operation, $formfields, $fieldname, $insert)
       	  	$formfields[$fieldname] = mysqli_real_escape_string($connection, $formfields[$fieldname]);
 
       	    	// add comma
-      	        if ( $insert ) $insert = $insert . " and ";
+      	        if ( $insert ) $insert .= " and ";
       	        
       	  	// add where value
-      		if ( $formfields[$fieldname] == "" ) 
-        		$insert = $insert . "$fieldname = NULL";
+      		if ( $formfields[$fieldname] === "" ) 
+        		$insert .= "$fieldname = NULL";
       		else
-        		$insert = $insert . "$fieldname = '$formfields[$fieldname]'"; 
+        		$insert .= "$fieldname = '$formfields[$fieldname]'"; 
         	break;
       	  	
           default:
@@ -1203,33 +1203,33 @@ function param_report ($data, $paramgroup, $public, $teamcnt)
 // system functions
 //
 
-// function get_sys_value($name)
+// function get_system_value($name)
 //  $name - name of sytem key (value in db)
 //
 // returns value or NULL if not set
 //
 // gets system key->value from database system_value table
 
-function get_sys_value($name)
+function get_system_value($name)
 {
    global $connection;
    
    // select to see if update or insert
    $query = "select value from system_value where skey = '{$name}'";
-   if (debug()) print "<br>DEBUG:page,get_sys_value: " . $query . "<br>\n";
+   if (debug()) print "<br>DEBUG:page,get_system_value: " . $query . "<br>\n";
    
    if (! ($result = @ mysqli_query ($connection, $query)))
   	  dbshowerror($connection, "die");
   	  
    // if return, update, otherwise insert
    if ($row = mysqli_fetch_array($result))
-     return($row[$name]);
+     return($row['value']);
    else
      return(NULL);
 }
 
 
-// function set_sys_value($name)
+// function set_system_value($name)
 //  $name - name of sytem key (value in db)
 //  $value - value to set
 //
@@ -1237,13 +1237,13 @@ function get_sys_value($name)
 //
 // gets system key->value from database system_value table
 
-function set_sys_value($name, $value)
+function set_system_value($name, $value)
 {
    global $connection;
    
    // select to see if update or insert
    $query = "select value from system_value where skey = '{$name}'";
-   if (debug()) print "<br>DEBUG:page,set_sys_value, Select: " . $query . "<br>\n";
+   if (debug()) print "<br>DEBUG:page,set_system_value, Select: " . $query . "<br>\n";
    
    if (! ($result = @ mysqli_query ($connection, $query)))
   	  dbshowerror($connection, "die");
@@ -1252,7 +1252,7 @@ function set_sys_value($name, $value)
    if ($row = mysqli_fetch_array($result))
    {
      $query = "update system_value set value = '{$value}' where skey = '{$name}'";
-     if (debug()) print "<br>DEBUG:page,set_sys_value,update:" . $query . "<br>\n";
+     if (debug()) print "<br>DEBUG:page,set_system_value,update:" . $query . "<br>\n";
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    } 
@@ -1260,7 +1260,7 @@ function set_sys_value($name, $value)
    {
      $query = "insert into system_value (skey, value) values ('{$name}', '{$value}')";
              
-     if (debug()) print "<br>DEBUG:page,set_sys_value,insert:" . $query . "<br>\n"; 
+     if (debug()) print "<br>DEBUG:page,set_system_value,insert:" . $query . "<br>\n"; 
      if (! (@mysqli_query ($connection, $query) ))
        dbshowerror($connection, "die");
    }
@@ -1503,10 +1503,11 @@ function allteams_need_eval ()
   return($teamnums);
 }
 
+
 //
 // ********************
 //
-// match functions
+// match schedule functions
 //
 //
 
@@ -1514,43 +1515,217 @@ function allteams_need_eval ()
 // match time functions
 //
 
-// function: match_get_act_est_time ($actual_time)
+// function: match_get_act_est_time ($type, $matchnum, $actual_utime, $scheduled_utime)
+//  $type - match type, P,Q,F
+//  $matchnum 
+//  $actual_utime
+//  $scheduled_utime
 //
-//  Returns: estimated time array ($est_time) of key/value pairs, with the following keys:
+//  Returns: $match_time_array of key/value pairs, with the following keys:
 //    ['heading_tag']
 //    ['display_time']
-//    ['actual_time']
-//    ['estimated_time']
-//    ['seconds_delay']
-//    ['set_ok']
+//    ['can_set']
 //    ['est_flag']
-
-/*
-if no actual
-  flag est/actual
-  estimated time (formatted)
-
-can display
-*/
-
+//    ['estimated_utime']
 //
-//  Evaluation columns are defined in system global $needs_eval_not_null_cols.
-//  Needs eval means at least one of these columns is null
+//  Others we may implement:
+//    ['actual_time']
+//    ['seconds_delay']
+//
+// 
+// if $actual_utime 
+//  - is not null: converts to HH:MM can displays in display time. heading tag is Act
+//  - is null, provides estimated time based on system value match_delay
+//
+// Uses two system values:
+//   - match_time_delay - current delay time from scheduled in match timing
+//   - match_time_date - date in YYYY-MM-DD format the last delay was calc'd.  If today is not 
+//      same day, resets match_time_delay
+//
 //
 
-// function: match_get_estimated_time ($type, $matchnum)
+function match_get_act_est_time ($type, $matchnum, $actual_utime, $scheduled_utime)
+{
+  global $connection;
+  global $sys_event_id;
+  global $schedule_match_window;
+  
+  $time_array = array();
+  
+  // if actual time is set, return actual date in format format
+  if ($actual_utime != NULL)
+  {
+    $time_array['display_time'] = date('H:i',$actual_utime);
+    $time_array['can_set'] = FALSE;
+    $time_array['heading_tag'] = 'Act';
+    $time_array['est_flag'] = FALSE;
+  }
+  else
+  {
+    // determine if match is before last actual time
+    $recent_matchnum = match_get_recent_actual ($type);
+
+    if ($matchnum <= $recent_matchnum)
+    {
+      $time_array['display_time'] = "";
+      $time_array['can_set'] = FALSE;
+      $time_array['heading_tag'] = 'Estf';
+      $time_array['est_flag'] = FALSE;
+    }
+    else
+    {
+      // Algorithm:
+      //  Obtain delay from match_get_delay ($scheduled_utime)  
+      //  set estimated_utime, set other variables.
+      //  If current time is within $schedule_match_window of estimated_utime, set can_set flag
+      //
+      $delay = match_get_delay ($scheduled_utime);
+
+      // set variables
+      $time_array['estimated_utime'] = $scheduled_utime + $delay;
+      $time_array['display_time'] = date('H:i',$time_array['estimated_utime']);
+      $time_array['heading_tag'] = 'Est';
+      $time_array['est_flag'] = TRUE;    
+    
+      // if time within time window, set can_set TRUE
+      if ( abs(time() - $time_array['estimated_utime']) <= $schedule_match_window)
+        $time_array['can_set'] = TRUE;
+      else
+        $time_array['can_set'] = FALSE;     
+     } // end matchnum recent else
+  }  // end actual_time null else
+    
+  return($time_array);
+
+}
 
 
 // function: match_set_time ($type, $matchnum)
+//  $type - match type, P,Q,F
+//  $matchnum 
 //
 //  Returns: TRUE if set time, FALSE if match time was not set
 //
-//  Will directly print errors when time could not be set.  Sets match time and updates
-//   system variable
+//  Will directly print errors when time could not be set.  Sets actual time of match if within
+//    $schedule_match_window and updates system delay variables as needed
 //
 
+function match_set_time ($type, $matchnum)
+{
+  global $connection;
+  global $sys_event_id;
+  global $schedule_match_window;
+  
+  
+  // check if matchnum is less than most recent
+  $recent_matchnum = match_get_recent_actual ($type);    
+  if ($matchnum <= $recent_matchnum) return(FALSE);
+  
+  // get match scheduled and estimated time.  If actual time set, abort.
+  $query="select scheduled_utime, actual_utime from match_instance " 
+          . "where event_id = '{$sys_event_id}' and type = '{$type}' and matchnum = '{$matchnum}'";
+  if (debug()) print "<br>DEBUG:page, set_match_time:" . $query . "<br>\n";
+  if (! ($result = @mysqli_query ($connection, $query) ))
+  	dbshowerror($connection, "die");
+  $row = mysqli_fetch_array($result);  
+ 
+  // check if actual time is set
+  if ($row['actual_time'] != NULL) return(FALSE);
+  
+  //
+  // check if we can set, then set actual time and set new delay time
+  //
+  
+  // get current delay
+  $delay = match_get_delay ($row['scheduled_utime']);
+
+  // if time not within time window, return false, otherwise set time
+  $now = time();
+  if ( abs($now - ($row['scheduled_utime'] + $delay)) > $schedule_match_window)
+    return (FALSE);
+  else
+  {
+    // set delay values
+    set_system_value("match_time_date", date('Y-m-d', $now));
+    set_system_value("match_time_delay", $now - $row['scheduled_utime']);
+
+    // set match actual time
+    $query="update match_instance set actual_utime = {$now} " 
+            . "where event_id = '{$sys_event_id}' and type = '{$type}' and matchnum = '{$matchnum}'";
+    if (debug()) print "<br>DEBUG:page, set_match_time:" . $query . "<br>\n";
+    if (! ($result = @mysqli_query ($connection, $query) ))
+  	dbshowerror($connection, "die");
+
+    return (TRUE); 
+  }
+}
+      
+
+// function match_get_delay ($scheduled_utime)
+//  $scheduled_utime - scheduled utime for comparison
+//
+//  Returns: seconds of delay to apply to match
+//
+// Determines if delay time applies to $scheduled_utime and returns delay
+//
+// Uses two system values:
+//   - match_time_delay - current delay time from scheduled in match timing
+//   - match_time_date - date in YYYY-MM-DD format the last delay was calc'd.  If today is not 
+//      same day, resets match_time_delay
+//
+
+function match_get_delay ($scheduled_utime)
+{
+  global $schedule_match_window;
+  
+  // Algorithm:
+  //  Obtain date. If date has changed, current delay is not valid. Null 
+  //  out delay and date and report null.  
+  //  If date and delay are set, and today is the match time, set delay
+  //
+  $date = get_system_value("match_time_date");
+  // assume $delay=0 and set otherwise
+  $delay = 0; 
+  // if date not null, then check date
+  if ($date != NULL)
+    // check dates match today
+    if ($date != date('Y-m-d'))
+    {
+      // set to delay values to null
+      set_system_value("match_time_date", NULL);
+      set_system_value("match_time_delay", NULL);
+    }
+    else if (date('Y-m-d', $scheduled_utime) == date('Y-m-d'))
+      $delay = get_system_value("match_time_delay");
+
+  return($delay);
+}
 
 
+//
+// function: match_get_recent_actual ($type)
+//  $type - match type, P,Q,F
+//
+//  Returns: $matchnum of most recent actual time that has been set, or FALSE
+
+function match_get_recent_actual ($type)
+{
+  global $sys_event_id;
+  global $connection;
+  
+  $query="select matchnum from match_instance " 
+          . "where event_id = '{$sys_event_id}' and type = '{$type}' "
+          . "and actual_utime is not NULL order by matchnum DESC";
+  if (debug()) print "<br>DEBUG:page, match_get_recent_actual:" . $query . "<br>\n";
+  if (! ($result = @mysqli_query ($connection, $query) ))
+  	dbshowerror($connection, "die");
+
+  // if result, send in return
+  if ($row = mysqli_fetch_array($result))
+    return ($row['matchnum']);
+  else
+    return (0);
+}
 
 
 

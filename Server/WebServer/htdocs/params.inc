@@ -451,10 +451,10 @@ $team_name_display_max = 40;
 
 //
 // time window (in seconds) for setting match start
-//   if current time exceed $schedule_set_match_window, user will
-//   not be presented with "start now" option
+//   if current time exceeds $schedule_set_match_window from the last estimated time, 
+//   user will not be presented with "start now" option
 //
-$schedule_set_match_window = 3600;  // no more than an hour
+$schedule_match_window = 1800;  // no more than an hour
 
 
 // ***************************

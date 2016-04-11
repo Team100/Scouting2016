@@ -12,7 +12,7 @@
   require "bluealliance.inc";
 
   // header and setup
-  pheader("Blue Alliance Update");
+  pheader("Blue Alliance Update and Control");
   $connection = dbsetup();
 
   // if not administrator, display error.  Otherwise show admin section.
@@ -23,7 +23,6 @@
 
   // get variables if they exist
   if (isset($_GET["op"])) $op = $_GET["op"]; else $op = "";
-  $edit=$_GET["edit"];
 
   // define lock array, fields arrays
 
@@ -104,10 +103,9 @@
       else
         print "Blue Alliance operation failed.  Please check errors.<br>\n";
       print "<br>\n";
-
-      // rankings
+      // awards
       // inform user
-      print "Retrieving awards...<br>\n";
+      print "Retrieving team history awards...<br>\n";
       if (tba_get_team_awards())
         print "Blue Alliance operation successful.<br>\n";
       else
@@ -145,7 +143,6 @@
   $state = tba_get_autoupdate();
   if ($state == 1) $auto_state = "off"; else $auto_state = "on";
 
-
   //
   // Page formatting
   //
@@ -154,25 +151,30 @@
   print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a><br>\n";
 
   print "
-  <h4><u>Update Functions and Control</u></h4>
+  <h4><u>Auto Update</u></h4>
+  <ul>
+  <li><a href=\"/bluealliance.php?op=autoupdate&toggle={$auto_state}\">Turn <b>{$auto_state}</b> automatic updates until {$auto_update_stop}.</a></li>
+  </ul>
+
+  <h4><u>Load and update during Regional</u></h4>
   <ul>
   <li><a href=\"/bluealliance.php?op=eventteams\">Update team information for current event</a></li>
   <br>
   <li><a href=\"/bluealliance.php?op=matchdata\">Update match data for current event</a></li>
   <br>
   <li><a href=\"/bluealliance.php?op=stats\">Get stats and rankings for teams in matches</a></li>
-  <br>
-  <li><a href=\"/bluealliance.php?op=history\">Update history and award info for teams in our database</a></li>
-  <br>
-  <br>
-  <li><a href=\"/bluealliance.php?op=autoupdate&toggle={$auto_state}\">Turn <b>{$auto_state}</b> automatic updates until {$auto_update_stop}.</a></li>
-  <br>
-  <br>
-  <li><a href=\"/bluealliance.php?op=allteams\">Update all FIRST teams (! be careful - lots of data)</a></li>
-  <br>
-
   </ul>
+
+  <h4><u>Large Loads (one time)</u></h4>
+
+  <ul>
+  <li><a href=\"/bluealliance.php?op=history\">Update history and award info for teams in our database</a><br>(will take a while to return)</li>
+  <br>
+  <li><a href=\"/bluealliance.php?op=allteams\">Update all FIRST teams</a><br>(!! be very careful - lots of data)</li>
+  </ul>
+
   "; // end of print
+
 
   } // end of "if admin" qualification
 

@@ -145,24 +145,16 @@
 
   // display history
   print "\n<tr valign=\"top\"><td>History: </td>\n";
+    print "<td><table border=\"1\">\n";
 
-
-  //print "\n<tr valign=\"top\"><td>History: </td><td>{$row["history"]}</td></tr>\n";
-	//  . tabtextfield($edit,$options,$row, "history","History: ",40,300);
-    //
-    // show table of history events: year, regional name, award
-    //   sort by year, event_id, award_type
-    //
-    print "<td><table border=\"1\">\n<tr><th>Year</th><th>Event</th><th>Awards</th></tr>\n";
-
-    // show history
+    // display history
 
     // query history rows
-    $query = "select year, long_name, award_name
-    from team_history a, team_history_award b
-    where a.teamnum = {$teamnum}
-    and a.teamnum = b.teamnum
-    and a.event_id = b.event_id";
+    $query = "select year, reg_name, award_name from team_history a left join team_history_award b
+       on a.teamnum = b.teamnum and a.event_id = b.event_id
+       where a.teamnum = {$teamnum}
+       order by year DESC, a.event_id, award_type
+       ";
 
     if (debug()) print "<br>DEBUG-teaminfo: " . $query . "<br>\n";
     if (!($result = @mysqli_query ($connection, $query)))
@@ -170,7 +162,7 @@
 
     while ($row = mysqli_fetch_array($result))
     {
-      print "<tr><td>{$row['year']}</td><td>{$row['long_name']}</td><td>{$row['award_name']}</td></tr>\n";
+      print "<tr><td>{$row['year']}</td><td>{$row['reg_name']}</td><td>{$row['award_name']}</td></tr>\n";
     }
 
     // end history table
@@ -210,8 +202,5 @@
       ";
   }
 
-?>
-
-<?php
    pfooter();
   ?>

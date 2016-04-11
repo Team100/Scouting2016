@@ -57,7 +57,7 @@ if ($needseval == 1) $teams_need_eval = allteams_need_eval();
   			and a.type=b.type and a.matchnum=b.matchnum and a.color!=b.color and
   			a.teamnum={$host_teamnum} group by teamnum order by teamnum,  matchnum";
 
-  if (debug()) print "<br>matchlist: " . $query . "<br>\n";
+  if (debug()) print "<br>DEBUG-matchlist: " . $query . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $query)))
       dbshowerror($connection);
   while ($row = mysqli_fetch_array($result))
@@ -170,8 +170,16 @@ EOF_EOF
 
   print $table_head;
 
+
+  //
+  // find most recent match for actual times, get delay info
+  //
+  if ($filter == "A") $filters = ['P','Q','F']; else $filters = [$filter];
+  foreach($filters as $type)
+    $recent[$type] = match_get_recent_actual ($type);
+
   //  *************************************
-  // Determine page break area
+  // Determine page break area and set up data query
   //
   //
   // define count and data query
@@ -186,7 +194,7 @@ EOF_EOF
   $query = $query . $where . " order by field(type,'F','Q','P'), matchnum";
 
   // get row count first for pagebreak
-  if (debug()) print "<br>matchlist: " . $cquery . $where . "<br>\n";
+  if (debug()) print "<br>DEBUG-matchlist: " . $cquery . $where . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $cquery . $where)))
     dbshowerror($connection);
   $row = mysqli_fetch_array($result);
@@ -196,7 +204,7 @@ EOF_EOF
 
   //
   // get data set and paint
-  if (debug()) print "<br>matchlist: " . $query . "<br>\n";
+  if (debug()) print "<br>DEBUG-matchlist: " . $query . "<br>\n";
   if (!($result = @ mysqli_query ($connection, $query)))
     dbshowerror($connection);
 
@@ -211,7 +219,7 @@ EOF_EOF
    		if($highlight)
    		{
             $query="select teamnum from match_team where event_id = '{$sys_event_id}' and type = '{$row["type"]}' and matchnum = {$row["matchnum"]}";
-			if (debug()) print "<br>matchlist: " . $query . "<br>\n";
+			if (debug()) print "<br>DEBUG-matchlist: " . $query . "<br>\n";
 			if (!($result2 = @ mysqli_query ($connection, $query)))
 				dbshowerror($connection, die);
 			while($row2 = mysqli_fetch_array($result2))
@@ -224,15 +232,27 @@ EOF_EOF
 		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["type"]}</a></td>\n";
 		print "<td>{$bold}<a href=\"/matcheval.php?final={$final}&type={$row["type"]}&matchnum={$row["matchnum"]}\">{$row["matchnum"]}</a></td>\n";
 		if ($final == 1) print "<td>{$row["final_type"]}</td>";   // show final type only if set
-//		print "<td>" . substr($row["scheduled_time"],0,5) . "</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
 
-        // time presentation
-        $now = time();
-        $sched = $row['scheduled_utime'];
+        //
+        // time delay determiniation and presentation
+        //
+        // find and display scheduled time
+        if ($row['scheduled_utime'] != NULL) $display_sched = date('H:i',$sched = $row['scheduled_utime']); else $display_sched="";
+		print "<td>{$display_sched}</td>";
 
-        if ($sched != NULL) $display_sched = date('H:i',$sched); else $display_sched="";
+        // set delay
+        if (! (isset($delay))) $delay = match_get_delay ($row['scheduled_utime']);
+        // if actual time set, use it
+        if ($row['actual_utime'] != NULL)
+          $display_actual = date('H:i', $row['actual_utime']);
+        else
+          // if match is greater than most recent set and scheduled_utime not null, add delay
+          if (($row["matchnum"] > $recent[$row['type']]) && ($row['scheduled_utime'] != NULL))
+            $display_actual = "(". date('H:i', $row['scheduled_utime'] + $delay) . ")";
+          else
+            $display_actual = "";
 
-		print "<td>{$display_sched}</td><td>" . substr($row["actual_time"],0,5) . "</td>\n";
+		print "<td>{$display_actual}</td>\n";
 
 
 		// get teams in red/blue order
@@ -240,7 +260,7 @@ EOF_EOF
 		    . " where event_id = '{$sys_event_id}' and type = '{$row["type"]}' and matchnum = {$row["matchnum"]} "
 		    . " order by color DESC, matchnum";
 
-		if (debug()) print "<br>matchlist: " . $detail_query . "<br>\n";
+		if (debug()) print "<br>DEBUG-matchlist: " . $detail_query . "<br>\n";
 		if (!($detail = @ mysqli_query ($connection, $detail_query )))
 			dbshowerror($connection);
 

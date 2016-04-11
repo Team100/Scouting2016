@@ -60,7 +60,12 @@ $tba_event_to_event = array ("key"=>"event_id","short_name"=>"name","name"=>"lon
 $tba_team_to_team = array ("team_number" =>"teamnum","nickname"=>"name","location"=>"location",
    "website"=>"website","name"=>"sponsors","rookie_year"=>"rookie_year");
    
-// tBA history
+// tBA team history to team history
+$tba_history_to_history = array ("key"=>"event_id","short_name"=>"reg_name","year"=>"year");
+
+// tBA team award to team award
+$tba_award_history_to_award_history = 
+  array ("event_key"=>"event_id", "award_type"=>"award_type", "name"=>"award_name");
 
 // tBA team to teambot table
 $tba_team_to_teambot = array ("botname"=>"name");
@@ -76,13 +81,6 @@ $tba_match_to_match_team = array ();
 
 // tBA stats to teambot
 $tba_stats_to_teambot = array ("oprs"=>"opr","dprs"=>"dpr","ccwms"=>"ccwm");
-
-// tBA history to history
-$tba_history_to_history = array ("key"=>"event_id","short_name"=>"long_name","year"=>"year");
-
-// tBA award to award
-$tba_award_to_award = array ("event_key"=>"event_id", "award_type"=>"award_type", "name"=>"award_name");
-
 
 // tBA stats to match_instance_alliance
 $map_ranking_to_teambot = array (0=>"f_ranking", 1=>"teamnum");
@@ -552,13 +550,13 @@ function tba_get_event_statss()
 } // end of function
 
 
-
-// function: tba_get_team_history($teamnum)
+//
+// function: tba_get_team_history()
 //   Returns - message string of what to print as a final message
 //
 // Gets event teams based on $sys_event_id
 
-function tba_get_team_history($teamnum)
+function tba_get_team_history()
 {
   global $sys_event_id;
   global $tba_AppId;
@@ -566,96 +564,98 @@ function tba_get_team_history($teamnum)
   global $connection;
   global $tba_history_to_history;
 
-
-  $connection = dbsetup();
-
-
+  // for every team
   $query = "select teamnum from team";
 
-   if (!($result = @mysqli_query ($connection, $query)))
-        dbshowerror($connection, "die");
-   while ($row = mysqli_fetch_array($result))
-   {
-	  // get data
-	  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/events", TRUE)))
-		print "API returned " . $tba_error['message'] . "<br>\n";
-	  else
-	  {
-
-		  foreach($tba_response->body as $event)
-		  {
-			$tba_dbarray = array("teamnum"=>$row["teamnum"]);
-			$tba_dbarray = tba_mapfields($tba_history_to_history, $event, $tba_dbarray);
-			$stuff = array("teamnum"=>$row["teamnum"], "event_id"=>$tba_dbarray["event_id"]);
-			tba_updatedb("team_history", $stuff, $tba_dbarray);
-		  }
-
-		// commit
-		if (! (@mysqli_commit($connection) ))
-		  dbshowerror($connection, "die");
-
-	  } // end of else from REST query
-
+  if (!($result = @mysqli_query ($connection, $query)))
+       dbshowerror($connection, "die");
+  while ($row = mysqli_fetch_array($result))
+  {
+    // get data
+    if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/events", FALSE)))
+      print "API returned " . $tba_error['message'] . "<br>\n";
+    else
+    {
+      foreach($tba_response->body as $event)
+      {
+        // start array
+        $tba_dbarray = array("teamnum"=>$row["teamnum"]);
+         
+        // map array 
+        $tba_dbarray = tba_mapfields($tba_history_to_history, $event, $tba_dbarray);
+         
+        // table ident
+        $table_ident = array("teamnum"=>$row["teamnum"], "event_id"=>$tba_dbarray["event_id"]);
+	 
+        // add to database
+        tba_updatedb("team_history", $table_ident, $tba_dbarray);
+       }
+ 
+    } // end of else from REST query
+  
+    // commit
+    if (! (@mysqli_commit($connection) ))
+      dbshowerror($connection, "die");
+     
+    // inform user
     print $row["teamnum"] . ", ";
   }
-
+ 
+  print "<br>\n";
   return(TRUE);
-
-
   
 } // end of function
 
-// function: tba_get_team_awards($teamnum)
+//
+// function: tba_get_team_awards()
 //   Returns - message string of what to print as a final message
 //
 // Gets event teams based on $sys_event_id
 
-function tba_get_team_awards($teamnum)
+function tba_get_team_awards()
 {
   global $sys_event_id;
   global $tba_AppId;
   global $tba_error;
   global $connection;
-  
-  
-    $connection = dbsetup();
-  
-  
-    $query = "select teamnum from team";
-  
-     if (!($result = @mysqli_query ($connection, $query)))
-          dbshowerror($connection, "die");
-     while ($row = mysqli_fetch_array($result))
-     {
-  	  // get data
-  	  if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/awards", TRUE)))
-  		print "API returned " . $tba_error['message'] . "<br>\n";
-  	  else
-  	  {
-  	  	print "Im here";
-  		// loop through each type of stat in map function
-  		  print "McKay";
-  		  foreach($tba_response->body as $event)
-  		  {
-  			$tba_dbarray = array("teamnum"=>$row["teamnum"]);
-  			$tba_dbarray = tba_mapfields($tba_award_to_award, $event, $tba_dbarray);
-  			print_r($event);
-  			print "array <br>";
-  			$stuff = array("teamnum"=>$row["teamnum"], "event_id"=>$tba_dbarray["event_id"]);
-  			tba_updatedb("team_history_award", $stuff, $tba_dbarray);
-  		  }
-  		  print "<br>\n";
-  		
-  
-  		// commit
-  		if (! (@mysqli_commit($connection) ))
-  		  dbshowerror($connection, "die");
-  
-  	  } // end of else from REST query
+  global $tba_award_history_to_award_history;
     
-      print $row["teamnum"] . ", ";
-    }
+  // for every team
+  $query = "select teamnum from team";
   
+  if (!($result = @mysqli_query ($connection, $query)))
+     dbshowerror($connection, "die");
+  while ($row = mysqli_fetch_array($result))
+  {
+    // get data
+    if (! ($tba_response = tba_getdata("http://www.thebluealliance.com/api/v2/team/frc{$row['teamnum']}/history/awards", FALSE)))
+      print "API returned " . $tba_error['message'] . "<br>\n";
+    else
+      foreach($tba_response->body as $award)
+      {
+ 	// start array
+ 	$tba_dbarray = array("teamnum"=>$row["teamnum"]);
+ 	
+ 	// map fields
+        $tba_dbarray = tba_mapfields($tba_award_history_to_award_history, $award, $tba_dbarray);
+
+        $table_ident = 
+           array("teamnum"=>$row['teamnum'], "event_id"=>$tba_dbarray['event_id'], 
+                  "award_type"=>$tba_dbarray['award_type']);
+                  
+        // send to database
+        tba_updatedb("team_history_award", $table_ident, $tba_dbarray);
+      }
+    // end of else from REST query
+ 
+    // commit
+    if (! (@mysqli_commit($connection) ))
+      dbshowerror($connection, "die");
+  		  
+    print $row["teamnum"] . ", ";
+  }
+  
+  print "<br>\n";
   return(TRUE);
   
 } // end of function
@@ -857,7 +857,8 @@ function tba_mapfields ($tba_fieldmap, $tba_responsearray, $tba_dbarray)
    // and storing them in dbarray
    foreach($tba_fieldmap as $field =>$value)
      if (isset($tba_responsearray->$field))
-       if ($tba_responsearray->$field)
+// JLV - commenting out but may cause problems
+//       if ($tba_responsearray->$field != NULL)
          $tba_dbarray[$value] = $tba_responsearray->$field;
 
    return($tba_dbarray);
@@ -876,6 +877,11 @@ function tba_mapfields ($tba_fieldmap, $tba_responsearray, $tba_dbarray)
 //
 // Updates database with data
 //   Queries for row with data.  If found, updates.  If not found, inserts.
+//
+// NOTE: $tba_dbarray must contain all columns necessary to insert a new 
+//         row in the table.  If columns are missing, likely duplicate entries
+//         will occur.  These columns must exist in $table_identifiers
+//         and $tba_dbarray
 //
 
 function tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
