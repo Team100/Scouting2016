@@ -16,6 +16,9 @@ if(isset($_POST["highlight"]))
 else
 	$highlight=$_GET["highlight"];
 
+// set today
+$today = date('Y-m-d');
+
 //
 // setup for needs eval functions
 //
@@ -248,7 +251,11 @@ EOF_EOF
         else
           // if match is greater than most recent set and scheduled_utime not null, add delay
           if (($row["matchnum"] > $recent[$row['type']]) && ($row['scheduled_utime'] != NULL))
-            $display_actual = "(". date('H:i', $row['scheduled_utime'] + $delay) . ")";
+            // test if scheduled time is
+            if (date('Y-m-d', $row['scheduled_utime']) == $today)
+              $display_actual = "(". date('H:i', $row['scheduled_utime'] + $delay) . ")";
+            else
+              $display_actual = "({$display_sched})";
           else
             $display_actual = "";
 

@@ -16,6 +16,29 @@
   $nav1_before = "<a href=\"/teaminfo.php?teamnum=";
   $nav1_after = "\">Return to Team Info</a><br>";
 
+
+  //
+  // form setup
+  //
+
+  // get variables
+  $teamnum=$_GET["teamnum"];
+  $edit=$_GET["edit"];
+
+  // header and setup  -- use connection first so we can get "needs eval"
+  $connection = dbsetup();
+
+  pheader("{$teamnum} - Team Robot Info Compilation", "titleonly");
+
+  // Set up sub...inc parameters required
+  //  $teamnum
+  //  $page_event_id (event_id used in this page)
+  //  $page_allow_edits -- TRUE show edit buttons, FALSE does not
+  //
+  $page_event_id = $sys_event_id;
+  $page_allow_edits=TRUE;
+  $page_heading = "Team Robot Compilation Info - ";
+
   //
   // call shared team info header
   //

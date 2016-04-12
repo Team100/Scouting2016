@@ -79,8 +79,7 @@ create table team
   website varchar(80),		# tBA website, team web site
   sponsors varchar(1000),	# tBA name, team sponsors
   rookie_year int, 		# tBA rookie_year
-  history varchar(10000),	# history of events from FIRST site -- DEPRICATE
-  notes varchar(5000),		# notes on our interaciton with the team
+  notes varchar(5000),		# notes on our interaction with the team
   primary key (teamnum)
  );
 
@@ -217,22 +216,6 @@ create table teambot
   primary key(event_id,teamnum)
  );
 
-#
-# Ranking_tag
-#
-# Ranking tag on game_specific rankings from first
-#  Functions as a lookup table only
-#
-# -- depricate -- storing in params.inc instead
-#
-create table ranking_tag
- (
-  tag int,                      # tBA parameter number, corresponding to f_rankparamX
-  name varchar(20),             # tBA parameter name for display
-  primary key (tag)
- );
-
-
 
 #
 # Alliance
@@ -312,8 +295,6 @@ create table match_instance
   match_key varchar(5),         # tBA part after _ in match key, e.g. qm20
   final_type varchar(1),	# used in finals: Q=qarter, S=Semi, F=Final
   tba_match_num int,            # tBA match_number
-  scheduled_time time,		# scheduled time - depricate?
-  actual_time time,		# actual time - depricate?
   scheduled_utime int,          # schedule time - unix time
   actual_utime int,             # actual time - unix time
   game_plan varchar(2000), 	# our game plan for the match.  Note: this is the only field 

@@ -401,6 +401,13 @@ print "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"{$base}\">Return to Home</a>\n";
   if ($teamnickname) print "({$teamnickname})";
   print "</H3>\n";
 
+
+  //
+  // invoke info fields
+  //
+
+  // set $page_allow_edits to invoke editing or refrain
+  $page_allow_edits=TRUE;
   require "teaminfofields.inc";
   //
   // ***********************************************************************************

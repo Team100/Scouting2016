@@ -1529,7 +1529,6 @@ function allteams_need_eval ()
 //    ['estimated_utime']
 //
 //  Others we may implement:
-//    ['actual_time']
 //    ['seconds_delay']
 //
 // 
@@ -1569,7 +1568,7 @@ function match_get_act_est_time ($type, $matchnum, $actual_utime, $scheduled_uti
     {
       $time_array['display_time'] = "";
       $time_array['can_set'] = FALSE;
-      $time_array['heading_tag'] = 'Estf';
+      $time_array['heading_tag'] = 'Est';
       $time_array['est_flag'] = FALSE;
     }
     else
@@ -1593,7 +1592,7 @@ function match_get_act_est_time ($type, $matchnum, $actual_utime, $scheduled_uti
       else
         $time_array['can_set'] = FALSE;     
      } // end matchnum recent else
-  }  // end actual_time null else
+  }  // end actual_utime null else
     
   return($time_array);
 
@@ -1630,7 +1629,7 @@ function match_set_time ($type, $matchnum)
   $row = mysqli_fetch_array($result);  
  
   // check if actual time is set
-  if ($row['actual_time'] != NULL) return(FALSE);
+  if ($row['actual_utime'] != NULL) return(FALSE);
   
   //
   // check if we can set, then set actual time and set new delay time

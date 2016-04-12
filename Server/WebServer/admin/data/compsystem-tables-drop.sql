@@ -21,7 +21,6 @@ drop table team;
 drop table team_history;
 drop table team_history_award;
 drop table teambot;
-drop table ranking_tag;
 drop table alliance;
 drop table alliance_team;
 drop table alliance_unavailable;

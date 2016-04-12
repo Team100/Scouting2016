@@ -6,15 +6,13 @@
   // 
   // Shared by team info pages as inline insert
   //
+  //
+  // Assumes two variables are defined before this code is hit:
+  //  $teamnum
+  //  $page_event_id (event_id used in this page)
+  //  $page_allow_edits -- TRUE show edit buttons, FALSE does not
+  //
 
-  // get variables
-  $teamnum=$_GET["teamnum"];
-  $edit=$_GET["edit"];
-
-  // header and setup  -- use connection first so we can get "needs eval"
-  $connection = dbsetup();
-  
-  pheader("{$teamnum} - Team Robot Info", "titleonly");
 
   // check parameter and update if needed
   if (isset($_GET['needseval'])) set_user_prop("needeval", $_GET['needseval']);
@@ -22,7 +20,7 @@
   $needseval = test_user_prop("needeval");
 
   // define lock array, fields arrays
-  $dblock = array(table=>"teambot",where=>"event_id = '{$sys_event_id}' and teamnum = {$teamnum}");
+  $dblock = array(table=>"teambot",where=>"event_id = '{$page_event_id}' and teamnum = {$teamnum}");
 
   // teambot array
   $table_teambot = array_merge ( array("rank_overall","rating_overall","rating_overall_off","rating_overall_def",
@@ -44,7 +42,7 @@
       // load form fields
       $formfields = fields_load("post", $table_teambot);
 
-      $query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
+      $query = "update teambot set " . fields_insert("update",$formfields) . " where event_id = '{$page_event_id}' and teamnum = {$teamnum}";
       // process query
       if (debug()) print "<br>DEBUG-teaminfo: " . $query . "<br>\n";
       if (! (@mysqli_query ($connection, $query) ))
@@ -86,7 +84,7 @@
   $row = mysqli_fetch_array($result);
 
   // print team number, name and nickname as header
-  print "<H2>Team Robot Info - ". team_needs_eval_str($teamnum) . " - {$row["name"]}";
+  print "<H2>" . $page_heading . team_needs_eval_str($teamnum) . " - {$row["name"]}";
   if ($row["nickname"]) print " ({$row["nickname"]})";
   print "</H2>\n";
 
@@ -96,6 +94,10 @@
   	print "<form method=\"POST\" action=\"{$pagename}?edit=2&teamnum={$teamnum}\">\n";
 
 
+  //
+  // formatting table
+  //
+
   print "
   <!----- Top of formatting table ----->
   <table valign=\"top\">
@@ -103,7 +105,6 @@
    <td>";
 
   // Navigation Link to team details
- // print "<a href=\"/teamdetails.php?teamnum={$teamnum}\">Team Compilation of Match Eval</a><br>\n";
   print "{$nav1_before}{$teamnum}{$nav1_after}\n";
   print "<a href=\"/teammatches.php?teamnum={$teamnum}\">Team Matches Evaluation</a><br>\n";
 
@@ -120,7 +121,7 @@
 
   // get team details define result set
   $query = "select ". $rankcolumns . fields_insert("nameonly",NULL,$table_teambot)
-   . " from teambot where event_id = '{$sys_event_id}' and teamnum = {$teamnum}";
+   . " from teambot where event_id = '{$page_event_id}' and teamnum = {$teamnum}";
 
   if (debug()) print "<br>DEBUG-teaminfo: " . $query . "<br>\n";
   if (!($result = @ mysqli_query ($connection,$query)))
@@ -132,7 +133,8 @@
   // buttons / links
 
   // add edit link or submit button
-  print dblockshowedit($edit, $dblock, $editURL) . "\n";
+  if ($page_allow_edits)
+    print dblockshowedit($edit, $dblock, $editURL) . "\n";
 
   // return and home buttons
   print "<br>";
@@ -140,17 +142,24 @@
   print "<a href=\"{$base}\">Return to Home</a>\n";
 
   // additional links
-  print "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+  print "</td>\n<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
   print "<td>";
   print "<a href=\"/teamdetails.php?teamnum={$teamnum}\">Team Details &amp; Photos<a><br>\n";
+  print "<a href=\"/teamotherevents.php?teamnum={$teamnum}\">Other Season Events<a><br>\n";
+
+  // 3rd column of links
+  print "</td>\n<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+  print "<td>";
 
   // show needs eval feature on/off link
   print "<a href=\"{$pagename}?teamnum={$teamnum}&needseval=";
   if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
   print " Needs Eval</a>\n";
-
+  
   // end links and place picture
   print "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+  // 
+  // end
 
   // show image
   if ( file_exists ("teamimages/team-{$teamnum}-med.jpg"))

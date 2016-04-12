@@ -17,7 +17,7 @@
   // define lock array, fields arrays
   $dblock = array(table=>"team",where=>"teamnum = {$teamnum}");
 
-  $table_team = array("name","nickname","org","location","students","website","sponsors","rookie_year","history","notes");
+  $table_team = array("name","nickname","org","location","students","website","sponsors","rookie_year", "notes");
   $edit_fields = array("name","nickname","org","location","students","website","sponsors","rookie_year","notes");
 
   // handle update if returning from edit mode

@@ -13,9 +13,7 @@ mysql -D competition -u compuser --password=%dbpass% < compsystem-tables-drop.sq
 
 mysql -D %dbname% -u %dbuser% --password=%dbpass% < compsystem-tables.sql
 
-rem mysql -D %dbname% -u %dbuser% --password=%dbpass% < insert-team.sql
-
-
 
 rem insert documentation
 
+rem fresh database complete

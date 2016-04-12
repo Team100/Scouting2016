@@ -276,15 +276,6 @@
     print "</tr></table>\n";
 
 
-/*
-	</td></tr>\n<tr><td>\n";
-
-	print "</td></tr>\n";
-    // end data grids
-    print "</table>\n</tr></table>\n";
-
-*/
-
     //
     // print narrative comparatives
     //
@@ -586,15 +577,5 @@ print "<br><br>\n";
 print "<a href=\"{$base}\">Return to Home</a>\n";
 print "&nbsp;&nbsp;&nbsp; <a href=\"/matchlist.php?final={$final}\">Match List</a>\n";
 
-
-?>
-
-
-
-
-
-
-
-<?php
 	pfooter();
 ?>

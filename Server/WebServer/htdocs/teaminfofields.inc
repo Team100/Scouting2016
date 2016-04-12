@@ -150,7 +150,8 @@
   // end of team info data block
 
     // add edit link or submit button
-  print dblockshowedit($edit, $dblock, $editURL) . "\n";
+  if ($page_allow_edits)
+    print dblockshowedit($edit, $dblock, $editURL) . "\n";
 
 
 //
