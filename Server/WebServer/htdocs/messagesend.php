@@ -10,14 +10,9 @@
   $edit=$_GET["edit"];
 
   // header and setup
-  pheader("Send a Message to Remote Member");
+  pheader("Send a Message to Field");
   $connection = dbsetup();
 
- // if not administrator, display error.  Otherwise show admin section.
- if (! $admin)
-   print "<h3>You must be an administrator to use this page.</h3>\n";
- else
- {
 
   // define lock array, fields arrays
   $dblock = array(table=>"message",where=>" facility = 'finals'");
@@ -99,13 +94,11 @@
 
   print "</tr>\n</table>\n";
 
- } // end of "if admin" qualification
-
 
   // return and home buttons
   print "<br><a href=\"{$base}\">Return to Home</a>\n";
 
-  if ($admin) print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>\n";
+  //if ($admin) print "&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>\n";
   print "<br>\n";
 
 

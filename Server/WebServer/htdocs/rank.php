@@ -188,7 +188,7 @@
   // build query
     // build columns list
     foreach($rank_columns as $column=>$col_def)
-      $columns = $columns . $column . ", ";
+      $columns .= $column . ", ";
 
     // order by
     if ($order == "d") $sql_ord='DESC'; else $sql_ord='ASC';
@@ -220,7 +220,7 @@
   if ($edit)
   {
     // if in edit mode, signal save with edit=2
-  	print "<form method=\"POST\" action=\"/rank.php?edit=2&sort={$sort}\">\n";
+  	print "<form method=\"POST\" action=\"/rank.php?edit=2&sort={$sort}&order={$order}\">\n";
   	// add hidden field for op
   	hiddenfield( "op", "Save");
   }
@@ -236,7 +236,7 @@
 
   print "\n\n";
   // show edit
-  print dblockshowedit($edit, $dblock, $url_root . $sort . "&lsort=" . $lsort) . "\n";
+  print dblockshowedit($edit, $dblock, $url_root . $sort . "&lsort=" . $lsort . "&order=" . $order) . "\n";
   // Return navigation
   print "\n<br><a href=\"{$base}\">Return to Home</a>\n";
 
@@ -245,8 +245,17 @@
   print "
   <!--- table for display data --->
   <table valign=\"top\">
-  <tr><th></th>
+  <tr>
   "; // end of print
+
+  // Team num sort heading
+  if ($lsort == "teambot.teamnum")
+  {
+    $star="*";
+    if ($order=="a") $revsort="d"; else $revsort="a";
+  }
+  else $start="";
+  print "<th><a href=\"{$url_root}rank_overall&lsort=teambot.teamnum&order={$revsort}\">Team{$star}</a></th>";
 
 
   // display column headings
@@ -325,7 +334,8 @@
   	// print teamnum, name
     print "<td>" . teamhref($teamnum) . "{$teamnum}";
     if (in_array($teamnum, $teams_need_eval)) print "&bull;";
-    print " - {$team[$teamnum]["name"]}";
+    print " - ";
+    print substr($team[$teamnum]["name"], 0, $team_name_display_max - 15);
     // if nickname, print too
     if ($team[$teamnum]["nickname"]) print " ({$team[$teamnum]["nickname"]})";
     print "</a></td>\n";
@@ -383,9 +393,9 @@
 
   // show edit at bottom
   print "<br>\n";
-  print dblockshowedit($edit, $dblock, $url_root . $sort . "&lsort=" . $lsort) . "\n";
+  print dblockshowedit($edit, $dblock, $url_root . $sort . "&lsort=" . $lsort . "&order=" . $order) . "\n";
 
-  print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+  print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
   // show needs eval feature on/off link
   print "<a href=\"{$url_root}rank_overall&lsort={$lsort}&needseval=";
   if ($needseval == 1) print "0\">Hide"; else print "1\">Show";

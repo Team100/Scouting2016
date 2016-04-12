@@ -32,7 +32,7 @@ print "
 // show needs eval feature on/off link
 print "<a href=\"/?needseval=";
 if ($needseval == 1) print "0\">Hide"; else print "1\">Show";
-print "Needs Eval</a>\n";
+print " Needs Eval</a>\n";
 
 print "
 <table valign=\"top\">
@@ -60,7 +60,7 @@ print "
       and teambot.event_id = '{$sys_event_id}' order by team.teamnum";
 
   if (debug()) print "<br>DEBUG-index: " . $query . "<br>\n";
-  if (!($result = @ mysqli_query ($connection, $query)))
+  if (!($result = @mysqli_query ($connection, $query)))
     dbshowerror($connection);
 
   $rowcnt=1;
@@ -69,9 +69,9 @@ print "
     // print each row with href
     print "<tr><td>" . teamhref($row["teamnum"]) . "{$row["teamnum"]}";
     if (in_array($row["teamnum"], $teams_need_eval)) print "&bull;";
-    print " - {$row["name"]} ";
+    print " - " . substr($row["name"], 0, $team_name_display_max-6);
      // add nickname if it exists
-     if ($row["nickname"]) print " ({$row["nickname"]})";
+     if ($row["nickname"]) print " " . substr($row["nickname"], 0, 12);
      print "</a></td></tr>\n";
 
     // if more than pagebreak rows, pagenate
@@ -107,19 +107,21 @@ print "
 <li><a href=\"/finalselect.php\">Finals Selection - In Stands</a></li>
 <li><a href=\"/finalselectfield.php\">Finals Selection - On Field</a></li>
 <br>
-<li><a href=\"/matchlist.php?filter=F\">Evaluate a final match</a></li>
+<li><a href=\"/matchlist.php?filter=F\">Evaluate a finals match</a></li>
 <br>
 <li><a href=\"/tabletsync.php\">Sync with tablet servers</a></li>
+
+<br>
+<li><a href=\"/messagesend.php\">Send a Message to Field</a></li>
+<li><a href=\"/messagerecv.php\">Receive a Message in Field</a></li>
 </ul>
 
 <!--- Documentation Section --->
-<br>
 <h3><center><u>Documentation</u></center></h3>
 <ul>
 <li><a href=/doc/photos.php>Creating photos</a>
   &nbsp;&nbsp;<a href=\"/doc/PhotoLog.pdf\">Photo Log</a>
   </li>
-<li><a href=\"/<?php print $schedule_xls ?>\">Qualification Schedule (xls)</a></li>
 <li><a href=\"/documentationhome.php\">Documentation</a></li>
 </ul>
 

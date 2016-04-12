@@ -45,15 +45,15 @@
 #
 create table event
  (
-  event_id varchar(8),		# tBA key (event key), format yyyy[Event_Code]
+  event_id varchar(10),		# tBA key (event key), format yyyy[Event_Code]
   name varchar(20),             # tBA short_name
-  long_name varchar(35),        # tBA name, official name
+  long_name varchar(100),        # tBA name, official name
   event_code varchar(4),        # tBA event_code
   event_type varchar(20),       # tBA event_type_string, human-readable event, i.e. 'Regional'
   event_type_id int,            # tBA event_type, with a number code
   year int,                     # tBA year
   location varchar(40),         # tBA location
-  website varchar(100),          # tBA website, event webssite	
+  website varchar(100),         # tBA website, event webssite	
   primary key (event_id)
  );
 
@@ -79,8 +79,7 @@ create table team
   website varchar(80),		# tBA website, team web site
   sponsors varchar(1000),	# tBA name, team sponsors
   rookie_year int, 		# tBA rookie_year
-  history varchar(10000),	# history of events from FIRST site
-  notes varchar(5000),		# notes on our interaciton with the team
+  notes varchar(5000),		# notes on our interaction with the team
   primary key (teamnum)
  );
 
@@ -95,9 +94,9 @@ create table team
 create table team_history
  (
   teamnum  int, 		# FIRST team number - foreign key from team table
-  event_id varchar(8),          # tBA event_key ("key") in the history object.  Note: not a foreign key to event table
+  event_id varchar(10),         # tBA event_key ("key") in the history object.  Note: not a foreign key to event table
   year int,                     # tBA year
-  long_name varchar(40),        # tBA name of regional
+  reg_name varchar(60),         # tBA name of regional
   primary key (teamnum,event_id)
  );
  
@@ -113,9 +112,9 @@ create table team_history
 create table team_history_award
  (
   teamnum  int, 		# FIRST team number - foreign key from team table
-  event_id varchar(8),          # tBA event_key ("key") in the team history award object Note: not a foreign key to event table
+  event_id varchar(10),         # tBA event_key ("key") in the team history award object Note: not a foreign key to event table
   award_type varchar(3),        # tBA award_type (integer)
-  award_name varchar(50),       # tBA name in team history object
+  award_name varchar(100),       # tBA name in team history object
   primary key (teamnum,event_id,award_type)
  );
 
@@ -217,22 +216,6 @@ create table teambot
   primary key(event_id,teamnum)
  );
 
-#
-# Ranking_tag
-#
-# Ranking tag on game_specific rankings from first
-#  Functions as a lookup table only
-#
-# -- depricate -- storing in params.inc instead
-#
-create table ranking_tag
- (
-  tag int,                      # tBA parameter number, corresponding to f_rankparamX
-  name varchar(20),             # tBA parameter name for display
-  primary key (tag)
- );
-
-
 
 #
 # Alliance
@@ -312,8 +295,6 @@ create table match_instance
   match_key varchar(5),         # tBA part after _ in match key, e.g. qm20
   final_type varchar(1),	# used in finals: Q=qarter, S=Semi, F=Final
   tba_match_num int,            # tBA match_number
-  scheduled_time time,		# scheduled time - depricate?
-  actual_time time,		# actual time - depricate?
   scheduled_utime int,          # schedule time - unix time
   actual_utime int,             # actual time - unix time
   game_plan varchar(2000), 	# our game plan for the match.  Note: this is the only field 
@@ -342,10 +323,10 @@ create table match_instance_alliance
   locked varchar(12), 		# row locked for editing by user.  Can clear in application.
   updatedby varchar(200), 	# last updated by users
   score int,			# tBA score, final score
-  raw_points int, 		# raw points (prior to penalties)  -- depricate
-  penalty_points int,		# penalty points -- depricate
-  other_points int,		# other points, might need in the future -- depricate
-  seed_points int,		# seed points - seed points in system -- depricate
+  raw_points int, 		# raw points (prior to penalties)  -- depricate in 2017 if not used and not found in code
+  penalty_points int,		# penalty points -- depricate in 2017 if not used and not found in code
+  other_points int,		# other points, might need in the future -- depricate in 2017 if not used and not found in code
+  seed_points int,		# seed points - seed points in system -- depricate in 2017 if not used and not found in code
   f_score0 varchar(25),          # tBA custom score field
   f_score1 varchar(25),          # tBA custom score field
   f_score2 varchar(25),          # tBA custom score field
@@ -495,7 +476,7 @@ create table match_team
 #
 # championship listing table
 #
-# depricate?
+# depricate entire table?
 #
 #create table championteam
 #(
@@ -512,7 +493,7 @@ create table match_team
 
 create table schedule
  (
-  scheduled_time time, 		# schedule time of match
+  scheduled_utime int, 		# schedule time of match
   type varchar(1),		# match type (see match table)
   matchnum int,		  	# match number
   blue1 int,			# blue teamnum

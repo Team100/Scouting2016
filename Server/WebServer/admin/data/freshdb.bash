@@ -14,3 +14,4 @@ mysql -D ${dbname} -u ${dbuser} --password=${dbpass} < compsystem-tables-drop.sq
 
 mysql -D ${dbname} -u ${dbuser} --password=${dbpass} < compsystem-tables.sql
 
+echo "Competition System Tables Built"

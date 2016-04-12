@@ -8,7 +8,7 @@
   require "page.inc";
   // get variables
 
-  pheader("Template", "titleonly", array ("openhead"=>1) );
+  pheader("Receive Message", "titleonly", array ("openhead"=>1) );
   $connection = dbsetup();
 
   // add retrieve header
@@ -25,13 +25,8 @@
 
   $message = mysqli_fetch_array($result);
 
+   print "<p style=\"font-size:50px;\">{$message["message"]}</p>";
 
-  //  print "<font size=\"40\">{$message["message"]}</font>";
-   print "<p style=\"font-size:100px;\">{$message["message"]}</p>";
-   //print "<p style=\"font-size:100px;\">{$message["message"]}</p>";
 
-  ?>
-
-<?php
    pfooter();
  ?>

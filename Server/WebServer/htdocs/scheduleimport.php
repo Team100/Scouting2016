@@ -23,6 +23,10 @@
   // load debug
   if ($_GET['debug']) $debug=TRUE;
 
+  // load match_date from post or from system
+  if (isset($_POST['match_date'])) $match_date=$_POST['match_date'];
+  else $match_date = get_system_value("schedule_import_date");
+
   // header
   print <<< EOF_EOF
 <!--- Comment Section --->
@@ -33,21 +37,25 @@
 
 Imports a comma-separated schedule in the standard FIRST format.  Checks the format first, then populates database.
 <p>
-The steps for this process are:
+The process is somewhat manual.  Steps for this process are:
 <ol>
 <li>Obtain the FIRST schedule. Often it is formatted as an Excel file. In this case, save the file
     as a CVS file, then edit the headers out of the file using an editor such as Notepad.
 <li>Make sure the file is well-formed including:
  <ul>
  <li>No extra lines at the end of file.
- <li>Type of match should either be 'P', 'Q', or 'F'
- <li>Time must be just a clock time (e.g. 11:53)
+ <li>First letter in type of match should either be 'P', 'Q', or 'F'
+ <li>Watch am/pm designation on scheulded time.  If day does not match system date, remove the day-of-week designation in file.
+      Day of week trumps just a date.
  <li>No headers or anything but data
+ <li>File must be named qualification_schedule.csv
+ <li>General function 1) replace ",P" with "pm,P" to get times right, 2) may need to replace day of week with nothing
  </ul>
 <li>Upload the schedule file in CSV format by browsing to the file
-<li>Check validity of field mapping.  Often the FIRST format can change.  If the field format needs
-    modification, delete the upload file, edit the source file and upload it again.
-<li>Import the file, which turns the uploaded file into the data within the Competition System.
+<li>Check validity of field mapping on the web page upload (it will be displayed).  Often the FIRST format can change.  If the field format needs
+    modification, delete the upload file, edit the source file and upload it again.  work until it looks right.
+<li>Import the file, which turns the uploaded file into the data within the Competition System. If the process errors out, none of the rows will
+    have been loaded, so try again.
 </ol>
 
 <!--- Functions Section --->
@@ -66,6 +74,9 @@ EOF_EOF
   	  // delete / unlink function to remove file
   	  unlink($schedule_csv);
 
+  	  // set system value schedule_import_date
+      set_system_value("schedule_import_date", NULL);
+
   	  print "<h3>Upload file deleted.  Try again.</h3><br>\n";
   }
 
@@ -83,6 +94,9 @@ EOF_EOF
 			// move file
 			move_uploaded_file($_FILES['toProcess']['tmp_name'], $schedule_csv);
 			print "<br><b>File successfullly uploaded.</b><br><br>";
+
+			// set system date
+            set_system_value("schedule_import_date", $match_date);
 		}
 
 	} else
@@ -93,10 +107,18 @@ EOF_EOF
   // if file doesn't exist, upload it
   if (! (file_exists ($schedule_csv)))
   {
+    // set today as default
+    $today = date('Y-m-d');
+
   	print "<h4>File does not exist on server. Upload CSV File</h5>
+    <form enctype=\"multipart/form-data\" action=\"/scheduleimport.php?debug={$debug}\" method=\"POST\">
+    Date of matches:
+    <input type=\"text\" name=\"match_date\" size=10 maxlength=10 value=\"{$today}\">
+    <br>
+    <br>
   	Upload csv file of the name $schedule_csv_filename
   	<br><br>
-    <form enctype=\"multipart/form-data\" action=\"/scheduleimport.php?debug={$debug}\" method=\"POST\">
+
     <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"10240\">
     <input type=\"file\" name=\"toProcess\" size=\"50\" maxsize=\"100\">
     <br><br>
@@ -142,18 +164,58 @@ EOF_EOF
   		print "<li>Importing from csv file into table...\n";
   		foreach ($file as $line)
   		{
+  			//
+  			// clean any characteristics of the text line
+  			//   NOTE:if you add it here, add it to the clean section above
+
+  			// remove * from name
+            $line = str_replace("*", "", $line);
+
+            // end of clean string section
+
+
   			// parse fields
   			$fields = explode ( ",", rtrim ( $line));
   			if ($debug) print "\n<br><br>Field:" . var_dump ( $fields);
 
   			// insert into schedule table
   			// format of explode array:
-  			//   Time,MatchType,MatchNum,Blue1,Blue2,Blue3,Red1,Red2,Red
-  			$query = "insert into schedule
-  						(scheduled_time, type, matchnum, blue1, blue2, blue3, red1, red2, red3)
-  						values ('{$fields[0]}','"
-  						. substr($fields[1],0,1)
-  						. "',{$fields[2]},{$fields[3]},{$fields[4]},{$fields[5]},{$fields[6]},
+  			//   Time,MatchType,MatchNum,Blue1,Blue2,Blue3,Red1,Red2,Red3
+
+
+  			//
+  			// clean any characteristics of the text line
+  			//   NOTE:if you add it here, add it to the clean section above
+
+  			// remove * from name
+            $line = str_replace("*", "", $line);
+
+
+  			// parse fields
+  			$fields = explode ( ",", rtrim ( $line));
+  			if ($debug) print "\n<br><br>Field:" . var_dump ( $fields);
+
+  			//
+  			// special checking on needed fields
+  			//
+  			//   NOTE:if you add it here, add it to the checking section below as well
+
+  			// check date
+  			//  convert to utime, then format that utime for display
+  			$fields[0] = strtotime($match_date . " " . $fields[0]);
+
+  			// check match type
+  			$type = strtoupper(substr($fields[1],0,1));
+  			if (! (in_array($type, ["P","Q","F"]))) $type="!!Invalid Type!!";
+  			$fields[1]= $type;
+
+  			// end of checking section
+
+
+ 			// not elegant but it's a one-shot -- hand-built query
+ 			$query = "insert into schedule
+  						(scheduled_utime, type, matchnum, blue1, blue2, blue3, red1, red2, red3)
+  						values ('{$fields[0]}','{$fields[1]}',{$fields[2]},{$fields[3]},{$fields[4]},{$fields[5]},{$fields[6]},
   							{$fields[7]},{$fields[8]})";
 
   			// process SQL
@@ -172,8 +234,8 @@ EOF_EOF
 
 		// populate match_instance
 		print "<li>Adding match instance rows...";
-		$query = "insert into match_instance (event_id, type, matchnum, scheduled_time)
-					select '{$sys_event_id}', type, matchnum, scheduled_time from schedule";
+		$query = "insert into match_instance (event_id, type, matchnum, scheduled_utime)
+					select '{$sys_event_id}', type, matchnum, scheduled_utime from schedule";
 
 		// print if in debug mode
 		if ($debug) print "<br>Query:" . $query;
@@ -253,6 +315,7 @@ EOF_EOF
 
   	{
   		// Show sample import record
+        print "Match date set: " . $match_date . "<br>";
   		print "<br><font color=\"red\"><b>The following schedule will be uploaded.  Please check accuracy of fields:</b></font><br>\n";
 
   		// set up table
@@ -264,9 +327,35 @@ EOF_EOF
 		// show each import row
   		foreach ($file as $line)
   		{
+  			//
+  			// clean any characteristics of the text line
+  			//   NOTE:if you add it here, add it to the clean section above
+
+  			// remove * from name
+            $line = str_replace("*", "", $line);
+
+            // end of clean string section
+
+
   			// parse fields
   			$fields = explode ( ",", rtrim ( $line));
   			if ($debug) print "\n<br><br>Field:" . var_dump ( $fields);
+
+  			//
+  			// special checking on needed fields
+  			//
+  			//   NOTE:if you add it here, add it to the checking section above
+
+  			// check date
+  			//  convert to utime, then format that utime for display
+  			$fields[0] = date('Y-m-d h:i a', strtotime($match_date . " " . $fields[0]));
+
+  			// check match type
+  			$type = strtoupper(substr($fields[1],0,1));
+  			if (! (in_array($type, ["P","Q","F"]))) $type="!!Invalid Type!!";
+  			$fields[1]= $type;
+
+  			// end of checking section
 
 			print "<tr>";
 			foreach ($fields as $field)
@@ -292,7 +381,7 @@ EOF_EOF
 
   		<br>
   		<a href=\"{$base}\">Return to Home</a>
-  		nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>
+  		&nbsp;&nbsp;&nbsp; <a href=\"/admin.php\">Sys Admin</a>
   		";  // end of print
   	}
 

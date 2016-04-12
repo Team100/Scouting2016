@@ -94,7 +94,7 @@
 
    // event_id
 
-   $query = "select event_id, type, matchnum, scheduled_time, actual_time
+   $query = "select event_id, type, matchnum, scheduled_utime, actual_utime
     	from match_instance where ".$match_sql_identifier;
 
    if (debug()) print "<br>DEBUG-teammatches: " . $query . "<br>\n";
@@ -115,10 +115,22 @@
    $pointsR = mysqli_fetch_array($resultR);
    $pointsB = mysqli_fetch_array($resultB);
 
+   //
+   // set up  time
+   //
+   if ($row['scheduled_utime'] != NULL) $scheduled_display = date('H:i',$row['scheduled_utime']); else $row['scheduled_utime'];
+   // get publishing info on actual time / estimated time
+   $time_array = match_get_act_est_time($row["type"], $row["matchnum"], $row['actual_utime'], $row['scheduled_utime']);
+   // end of time
+
    //print match data
-   print "<tr><th>Event</th><th>Type</th><th>Match</th><th>Sched</th><th>Actual</th><th>Red</th><th>Blue</th></tr>\n";
-   print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td><td>\n".
-      $row["scheduled_time"]."</td><td>".$row["actual_time"]."</td><td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>\n";
+   print "<tr><th>Event</th><th>Type</th><th>Match</th><th>Sched</th><th>{$time_array['heading_tag']}</th><th>Red</th><th>Blue</th></tr>\n";
+   print "<tr><td>".$row["event_id"]."</td><td>".$row["type"]."</td><td>".$row["matchnum"]."</td>\n";
+
+   // display time
+   print "<td>{$scheduled_display}</td><td>{$time_array['display_time']}</td>";
+
+   print "<td>".$pointsR["score"]."</td><td>".$pointsB["score"]."</td></tr>\n";
 
 
    //print teams

@@ -50,6 +50,8 @@
 		//	dbshowerror($connection, "die");
 		$dbcontrol=$user;
 	}//take control if there is no control
+
+
 	//********
 
 	// handle update if returning from edit mode
@@ -439,6 +441,22 @@
 	}
 
 
+
+	//
+	// load FIRST rankings
+	$query="select teamnum from teambot where event_id = '{$sys_event_id}' "
+	    . " and teamnum not in (select teamnum from alliance_unavailable where event_id = '{$sys_event_id}')"
+	    . " and teamnum not in (select teamnum from alliance_team where event_id = '{$sys_event_id}') "
+	    . " order by isnull(f_ranking), f_ranking ASC";
+    if (debug()) print "<br>DEBUG-finalselect,f_ranking: " . $query . "<br>\n";
+    if (!($result = @ mysqli_query ($connection, $query)))
+		dbshowerror($connection, die);
+	while($row = mysqli_fetch_array($result))
+	  $top_ranked_available[] = $row['teamnum'];
+    // zero f_rankcnt
+    $f_rankcnt=0;
+    // end of seek rankings
+
 	//
 	// loads rank values from a specifed type of ranking, allows the user to edit and resort the rankings
 	//  overall, pos1, pos2, pos3
@@ -447,9 +465,9 @@
 	// load rank values
 	//
 
-	unset( $teamsrank);  // unsetting rank arry
+	unset( $teamsrank);  // unsetting rank array
 
-	if ($sort) $orderby = " order by rank_{$sort} ";
+	if ($sort) $orderby = " order by isnull(rank_{$sort}), rank_{$sort} ";
 	$query = "select teambot.teamnum teamnum, name, nickname, rank_overall, rating_overall,
 		rating_overall_off, rating_overall_def, rank_pos1, rating_pos1, rank_pos2, rating_pos2,
 		rank_pos3, rating_pos3
@@ -615,6 +633,7 @@
 
 		print "<br><table>\n<tr valign = \"top\"><td><table border=1>\n";
 
+
 		for($i=1; $i<=8; $i++)
 		{
 			print "<tr><td>Alliance {$i}</td>\n";
@@ -633,6 +652,9 @@
 
 			if($edit == 11)
 			{
+			    // zero out f_rankcnt
+			    //$rankcnt=0;
+
 				if (! ($result = @ mysqli_query ($connection, "select teamnum from alliance_team
 					where event_id = '{$sys_event_id}' and alliancenum = '{$i}' and position = '1'") ))
 					dbshowerror($connection, "die");
@@ -641,7 +663,7 @@
 				if($row)
 					print "<td><input type=\"text\" name=\"team{$i}\" size=4 maxlength=4 value=\"{$row["teamnum"]}\"><td>\n";
 				else
-					print "<td><input type=\"text\" name=\"team{$i}\" size=4 maxlength=4><td>\n";
+					print "<td><input type=\"text\" name=\"team{$i}\" size=4 maxlength=4 value=\"{$top_ranked_available[$f_rankcnt++]}\"<td>\n";
 			}
 			if($edit == 13)
 			{
@@ -667,8 +689,11 @@
 			print "</tr>\n";
 		}
 
+		// close table and close formatting column
+		print "</table>\n</td>\n";
+
 		//** print refused list:
-		print "</td></table>\n<td>&nbsp;&nbsp;</td><td>\n<table border=1>\n<tr><td>Refused:</td></tr>\n";
+		print "<td>&nbsp;&nbsp;</td><td>\n<table border=1>\n<tr><td>Refused:</td></tr>\n";
 		if(!($result = @ mysqli_query ($connection, "select teamnum from alliance_unavailable
 			where event_id = '{$sys_event_id}' and refused=true") ))
 			dbshowerror($connection, "die");
@@ -683,6 +708,10 @@
 		// print "<br>Refusal: <input type=\"text\" name=refused size=4 maxlength=4><br><br>\n";
 
 	}
+
+
+    // show next seeded alliance
+	print "Next highest seed: {$top_ranked_available[$f_rankcnt]}<br><br>\n";
 
 
     //
@@ -745,7 +774,7 @@
 	<hr>
 	<!--- table for display data --->
 	<table valign=\"top\">
-	<tr><th></th>
+	<tr>
 	<th><a href=\"{$url_root}finalselect.php?edit={$editT}&sort=overall\">Overall Rank</a>";  // end of print
 	print "</th>";
 
@@ -775,9 +804,10 @@
 		print "<tr>\n";
 
 		// print team num, name
-		print "<td><a href=\"/teaminfo.php?teamnum={$teamnum}\">{$teamnum} - {$team[$teamnum]["name"]}";
+		print "<td><a href=\"/teaminfo.php?teamnum={$teamnum}\">{$teamnum} - ";
+		print substr($team[$teamnum]["name"], 0, $team_name_display_max-6);
 		// if nickname, print too
-		if ($team[$teamnum]["nickname"]) print " ({$team[$teamnum]["nickname"]})";
+		if ($team[$teamnum]["nickname"]) print " " . substr($team[$teamnum]["nickname"], 0, 12);
 		print "</a></td>\n";
 
 		// overall rank
@@ -807,8 +837,5 @@
 	print "</table>";
 
 
-?>
-
-<?php
 	pfooter();
 ?>

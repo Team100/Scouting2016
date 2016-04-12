@@ -28,7 +28,7 @@
 
   // two fields - rating and rank
   $options["notag"]=FALSE;
-  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall","Overall:&nbsp",4);
+  print "<tr>" . tabtextfield($edit,$options,$row, "rating_overall","Overall&nbsp",4);
   $options["notag"]=TRUE;
   print tabtextfield($edit,$options,$row, "rank_overall","Overall:&nbsp",4) . "</tr>\n";
 
@@ -150,7 +150,8 @@
   // end of team info data block
 
     // add edit link or submit button
-  print dblockshowedit($edit, $dblock, $editURL) . "\n";
+  if ($page_allow_edits)
+    print dblockshowedit($edit, $dblock, $editURL) . "\n";
 
 
 //

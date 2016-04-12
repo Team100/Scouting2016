@@ -85,7 +85,7 @@ $dispfields["Play"][4] = array("used"=>TRUE, "tag"=>"pickup", "display"=>"Pickup
 $dispfields["Play"][5] = array("used"=>TRUE, "tag"=>"scaling", "display"=>"Scaling Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 $dispfields["Play"][6] = array("used"=>TRUE, "tag"=>"specialmech", "display"=>"Special Mech?", "inputlen"=>1, "maxlen"=>1, "default_value"=>"");
 $dispfields["Play"][7] = array("used"=>TRUE, "tag"=>"portcullis", "display"=>"Portcullis", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
-$dispfields["Play"][8] = array("used"=>TRUE, "tag"=>"cheval", "display"=>"Cheval-Door", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
+$dispfields["Play"][8] = array("used"=>TRUE, "tag"=>"cheval", "display"=>"Cheval", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
 $dispfields["Play"][9] = array("used"=>TRUE, "tag"=>"moat", "display"=>"Moat", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
 $dispfields["Play"][10] = array("used"=>TRUE, "tag"=>"ramparts", "display"=>"Ramparts", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
 $dispfields["Play"][11] = array("used"=>TRUE, "tag"=>"drawbridge", "display"=>"Drawbridge", "inputlen"=>2, "maxlen"=>2, "default_value"=>"0");
@@ -446,12 +446,15 @@ $lred = '#ffcccc';
 //  Data will be truncated to this value
 $maxlengthchangeby=200;
 
+// display length of team name/number when it matters (index.php, rank, etc.)
+$team_name_display_max = 40;
+
 //
 // time window (in seconds) for setting match start
-//   if current time exceed $schedule_set_match_window, user will
-//   not be presented with "start now" option
+//   if current time exceeds $schedule_set_match_window from the last estimated time, 
+//   user will not be presented with "start now" option
 //
-$schedule_set_match_window = 3600;  // no more than an hour
+$schedule_match_window = 1800;  // no more than an hour
 
 
 // ***************************
@@ -524,7 +527,7 @@ function rap_custom_field_data ($team, $teamcnt)
   asort($averages);
 
   // format data
-  print "<br><b>Defense Selection</b><br>\n";
+  print "<br><b>Defense Selection</b> (lowest is most difficult for alliance)<br>\n";
   print "<table border=\"1\">\n";
   foreach ($averages as $stringfield=>$value)
   {
