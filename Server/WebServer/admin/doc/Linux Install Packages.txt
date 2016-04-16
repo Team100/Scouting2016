@@ -1,0 +1,11 @@
+Linux System Install Packages
+
+
+php5-curl
+
+mysql
+mysqli
+php5
+apache
+
+

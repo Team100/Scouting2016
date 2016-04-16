@@ -1,0 +1,24 @@
+Robotics System Programming Doc
+
+Docuemntation we need:
+- system outline
+- scheme method?
+- features behind the schema
+- 
+
+
+
+
+Patterns:
+Structure a field match to db on insert or update statements
+
+Settingup a form
+
+
+
+//  $formfields - array created in fields_load of each field 
+//      (an ordered associative array of name=>value for each field)
+//  $fieldnames - optional array of field names to be inserted 
+//      (an ordered array of db column fieldnames)
+
+

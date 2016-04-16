@@ -1,3 +1,17 @@
+competition System
+Library Programming and General Patterns
+
+
+Page edit modes:
+
+- Nothing (no edit field specified) - render page a first in
+- Edit=2: perform save or commit from edit, then return to non-edit mode
+- Edit=3: save and stay in edit mode
+
+
+
+
+
 
 SQL Examples:
 
