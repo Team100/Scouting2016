@@ -204,11 +204,11 @@
 							else
 								$error_message="Duplicate entry: {$temp}";
 						}
-					}
-				}
-			}
+					} // end not in db
+				} // endof isset
+			} // end of 14
 		}
-		$edit=1;
+		// $edit=1;  // JLV: moved to refused processing
 	}//enter all teams
 
 	if($edit==15)
@@ -249,11 +249,25 @@
     //************************************************
   	//Conrads Work:
 
+
+    // JLV: separate Conrad's refused processing from the edit=10 so that edet=13 can use
+    //
+    // refused processing
+    //
 	$error_message="";
-	if($edit == 10)
+	if(($edit == 10) || ($edit == 14))
 	{
-		// commit refusal:
-		$refused=mysqli_real_escape_string($connection, $_POST["refused"]);
+	  // set up for iteration in edit=14 or one-shot in edit=10
+	  //
+	  // loop through all entries.  If edit=10, only process one
+	  for($i=1; $i<8; $i++)
+	  {
+	    if (($i == 1) && ($edit == 10))
+          $refused=mysqli_real_escape_string($connection, $_POST["refused"]);
+        else
+          $refused=mysqli_real_escape_string($connection, $_POST["refused" . $i]);
+
+        // process if not null
 		if(isset($refused) && $refused!="")
 		{
 			if (! ($result2 = @mysqli_query ($connection, "select * from teambot where event_id = '{$sys_event_id}' and teamnum={$refused}") ))
@@ -274,7 +288,7 @@
 					$refused=$refused*-1;
 					if(!(mysqli_query ($connection, "delete from alliance_unavailable where event_id = '{$sys_event_id}' and teamnum = {$refused}")))
 							dbshowerror($connection, "die");
-				}//if enter a negative number remove that form the unavilable list
+				}//if enter a negative number remove that from the unavilable list
 				else
 				{
 					$wrong=0;
@@ -326,8 +340,16 @@
 				}
 			}
 		}//end of filling the unavailable list
+	  }  // end of for loop for each refused tag
+
+	  if ($edit == 14) $edit=1;  // JLV: moved from above to included refused processing
+    }     // end of refused processing
 
 
+    // rest of processing for edit=10
+	$error_message="";
+	if($edit == 10)
+    {
 		//inputs entered data into tables, determines validity of input
 		$prev=mysqli_real_escape_string($connection, $_POST["next"]);
 
@@ -602,8 +624,17 @@
 		}//end of for counter to 3 for each column
 		print "</tr></table></td>";
 
+		//** display additional submit buttons for easy of use
+		print "<td>&nbsp;</td>\n";
+		print "<td>";
+        print "<br><br><INPUT TYPE=\"Submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0>\n";
+        print "<br><br><br><br><br><br><INPUT TYPE=\"Submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0>\n";
+        print "</td>\n";
+		print "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+
+
 		//** print refused list:
-		print "<td>&nbsp;&nbsp;</td><td><table border=1><tr><td>Refused:</td></tr>";
+		print "<td><table border=1>\n<tr><td>Refused:</td></tr>\n";
 		if(!($result = @ mysqli_query ($connection, "select teamnum from alliance_unavailable
 			where event_id = '{$sys_event_id}' and refused=true") ))
 			dbshowerror($connection, "die");
@@ -678,7 +709,7 @@
 					{
 						$tmp = $row2["teamnum"];
 						print "<td><input type=\"text\" name=\"team{$i}{$q}\" size=4 maxlength=4
-							value=\"$tmp\"><td>\n";
+							value=\"{$tmp}\"><td>\n";
 					}
 					else
 						print "<td><input type=\"text\" name=\"team{$i}{$q}\" size=4 maxlength=4><td>\n";
@@ -692,20 +723,38 @@
 		// close table and close formatting column
 		print "</table>\n</td>\n";
 
+		//** display additional submit buttons for easy of use
+		print "<td>&nbsp;</td>\n";
+		print "<td>";
+        print "<br><br><INPUT TYPE=\"Submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0>\n";
+        print "<br><br><br><br><br><br><INPUT TYPE=\"Submit\" name=\"Submit\" VALUE=\"Submit\" ALIGN=middle BORDER=0>\n";
+        print "</td>\n";
+		print "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+
+
 		//** print refused list:
-		print "<td>&nbsp;&nbsp;</td><td>\n<table border=1>\n<tr><td>Refused:</td></tr>\n";
+		print "<td>\n<table border=1>\n<tr><td>Refused:</td></tr>\n";
 		if(!($result = @ mysqli_query ($connection, "select teamnum from alliance_unavailable
 			where event_id = '{$sys_event_id}' and refused=true") ))
 			dbshowerror($connection, "die");
+
+        // if in edit=13 mode, show entry table to be processed by edit=14
+        $refcnt=1;
 		while($row = mysqli_fetch_array($result))
+		  // if $edit=13, show input field
+		  if ($edit == 13)
+		    print "<tr><td><input type=\"text\" name=\"refused". $refcnt++ . "\" size=4 maxlength=4 value=\"{$row['teamnum']}\"></td></tr>\n";
+		  else
 			print "<tr><td>{$row["teamnum"]}</td></td>\n";
+
+	    // print table to 7 more if needed
+	    if ($edit == 13)
+	      for($i=$refcnt; $i < 8; $i++)
+	        print "<tr><td><input type=\"text\" name=\"refused{$i}\" size=4 maxlength=4> </td><tr>\n";
+
 		print "</table></table><br>\n";
 		//** end of printing refused list
 		//print "</table><br>\n";
-
-		// enter refused
-		// JLV fix entry
-		// print "<br>Refusal: <input type=\"text\" name=refused size=4 maxlength=4><br><br>\n";
 
 	}
 
@@ -765,8 +814,11 @@
 	if($editT==11 || $editT==12)
 		$editT=15;
 
+
+
+	// ********
 	//
-	// rankings table
+	// rankings table underneath alliance selection
 	//
 	// set up table heading
 	print "
