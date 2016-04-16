@@ -45,7 +45,8 @@
 // 
 // tBA event to event table
 // tBA team to team table
-// tBA history
+// tBA team history to team history
+// tBA team award to team award
 // tBA team to teambot table
 // tBA match to match_instance table
 // tBA match to match_instance_alliance table
@@ -135,11 +136,13 @@
 //   Returns - message string of what to print as a final message
 //
 // Gets event stats based on $sys_event_id
-// function: tba_get_team_history($teamnum)
+//
+// function: tba_get_team_history()
 //   Returns - message string of what to print as a final message
 //
 // Gets event teams based on $sys_event_id
-// function: tba_get_team_awards($teamnum)
+//
+// function: tba_get_team_awards()
 //   Returns - message string of what to print as a final message
 //
 // Gets event teams based on $sys_event_id
@@ -163,8 +166,10 @@
 //  array('state'=>FALSE, 'fatal'=>FALSE, 'code'=>, 'message'=>"", 'response'=>"");
 //
 //  
-// function: tba_getdata($tba_url) - 
+// function: tba_getdata($tba_url, $skiplastmod) - 
 //   $tba_url - URL to call
+//   $skiplastmod - Boolean value that determines if lastmod function is used
+//         True means skip, false means process lastmod
 //
 // Returns:
 //   $tba_response if success
@@ -218,6 +223,8 @@
 //
 //  Maps blue alliance returned object in array to a tba_dbarray.
 //  Returns the tba_dbarray
+// JLV - commenting out but may cause problems
+//       if ($tba_responsearray->$field != NULL)
 //
 // function: tba_updatedb($tablename, $table_identifiers, $tba_dbarray)
 //   $tablename - table name in compsys for which array applies
@@ -230,6 +237,25 @@
 //
 // Updates database with data
 //   Queries for row with data.  If found, updates.  If not found, inserts.
+//
+// NOTE: $tba_dbarray must contain all columns necessary to insert a new 
+//         row in the table.  If columns are missing, likely duplicate entries
+//         will occur.  These columns must exist in $table_identifiers
+//         and $tba_dbarray
+//
+//
+// function: tba_updatedbifnew($tablename, $table_identifiers, $tba_dbarray)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $tba_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+//
+// Updates database with data
+//   Queries for row with data.  If found, updates only the columns which are 
+//     currently NULL.  If not found, inserts.
 //
 //
 // function: tba_set_autoupdate($state) - sets autoupdate
@@ -244,16 +270,6 @@
 //
 // Gets state of setting for $auto_update_file 
 //  If time is past $auto_update_stop (set in params.inc), set state to zero
-//
-//
-// function: tba() - 
-//   $
-//
-//
-//
-// function: tba() - 
-//   $
-//
 //
 //
 // ****************************************************************************

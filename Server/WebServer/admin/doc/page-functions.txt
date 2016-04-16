@@ -105,6 +105,21 @@
 // Updates database with data
 //   Queries for row with data.  If found, updates.  If not found, inserts.
 //
+//   $dummycol="";
+//   foreach($table_identifiers as $column=>$value)
+//
+// function: db_update_or_create_if_new($tablename, $table_identifiers, $db_array)
+//   $tablename - table name in compsys for which array applies
+//   $table_identifies - formatted array of key/value pairs where the 
+//        key is the db column name that is part of the identifier
+//        (and thus the where clause), and the value is the data.
+//   $tba_data_array - tBA data, formatted as an array of key/value 
+//        pairs where the key is the db column name and the value
+//        is the data.
+// Updates database with data
+//   Queries for row with data.  If found, updates only the columns which are 
+//     currently NULL.  If not found, inserts.
+//
 //
 // ****************************************************************************
 //
@@ -314,6 +329,38 @@
 //
 // ****************************************************************************
 //
+// system functions
+//
+// function get_system_value($name)
+//  $name - name of sytem key (value in db)
+//
+// returns value or NULL if not set
+//
+// gets system key->value from database system_value table
+// function set_system_value($name)
+//  $name - name of sytem key (value in db)
+//  $value - value to set
+//
+// returns TRUE if able to set
+//
+// gets system key->value from database system_value table
+//
+// user profile / use preferences test and set
+//
+// function test_user_prop ($property)
+//  $property - property name, corresponding to column in user_profile
+//
+// returns 1, 0 otherwise
+//
+// function set_user_prop ($property, $value)
+//  $property - property name, corresponding to column in user_profile
+//  $value - boolean 1/0 value to set
+//
+// returns TRUE if able to set
+//
+//
+// ****************************************************************************
+//
 // teams functions
 //
 //
@@ -329,6 +376,109 @@
 //
 //  Validates each team in array exists in teambot table.
 //
+//
+// teams need evaluation functions
+//
+//
+// Basic use pattern:
+// For one-shot team number display:
+//  To display teamnum (with or without &bull)
+//   team_needs_eval_str($teamnum) where teamnum is displayed
+// 
+// For lots of teams displayed on page:
+//  At top of page, to get array:
+//    $needseval = test_user_prop("needeval");
+//    if ($needseval == 1) $teams_need_eval = allteams_need_eval();
+//
+//  Inline in page where bullet would go:
+//    if (in_array($row["teamnum"], $teams_need_eval)) print "&bull;";
+// 
+// function: team_needs_eval ( $teamnum )
+//  $teamnum of team
+//
+//  Returns: TRUE if $teamnum needs evaluation, FALSE if not
+//
+//  Evaluation columns are defined in system global $needs_eval_columns
+//  Needs eval means at least one of these columns is null
+//
+// function: team_needs_eval_str ( $teamnum )
+//  $teamnum of team
+//
+//  Returns: string with teamnum if not needing eval and teamnum with a bullet if
+//   needing eval
+//
+//  Evaluation columns are defined in system global $needs_eval_columns
+//  Needs eval means at least one of these columns is null
+//
+// function: allteams_need_eval ()
+//
+//  Returns: array of teamnums which need evaluation
+//
+//  Evaluation columns are defined in system global $needs_eval_not_null_cols.
+//  Needs eval means at least one of these columns is null
+//
+//
+// ********************
+//
+// match schedule functions
+//
+//
+//
+// match time functions
+//
+// function: match_get_act_est_time ($type, $matchnum, $actual_utime, $scheduled_utime)
+//  $type - match type, P,Q,F
+//  $matchnum 
+//  $actual_utime
+//  $scheduled_utime
+//
+//  Returns: $match_time_array of key/value pairs, with the following keys:
+//    ['heading_tag']
+//    ['display_time']
+//    ['can_set']
+//    ['est_flag']
+//    ['estimated_utime']
+//
+//  Others we may implement:
+//    ['seconds_delay']
+//
+// 
+// if $actual_utime 
+//  - is not null: converts to HH:MM can displays in display time. heading tag is Act
+//  - is null, provides estimated time based on system value match_delay
+//
+// Uses two system values:
+//   - match_time_delay - current delay time from scheduled in match timing
+//   - match_time_date - date in YYYY-MM-DD format the last delay was calc'd.  If today is not 
+//      same day, resets match_time_delay
+//
+//
+// function: match_set_time ($type, $matchnum)
+//  $type - match type, P,Q,F
+//  $matchnum 
+//
+//  Returns: TRUE if set time, FALSE if match time was not set
+//
+//  Will directly print errors when time could not be set.  Sets actual time of match if within
+//    $schedule_match_window and updates system delay variables as needed
+//
+// function match_get_delay ($scheduled_utime)
+//  $scheduled_utime - scheduled utime for comparison
+//
+//  Returns: seconds of delay to apply to match
+//
+// Determines if delay time applies to $scheduled_utime and returns delay
+//
+// Uses two system values:
+//   - match_time_delay - current delay time from scheduled in match timing
+//   - match_time_date - date in YYYY-MM-DD format the last delay was calc'd.  If today is not 
+//      same day, resets match_time_delay
+//
+//
+// function: match_get_recent_actual ($type)
+//  $type - match type, P,Q,F
+//
+//  Returns: $matchnum of most recent actual time that has been set, or FALSE
 //
 // ****************************************************************************
 //
