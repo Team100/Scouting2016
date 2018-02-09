@@ -401,7 +401,7 @@ $tablet_export = $tablet_server_home . "/export";
 $default_password = "wild4woodside";
 
 // administrator users
-$admins = array("jlv", "mckay");
+$admins = array("jlv", "laura");
 
 
 //
